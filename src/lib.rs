@@ -8,27 +8,30 @@
 //! # Usage example
 //!
 //! ```
-//! use gjk2d::{Support, collides};
-//! use glam::Vec2;
+//! # use core::convert::TryInto;
+//! use gjk2d::prelude::*;
+//! use glam::{Vec2, Affine2};
+//! # fn main() -> Result<(), gjk2d::transform::Error> {
 //!
-//! // We need shape types
-//! struct Circle { center: Vec2, radius: f32 };
-//! impl Support for Circle {
-//!     fn support(&self, direction: Vec2) -> Vec2 {
-//!         // We have to return the farthest point of the shape in the given direction
-//!         self.center + direction.clamp_length(self.radius, self.radius)
-//!     }
-//! }
+//! // Create a circle
+//! let circle = shapes::Circle::new(1.0);
+//! let circle_transform = Transform::default();
+//!
+//! // Create a rectangle
+//! let rect = shapes::Rectangle::from_half_extents(Vec2::splat(2.0));
+//! let rect_transform1: Transform = Affine2::from_translation(Vec2::new(2.0, 0.0)).try_into()?;
+//! let rect_transform2: Transform = Affine2::from_translation(Vec2::new(0.0, 4.0)).try_into()?;
 //!
 //! // Then we can test for collision
-//! assert!(collides(
-//!     &Circle { center: Vec2::new(2.0, 3.0), radius: 1.0 },
-//!     &Circle { center: Vec2::new(4.0, 3.0), radius: 2.0 },
+//! assert!(gjk2d::collides(
+//!     &TransformedShape::new(&circle_transform, &circle),
+//!     &TransformedShape::new(&rect_transform1, &rect)
 //! ));
-//! assert!(!collides(
-//!     &Circle { center: Vec2::new(2.0, 3.0), radius: 1.0 },
-//!     &Circle { center: Vec2::new(2.0, 7.0), radius: 2.0 },
+//! assert!(!gjk2d::collides(
+//!     &TransformedShape::new(&circle_transform, &circle),
+//!     &TransformedShape::new(&rect_transform2, &rect)
 //! ));
+//! # Ok(()) }
 //! ```
 
 /// Re-export of glam types
@@ -37,8 +40,18 @@ pub use glam;
 use self::{glam::Vec2, simplex::Simplex};
 
 mod minkowski;
+pub mod shapes;
 mod simplex;
 pub mod transform;
+
+/// Re-export of most commonly used types
+pub mod prelude {
+    pub use crate::{
+        shapes,
+        transform::{Transform, TransformedShape},
+        Support,
+    };
+}
 
 /// Trait to be implemented by shape types to support collision detection
 ///

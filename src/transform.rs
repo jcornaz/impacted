@@ -7,21 +7,11 @@
 //!
 //! ```
 //! # use core::{f32::consts, convert::TryInto};
-//! # use gjk2d::{Support, glam::{Vec2, Affine2}, transform::{Transform, TransformedShape}};
+//! # use gjk2d::prelude::*;
+//! # use gjk2d::glam::{Vec2, Affine2};
 //! # fn main() -> Result<(), gjk2d::transform::Error> {
-//! // A simple rectangle defined by its extends (origin on its center)
-//! struct Rectangle { extents: Vec2 }
-//! impl Support for Rectangle {
-//!     fn support(&self, direction: Vec2) -> Vec2 {
-//!         let mut point = self.extents;
-//!         if direction.x < 0.0 { point.x = -point.x }   
-//!         if direction.y < 0.0 { point.y = -point.y }   
-//!         point
-//!     }
-//! }
-//!
 //! // Create a rectangle at the origin, without rotation nor scale
-//! let rectangle = Rectangle { extents: Vec2::splat(1.0) };
+//! let rectangle = shapes::Rectangle::from_half_extents(Vec2::splat(1.0));
 //!
 //! // A position, rotation and scale for the rectangle
 //! let transform: Transform = Affine2::from_scale_angle_translation(
@@ -54,9 +44,20 @@ pub struct Error;
 /// Transform that can be used to get a [`TransformedShape`]
 ///
 /// See [`transform`](self) module documentation for more details and examples
+#[derive(Debug, Clone)]
 pub struct Transform {
     local_to_world: Affine2,
     world_to_local: Mat2,
+}
+
+impl Default for Transform {
+    /// The default transform is the identity transform
+    fn default() -> Self {
+        Self {
+            local_to_world: Affine2::IDENTITY,
+            world_to_local: Mat2::IDENTITY,
+        }
+    }
 }
 
 impl TryFrom<Affine2> for Transform {
@@ -70,7 +71,8 @@ impl TryFrom<Affine2> for Transform {
     ///
     /// ```
     /// # use core::convert::TryFrom;
-    /// # use gjk2d::{glam::{Vec2, Affine2}, transform::Transform};
+    /// # use gjk2d::prelude::*;
+    /// # use gjk2d::glam::{Vec2, Affine2};
     /// assert!(Transform::try_from(Affine2::IDENTITY).is_ok());
     /// assert!(Transform::try_from(Affine2::from_scale(Vec2::ZERO)).is_err());
     /// ```
@@ -100,7 +102,7 @@ impl TryFrom<bevy_transform::components::GlobalTransform> for Transform {
     /// ```
     /// # use core::convert::TryFrom;
     /// # use glam::Vec3;
-    /// use bevy_transform::components::{GlobalTransform, Transform as BevyTransform};
+    /// use bevy_transform::prelude::{GlobalTransform, Transform as BevyTransform};
     /// use gjk2d::transform::Transform;
     /// assert!(Transform::try_from(GlobalTransform::default()).is_ok());
     /// assert!(Transform::try_from(GlobalTransform::from(BevyTransform::from_scale(Vec3::ZERO))).is_err());
