@@ -67,6 +67,7 @@ jobs:
       - run: cargo doc --all-features --no-deps
 
   unwanted-dependencies:
+    if: false # TODO enable when making the repository public
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
@@ -79,6 +80,7 @@ jobs:
       - run: cargo deny check
 
   unused-dependencies:
+    if: false # TODO enable when making the repository public
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0

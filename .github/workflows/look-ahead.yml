@@ -1,8 +1,8 @@
 name: look-ahead
 
 on:
-  schedule:
-    - cron: '0 0 */10 * *'
+  # schedule:
+  #   - cron: '0 0 */10 * *'
 
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        rust-version: ['beta']
+        rust-version: ['stable', 'beta', 'nightly']
 
     steps:
       - name: Checkout repository
