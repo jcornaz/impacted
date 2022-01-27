@@ -32,12 +32,12 @@ jobs:
       - run: cargo check --all-targets
 
       - name: Check no_std
-        run: cargo check --target thumbv6m-none-eabi
+        run: cargo check --no-default-features --target thumbv6m-none-eabi
 
       - run: cargo test --no-default-features
-      - run: cargo test --no-default-features -- --ignored
+      - run: cargo test --no-default-features --features std
+      - run: cargo test --no-default-features --features bevy_transform
       - run: cargo test
-      - run: cargo test -- --ignored
       - run: cargo test --all-features
       - run: cargo test --all-features -- --ignored
 

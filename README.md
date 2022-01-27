@@ -3,6 +3,12 @@
 2d collision test for arbitrary convex shapes
 
 
+## Cargo features
+
+* `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
+* `lbm` Required to compile in `no_std`
+* `bevy_transform` Add conversion for bevy's `GlobalTransform`
+
 ## Unlicense
 
 This is free and unencumbered software released into the public domain.
