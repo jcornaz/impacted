@@ -1,6 +1,6 @@
 # gjk2d
 
-2d collision test for arbitrary convex shapes
+2d collision test for arbitrary convex shapes in rust
 
 
 ## Cargo features
@@ -8,6 +8,14 @@
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
 * `lbm` Required to compile in `no_std`
 * `bevy_transform` Add conversion for bevy's `GlobalTransform`
+
+
+## MSRV
+
+The minimum supported rust version is - at any time - the latest stable rust version.
+
+Therefore, each release (including minor and patch) may require a newer stable rust version, and that is not considered a breaking change.
+
 
 ## Unlicense
 
