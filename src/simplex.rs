@@ -1,4 +1,4 @@
-use crate::math::Vec2;
+use crate::glam::Vec2;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Simplex(Primitive);

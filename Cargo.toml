@@ -12,11 +12,13 @@ keywords = ["collision", "convex", "geometry", "gamedev", "gjk"]
 
 [features]
 default = []
-std = ["glam/std"]
+std = ["glam/std", "thiserror"]
 
 [dependencies]
 # Public
 glam = { version = "0.20.2", default-features = false, features = ["libm"] }
+# Private
+thiserror = { version = "1.0", default-features = false, optional = true }
 
 [dev-dependencies]
 rstest = "0.12.0"

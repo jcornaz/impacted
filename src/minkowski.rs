@@ -1,4 +1,4 @@
-use crate::{math::Vec2, Support};
+use crate::{glam::Vec2, Support};
 
 pub(crate) struct Difference<'a, S1: Support, S2: Support> {
     pub(crate) shape1: &'a S1,

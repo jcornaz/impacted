@@ -8,7 +8,8 @@
 //! # Usage example
 //!
 //! ```
-//! use gjk2d::{math::Vec2, Support, collides};
+//! use gjk2d::{Support, collides};
+//! use glam::Vec2;
 //!
 //! // We need shape types
 //! struct Circle { center: Vec2, radius: f32 };
@@ -30,15 +31,14 @@
 //! ));
 //! ```
 
-use self::{math::Vec2, simplex::Simplex};
+/// Re-export of glam types
+pub use glam;
 
-/// Re-export of [glam](https://docs.rs/glam/0.20.2) types used throughout this crate
-pub mod math {
-    pub use glam::Vec2;
-}
+use self::{glam::Vec2, simplex::Simplex};
 
 mod minkowski;
 mod simplex;
+pub mod transform;
 
 /// Trait to be implemented by shape types to support collision detection
 ///
@@ -49,12 +49,12 @@ mod simplex;
 /// ## Circle
 ///
 /// ```
-/// # use gjk2d::{Support, math::Vec2};
+/// # use gjk2d::{Support, glam::Vec2};
 /// struct Circle { center: Vec2, radius: f32 };
 /// impl Support for Circle {
 ///     /// Returns the farthest point of the shape in the given direction
 ///     fn support(&self, direction: Vec2) -> Vec2 {
-///         // For a circle, the farthest point, is equal to `direction` with the length clamped at radius length's
+///         // For a circle, the farthest point, is equal to `direction` with the length clamped at radius length
 ///         self.center + direction.clamp_length(self.radius, self.radius)
 ///     }
 /// }
@@ -63,7 +63,7 @@ mod simplex;
 /// ## Rectangle
 ///
 /// ```
-/// # use gjk2d::{Support, math::Vec2};
+/// # use gjk2d::{Support, glam::Vec2};
 /// struct Rectangle { center: Vec2, extents: Vec2 };
 /// impl Support for Rectangle {
 ///     /// Returns the farthest point of the shape in the given direction
@@ -79,12 +79,6 @@ mod simplex;
 /// ```
 pub trait Support {
     /// Returns the farthest point of the shape in the given direction
-    ///
-    /// The given direction length must be finite and greater than zero
-    ///
-    /// # Panics
-    ///
-    /// The implementation may panic if the direction is not finite or has a zero length
     fn support(&self, direction: Vec2) -> Vec2;
 }
 
