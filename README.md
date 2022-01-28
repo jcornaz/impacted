@@ -12,9 +12,11 @@
 
 ## MSRV
 
-The minimum supported rust version is - at any time - the latest stable rust version.
+The minimum supported rust version is currently: `1.58`
 
-Therefore, each release (including minor and patch) may require a newer stable rust version, and that is not considered a breaking change.
+It may be increased to a newer stable version in a minor release.
+
+It will be increased to the latest stable version in a major release.
 
 
 ## Unlicense
