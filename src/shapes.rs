@@ -29,7 +29,7 @@ impl Support for Circle {
     /// # Example
     ///
     /// ```
-    /// # use gjk2d::{Support, shapes::Circle};
+    /// # use impacted::{Support, shapes::Circle};
     /// # use glam::Vec2;
     /// assert_eq!(Circle::new(2.0).support(Vec2::X), Vec2::X * 2.0);
     /// assert_eq!(Circle::new(3.0).support(Vec2::Y), Vec2::Y * 3.0);
@@ -68,7 +68,7 @@ impl Support for Rectangle {
     /// # Example
     ///
     /// ```
-    /// # use gjk2d::{Support, shapes::Rectangle};
+    /// # use impacted::{Support, shapes::Rectangle};
     /// # use glam::Vec2;  
     /// let  rectangle = Rectangle::from_half_extents(Vec2::new(3.0, 2.0));
     /// assert_eq!(rectangle.support(Vec2::new(1., 1.)), Vec2::new(3., 2.));

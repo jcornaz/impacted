@@ -9,9 +9,9 @@
 //!
 //! ```
 //! # use core::convert::TryInto;
-//! use gjk2d::prelude::*;
+//! use impacted::prelude::*;
 //! use glam::{Vec2, Affine2};
-//! # fn main() -> Result<(), gjk2d::transform::Error> {
+//! # fn main() -> Result<(), impacted::transform::Error> {
 //!
 //! // Create a circle
 //! let circle = shapes::Circle::new(1.0);
@@ -23,11 +23,11 @@
 //! let rect_transform2: Transform = Affine2::from_translation(Vec2::new(0.0, 4.0)).try_into()?;
 //!
 //! // Then we can test for collision
-//! assert!(gjk2d::collides(
+//! assert!(impacted::collides(
 //!     &TransformedShape::new(&circle_transform, &circle),
 //!     &TransformedShape::new(&rect_transform1, &rect)
 //! ));
-//! assert!(!gjk2d::collides(
+//! assert!(!impacted::collides(
 //!     &TransformedShape::new(&circle_transform, &circle),
 //!     &TransformedShape::new(&rect_transform2, &rect)
 //! ));
@@ -62,7 +62,7 @@ pub mod prelude {
 /// ## Circle
 ///
 /// ```
-/// # use gjk2d::{Support, glam::Vec2};
+/// # use impacted::{Support, glam::Vec2};
 /// struct Circle { center: Vec2, radius: f32 };
 /// impl Support for Circle {
 ///     /// Returns the farthest point of the shape in the given direction
@@ -76,7 +76,7 @@ pub mod prelude {
 /// ## Rectangle
 ///
 /// ```
-/// # use gjk2d::{Support, glam::Vec2};
+/// # use impacted::{Support, glam::Vec2};
 /// struct Rectangle { center: Vec2, extents: Vec2 };
 /// impl Support for Rectangle {
 ///     /// Returns the farthest point of the shape in the given direction

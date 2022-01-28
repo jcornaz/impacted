@@ -1,4 +1,4 @@
-# gjk2d
+# impacted
 
 2d collision test for arbitrary convex shapes in rust
 

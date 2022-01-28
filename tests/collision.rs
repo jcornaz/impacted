@@ -5,7 +5,7 @@ use std::f32::consts;
 use glam::{Affine2, Vec2};
 use rstest::*;
 
-use gjk2d::{
+use impacted::{
     prelude::*,
     shapes::{Circle, Rectangle},
 };
@@ -53,7 +53,7 @@ fn collides(
     #[case] shape2: impl Support,
     #[case] transform2: Affine2,
 ) {
-    assert!(gjk2d::collides(
+    assert!(impacted::collides(
         &TransformedShape::new(&transform1.try_into().unwrap(), &shape1),
         &TransformedShape::new(&transform2.try_into().unwrap(), &shape2)
     ))
@@ -90,7 +90,7 @@ fn does_not_collide(
     #[case] shape2: impl Support,
     #[case] transform2: Affine2,
 ) {
-    assert!(!gjk2d::collides(
+    assert!(!impacted::collides(
         &TransformedShape::new(&transform1.try_into().unwrap(), &shape1),
         &TransformedShape::new(&transform2.try_into().unwrap(), &shape2)
     ))

@@ -7,9 +7,9 @@
 //!
 //! ```
 //! # use core::{f32::consts, convert::TryInto};
-//! # use gjk2d::prelude::*;
-//! # use gjk2d::glam::{Vec2, Affine2};
-//! # fn main() -> Result<(), gjk2d::transform::Error> {
+//! # use impacted::prelude::*;
+//! # use impacted::glam::{Vec2, Affine2};
+//! # fn main() -> Result<(), impacted::transform::Error> {
 //! // Create a rectangle at the origin, without rotation nor scale
 //! let rectangle = shapes::Rectangle::from_half_extents(Vec2::splat(1.0));
 //!
@@ -71,8 +71,8 @@ impl TryFrom<Affine2> for Transform {
     ///
     /// ```
     /// # use core::convert::TryFrom;
-    /// # use gjk2d::prelude::*;
-    /// # use gjk2d::glam::{Vec2, Affine2};
+    /// # use impacted::prelude::*;
+    /// # use impacted::glam::{Vec2, Affine2};
     /// assert!(Transform::try_from(Affine2::IDENTITY).is_ok());
     /// assert!(Transform::try_from(Affine2::from_scale(Vec2::ZERO)).is_err());
     /// ```
@@ -103,7 +103,7 @@ impl TryFrom<bevy_transform::components::GlobalTransform> for Transform {
     /// # use core::convert::TryFrom;
     /// # use glam::Vec3;
     /// use bevy_transform::prelude::{GlobalTransform, Transform as BevyTransform};
-    /// use gjk2d::transform::Transform;
+    /// use impacted::transform::Transform;
     /// assert!(Transform::try_from(GlobalTransform::default()).is_ok());
     /// assert!(Transform::try_from(GlobalTransform::from(BevyTransform::from_scale(Vec3::ZERO))).is_err());
     /// ```

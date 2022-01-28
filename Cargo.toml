@@ -1,12 +1,12 @@
 [package]
-name = "gjk2d"
+name = "impacted"
 version = "0.0.0"
 license = "Unlicense"
 authors = ["Jonathan Cornaz"]
 edition = "2021"
 rust-version = "1.58"
 description = "2d collision test for arbitrary convex shapes"
-repository = "https://github.com/jcornaz/gjk2d"
+repository = "https://github.com/jcornaz/impacted"
 categories = ["game-development"]
 keywords = ["collision", "convex", "geometry", "gamedev", "gjk"]
 
