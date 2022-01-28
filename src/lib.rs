@@ -23,11 +23,11 @@
 //! let rect_transform2: Transform = Affine2::from_translation(Vec2::new(0.0, 4.0)).try_into()?;
 //!
 //! // Then we can test for collision
-//! assert!(impacted::collides(
+//! assert!(impacted::are_collided(
 //!     &TransformedShape::new(&circle_transform, &circle),
 //!     &TransformedShape::new(&rect_transform1, &rect)
 //! ));
-//! assert!(!impacted::collides(
+//! assert!(!impacted::are_collided(
 //!     &TransformedShape::new(&circle_transform, &circle),
 //!     &TransformedShape::new(&rect_transform2, &rect)
 //! ));
@@ -96,7 +96,9 @@ pub trait Support {
 }
 
 /// Returns true if the two convex shapes geometries are overlapping
-pub fn collides(shape1: &impl Support, shape2: &impl Support) -> bool {
+#[inline]
+#[must_use]
+pub fn are_collided(shape1: &impl Support, shape2: &impl Support) -> bool {
     let difference = minkowski::Difference { shape1, shape2 };
     find_simplex_enclosing_origin(&difference, Vec2::X).is_some()
 }
