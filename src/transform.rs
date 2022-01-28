@@ -1,53 +1,108 @@
-//! Transform for [`Support`] implementation
-//!
-//! This module provides a [`Transform`] and [`TransformedShape`]
-//! to wrap a shape implementing [`Support`].
-//!
-//! # Example
-//!
-//! ```
-//! # use core::{f32::consts, convert::TryInto};
-//! # use impacted::prelude::*;
-//! # use impacted::glam::{Vec2, Affine2};
-//! # fn main() -> Result<(), impacted::transform::Error> {
-//! // Create a rectangle at the origin, without rotation nor scale
-//! let rectangle = shapes::Rectangle::from_half_extents(Vec2::splat(1.0));
-//!
-//! // A position, rotation and scale for the rectangle
-//! let transform: Transform = Affine2::from_scale_angle_translation(
-//!     Vec2::splat(2.0), // sized doubled
-//!     consts::FRAC_PI_4, // rotated by 45°
-//!     Vec2::new(1., 2.), // translated
-//! ).try_into()?; // <-- Only reversible matrices can successfully be converted into a `Transform`
-//!
-//! // Get a transformed implementation of the `Support` trait
-//! let transformed = TransformedShape::new(&transform, &rectangle);
-//!
-//! let support_point = transformed.support(Vec2::X);
-//! assert!((3.5 .. 4.0).contains(&support_point.x));
-//! assert_eq!(2.0, support_point.y);
-//! # Ok(()) }
-//! ```
+use glam::{Affine2, Mat2, Vec2};
 
-use crate::{
-    glam::{Affine2, Mat2, Vec2},
-    Support,
-};
+use crate::{CollisionShape, Error, Support};
 
-/// Error returned if trying to create a [`Transform`] from a non-reversible matrix
-#[non_exhaustive]
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "std", derive(thiserror::Error))]
-#[cfg_attr(feature = "std", error("non-reversible transform"))]
-pub struct Error;
-
-/// Transform that can be used to get a [`TransformedShape`]
-///
-/// See [`transform`](self) module documentation for more details and examples
+/// Transform that can be used for a [`CollisionShape`]
 #[derive(Debug, Clone)]
 pub struct Transform {
     local_to_world: Affine2,
     world_to_local: Mat2,
+}
+
+impl Transform {
+    fn new(local_to_world: Affine2) -> Result<Self, Error> {
+        let world_to_local = local_to_world.matrix2.inverse();
+        if world_to_local.is_nan() {
+            Err(Error::NonInvertibleTransform)
+        } else {
+            Ok(Self {
+                local_to_world,
+                world_to_local,
+            })
+        }
+    }
+
+    /// Create a translation transform
+    ///
+    /// # Panics
+    ///
+    /// Panic if the translation is not finite
+    ///
+    /// # Example with glam
+    ///
+    /// ```rust
+    /// use impacted::Transform;
+    /// use glam::Vec2;
+    /// let translation = Transform::from_translation(Vec2::new(1.0, 2.0));
+    /// ```
+    #[inline]
+    #[must_use]
+    pub fn from_translation(translation: impl Into<[f32; 2]>) -> Self {
+        Self::new(Affine2::from_translation(translation.into().into())).unwrap()
+    }
+
+    /// Create a translation and rotation transform
+    ///
+    /// # Panics
+    ///
+    /// Panic if the translation or angle is not finite
+    ///
+    /// # Example with glam
+    ///
+    /// ```rust
+    /// use impacted::Transform;
+    /// use core::f32::consts;
+    /// use glam::Vec2;
+    /// let translation = Transform::from_angle_translation(consts::FRAC_PI_4, Vec2::new(1.0, 2.0));
+    /// ```
+    #[inline]
+    #[must_use]
+    pub fn from_angle_translation(angle: f32, translation: impl Into<[f32; 2]>) -> Self {
+        Self::new(Affine2::from_angle_translation(
+            angle,
+            translation.into().into(),
+        ))
+        .unwrap()
+    }
+
+    /// Create a translation, rotation and scale transform
+    ///
+    /// The scale must not be zero
+    ///
+    /// # Panics
+    ///
+    /// Panic if a component of the scale is zero, or if the translation or angle is not finite
+    ///
+    /// # Example with glam
+    ///
+    /// ```rust
+    /// use impacted::Transform;
+    /// use core::f32::consts;
+    /// use glam::Vec2;
+    /// let translation = Transform::from_scale_angle_translation(
+    ///     Vec2::splat(2.0),
+    ///     consts::FRAC_PI_4,
+    ///     Vec2::new(1.0, 2.0)
+    /// );
+    /// ```
+    #[inline]
+    #[must_use]
+    pub fn from_scale_angle_translation(
+        scale: impl Into<[f32; 2]>,
+        angle: f32,
+        translation: impl Into<[f32; 2]>,
+    ) -> Self {
+        Self::new(Affine2::from_scale_angle_translation(
+            scale.into().into(),
+            angle,
+            translation.into().into(),
+        ))
+        .unwrap()
+    }
+
+    pub(crate) fn position(&self) -> Vec2 {
+        self.local_to_world.translation
+    }
 }
 
 impl Default for Transform {
@@ -60,8 +115,19 @@ impl Default for Transform {
     }
 }
 
-impl TryFrom<Affine2> for Transform {
-    type Error = Error;
+impl Support for CollisionShape {
+    fn support(&self, direction: Vec2) -> Vec2 {
+        let local_direction = self.transform.world_to_local * direction;
+        let local_support = self.data.support(local_direction);
+        self.transform
+            .local_to_world
+            .transform_point2(local_support)
+    }
+}
+
+#[cfg(feature = "glam-020")]
+impl TryFrom<glam::Affine2> for Transform {
+    type Error = crate::Error;
 
     /// Try to create a transform from the glam `Affine2`
     ///
@@ -71,15 +137,15 @@ impl TryFrom<Affine2> for Transform {
     ///
     /// ```
     /// # use core::convert::TryFrom;
-    /// # use impacted::prelude::*;
-    /// # use impacted::glam::{Vec2, Affine2};
+    /// # use impacted::Transform;
+    /// # use glam::{Vec2, Affine2};
     /// assert!(Transform::try_from(Affine2::IDENTITY).is_ok());
     /// assert!(Transform::try_from(Affine2::from_scale(Vec2::ZERO)).is_err());
     /// ```
-    fn try_from(local_to_world: Affine2) -> Result<Self, Self::Error> {
+    fn try_from(local_to_world: glam::Affine2) -> Result<Self, Self::Error> {
         let world_to_local = local_to_world.matrix2.inverse();
         if world_to_local.is_nan() {
-            Err(Error)
+            Err(Error::NonInvertibleTransform)
         } else {
             Ok(Self {
                 local_to_world,
@@ -102,9 +168,9 @@ impl TryFrom<bevy_transform_06::components::GlobalTransform> for Transform {
     /// ```
     /// # use core::convert::TryFrom;
     /// # use glam::Vec3;
-    /// # use bevy_transform_06 as bevy_transform;
-    /// use bevy_transform::prelude::{GlobalTransform, Transform as BevyTransform};
-    /// use impacted::transform::Transform;
+    /// # use bevy_transform_06 as bevy;
+    /// use bevy::prelude::{GlobalTransform, Transform as BevyTransform};
+    /// use impacted::Transform;
     /// assert!(Transform::try_from(GlobalTransform::default()).is_ok());
     /// assert!(Transform::try_from(GlobalTransform::from(BevyTransform::from_scale(Vec3::ZERO))).is_err());
     /// ```
@@ -116,33 +182,6 @@ impl TryFrom<bevy_transform_06::components::GlobalTransform> for Transform {
             angle_2d_from_quat(transform.rotation),
             transform.translation.truncate(),
         ))
-    }
-}
-
-/// Association of a [`Transform`] and a [`Support`] references
-///
-/// See [`transform`](self) module documentation for more details and examples
-pub struct TransformedShape<'a, S> {
-    transform: &'a Transform,
-    shape: &'a S,
-}
-
-impl<'a, S: Support> TransformedShape<'a, S> {
-    /// Create a transformed shape
-    #[inline]
-    #[must_use]
-    pub fn new(transform: &'a Transform, shape: &'a S) -> Self {
-        Self { transform, shape }
-    }
-}
-
-impl<'a, S: Support> Support for TransformedShape<'a, S> {
-    fn support(&self, direction: Vec2) -> Vec2 {
-        let local_direction = self.transform.world_to_local * direction;
-        let local_support = self.shape.support(local_direction);
-        self.transform
-            .local_to_world
-            .transform_point2(local_support)
     }
 }
 
@@ -160,19 +199,44 @@ fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
     }
 }
 
-#[cfg(all(test, feature = "bevy-transform-06", feature = "std"))]
+#[cfg(test)]
 mod tests {
-    use glam::{Quat, Vec3};
-    use rstest::*;
+    use core::f32::consts;
+
+    use glam::Vec2;
 
     use super::*;
 
-    #[rstest]
-    #[case(Quat::from_axis_angle(Vec3::Z, 1.0), 1.0)]
-    #[case(Quat::from_axis_angle(-Vec3::Z, 1.0), -1.0)]
-    #[case(Quat::from_axis_angle(Vec3::Z, -1.0), -1.0)]
-    #[case(Quat::from_axis_angle(-Vec3::Z, -1.0), 1.0)]
-    fn angle_from_quat(#[case] quat: Quat, #[case] expected: f32) {
-        assert_eq!(angle_2d_from_quat(quat), expected);
+    #[test]
+    fn transformed_shape_support() {
+        let transform: Transform = Transform::from_scale_angle_translation(
+            Vec2::splat(2.0),  // sized doubled
+            consts::FRAC_PI_4, // rotated by 45°
+            Vec2::new(1., 2.), // translated
+        );
+
+        let support_point = CollisionShape::new_rectangle(2.0, 2.0)
+            .with_transform(transform)
+            .support(Vec2::X);
+        assert!((3.5..4.0).contains(&support_point.x));
+        assert_eq!(2.0, support_point.y);
+    }
+
+    #[cfg(all(feature = "std", feature = "bevy-transform-06"))]
+    mod angle_from_quat {
+        use glam::{Quat, Vec3};
+        use rstest::rstest;
+
+        use super::*;
+
+        #[rstest]
+        #[case(Quat::from_axis_angle(Vec3::Z, 1.0), 1.0)]
+        #[case(Quat::from_axis_angle(- Vec3::Z, 1.0), - 1.0)]
+        #[case(Quat::from_axis_angle(Vec3::Z, - 1.0), - 1.0)]
+        #[case(Quat::from_axis_angle(- Vec3::Z, - 1.0), 1.0)]
+        #[cfg(all(feature = "std", feature = "bevy-transform-06"))]
+        fn angle_from_quat(#[case] quat: Quat, #[case] expected: f32) {
+            assert!((angle_2d_from_quat(quat) - expected).abs() < f32::EPSILON);
+        }
     }
 }

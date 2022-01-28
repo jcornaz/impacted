@@ -32,7 +32,8 @@ But one can create their own shapes by implementing a `Support` trait (as this c
 ## Cargo features
 
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
-* `bevy-transform-06` Conversion for bevy (version 0.6.0) `GlobalTransform`
+* `bevy-transform-06` Conversion for bevy (version 0.6) `GlobalTransform`
+* `glam-020` Conversion for glam (version 0.20) `Affine2`
 
 
 ## MSRV

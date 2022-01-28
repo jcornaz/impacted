@@ -13,13 +13,14 @@ keywords = ["collision", "convex", "geometry", "gamedev", "gjk"]
 [features]
 default = ["std"]
 std = ["glam/std", "thiserror"]
+glam-020 = []
 
 [dependencies]
 # Public
-glam = { version = "0.20.2", default-features = false, features = ["libm"] }
 bevy-transform-06 = { package = "bevy_transform", version = "0.6.0", default-features = false, optional = true }
 
 # Private
+glam = { version = "0.20.2", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
 
 [dev-dependencies]

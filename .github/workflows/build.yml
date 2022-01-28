@@ -36,8 +36,11 @@ jobs:
 
       - run: cargo test --no-default-features
       - run: cargo test --no-default-features --features std
-      - run: cargo test --no-default-features --features bevy_transform
+      - run: cargo test --no-default-features --features bevy-transform-06
+      - run: cargo test --no-default-features --features glam-020
       - run: cargo test
+      - run: cargo test --features bevy-transform-06
+      - run: cargo test --features glam-020
       - run: cargo test --all-features
       - run: cargo test --all-features -- --ignored
 

@@ -2,96 +2,55 @@
 
 use std::f32::consts;
 
-use glam::{Affine2, Vec2};
+use glam::Vec2;
 use rstest::*;
 
-use impacted::{
-    prelude::*,
-    shapes::{Circle, Rectangle},
-};
+use impacted::{CollisionShape, Transform};
 
 #[rstest]
+#[case(CollisionShape::new_circle(1.0), CollisionShape::new_circle(1.0))]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.0),
-    Affine2::IDENTITY
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_angle_translation(2.0, Vec2::ZERO)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.0),
-    Affine2::from_angle(2.0)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::X * 1.0)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.0),
-    Affine2::from_translation(Vec2::X * 1.0)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.5).with_transform(Transform::from_translation(Vec2::Y * 2.1)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.5),
-    Affine2::from_translation(Vec2::Y * 2.1)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_translation(Vec2::X * 1.9)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Rectangle::from_half_extents(Vec2::new(1.0, 1.0)),
-    Affine2::from_translation(Vec2::X * 1.9)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.3)),
 )]
-#[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Rectangle::from_half_extents(Vec2::splat(1.0)),
-    Affine2::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.3)
-)]
-fn collides(
-    #[case] shape1: impl Support,
-    #[case] transform1: Affine2,
-    #[case] shape2: impl Support,
-    #[case] transform2: Affine2,
-) {
-    assert!(impacted::are_collided(
-        &TransformedShape::new(&transform1.try_into().unwrap(), &shape1),
-        &TransformedShape::new(&transform2.try_into().unwrap(), &shape2)
-    ))
+fn collides(#[case] shape1: CollisionShape, #[case] shape2: CollisionShape) {
+    assert!(shape1.is_collided_with(&shape2))
 }
 
 #[rstest]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.0),
-    Affine2::from_translation(Vec2::X * 2.1)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::X * 2.1)),
+
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Circle::new(1.0),
-    Affine2::from_translation(Vec2::Y * 2.1)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::Y * 2.1)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Rectangle::from_half_extents(Vec2::new(1.0, 1.0)),
-    Affine2::from_translation(Vec2::X * 2.1)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_translation(Vec2::X * 2.1)),
 )]
 #[case(
-    Circle::new(1.0),
-    Affine2::IDENTITY,
-    Rectangle::from_half_extents(Vec2::splat(1.0)),
-    Affine2::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.5)
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.5)),
 )]
-fn does_not_collide(
-    #[case] shape1: impl Support,
-    #[case] transform1: Affine2,
-    #[case] shape2: impl Support,
-    #[case] transform2: Affine2,
-) {
-    assert!(!impacted::are_collided(
-        &TransformedShape::new(&transform1.try_into().unwrap(), &shape1),
-        &TransformedShape::new(&transform2.try_into().unwrap(), &shape2)
-    ))
+fn does_not_collide(#[case] shape1: CollisionShape, #[case] shape2: CollisionShape) {
+    assert!(!shape1.is_collided_with(&shape2))
 }
