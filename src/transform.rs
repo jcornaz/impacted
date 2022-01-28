@@ -89,8 +89,8 @@ impl TryFrom<Affine2> for Transform {
     }
 }
 
-#[cfg(feature = "bevy_transform")]
-impl TryFrom<bevy_transform::components::GlobalTransform> for Transform {
+#[cfg(feature = "bevy-transform-06")]
+impl TryFrom<bevy_transform_06::components::GlobalTransform> for Transform {
     type Error = Error;
 
     /// Try to create a transform from the bevy `GlobalTransform`
@@ -102,13 +102,14 @@ impl TryFrom<bevy_transform::components::GlobalTransform> for Transform {
     /// ```
     /// # use core::convert::TryFrom;
     /// # use glam::Vec3;
+    /// # use bevy_transform_06 as bevy_transform;
     /// use bevy_transform::prelude::{GlobalTransform, Transform as BevyTransform};
     /// use impacted::transform::Transform;
     /// assert!(Transform::try_from(GlobalTransform::default()).is_ok());
     /// assert!(Transform::try_from(GlobalTransform::from(BevyTransform::from_scale(Vec3::ZERO))).is_err());
     /// ```
     fn try_from(
-        transform: bevy_transform::components::GlobalTransform,
+        transform: bevy_transform_06::components::GlobalTransform,
     ) -> Result<Self, Self::Error> {
         Self::try_from(Affine2::from_scale_angle_translation(
             transform.scale.truncate(),
@@ -145,7 +146,7 @@ impl<'a, S: Support> Support for TransformedShape<'a, S> {
     }
 }
 
-#[cfg(feature = "bevy_transform")]
+#[cfg(feature = "bevy-transform-06")]
 fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
     if quat.is_near_identity() {
         return 0.0;
@@ -159,7 +160,7 @@ fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
     }
 }
 
-#[cfg(all(test, feature = "bevy_transform", feature = "std"))]
+#[cfg(all(test, feature = "bevy-transform-06", feature = "std"))]
 mod tests {
     use glam::{Quat, Vec3};
     use rstest::*;

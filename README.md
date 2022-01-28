@@ -7,7 +7,7 @@
 
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
 * `lbm` Required to compile in `no_std`
-* `bevy_transform` Add conversion for bevy's `GlobalTransform`
+* `bevy-transform-06` Add conversion for bevy (version 0.6.0) `GlobalTransform`
 
 
 ## MSRV

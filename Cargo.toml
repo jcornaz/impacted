@@ -17,7 +17,7 @@ std = ["glam/std", "thiserror"]
 [dependencies]
 # Public
 glam = { version = "0.20.2", default-features = false, features = ["libm"] }
-bevy_transform = { version = "0.6.0", default-features = false, optional = true }
+bevy-transform-06 = { package = "bevy_transform", version = "0.6.0", default-features = false, optional = true }
 
 # Private
 thiserror = { version = "1.0", default-features = false, optional = true }
