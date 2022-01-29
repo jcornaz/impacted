@@ -1,5 +1,11 @@
 # impacted
 
+[![License](https://img.shields.io/github/license/jcornaz/impacted)](https://github.com/jcornaz/impacted/blob/main/UNLICENSE)
+[![Crates.io](https://img.shields.io/crates/v/impacted)](https://crates.io/crates/impacted)
+[![Docs](https://img.shields.io/docsrs/impacted)](https://docs.rs/impacted)
+[![Build](https://img.shields.io/github/workflow/status/jcornaz/impacted/build)](https://github.com/jcornaz/impacted/actions)
+
+
 2d collision test for game-development in rust
 
 This provides a low-level "narrow-phase" collision-detection logic,
