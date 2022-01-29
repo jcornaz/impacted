@@ -49,6 +49,26 @@ assert!(circle.is_collided_with(&rect1));
 You may also look in the [examples](https://github.com/jcornaz/impacted/tree/main/examples) directory
 for more complete/concrete usage examples (e.g. using the bevy engine)
 
+
+## Installation
+
+<!--- x-release-please-start-version --->
+```toml
+[dependencies]
+impacted = "1.0.0"
+```
+<!--- x-release-please-end-version --->
+
+
+### For bevy users
+<!--- x-release-please-start-version --->
+```toml
+[dependencies]
+impacted = { version = "1.0.0", features = ["bevy-06"] }
+```
+<!--- x-release-please-end-version --->
+
+
 ## Cargo features
 
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
