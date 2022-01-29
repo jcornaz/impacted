@@ -3,31 +3,36 @@
 2d collision test for arbitrary convex shapes in rust
 
 
+## Roadmap
+
+* [x] collision test (GJK implementation)
+* [ ] collision shapes
+  * [x] circle
+  * [x] rectangle
+  * [ ] convex-hull
+  * [ ] capsule
+* [ ] contact generation (EPA implementation)
+
+
 ## Usage example
 
 ```rust
-use impact::prelude::*;
+use impacted::{CollisionShape, Transform};
+use glam::Vec2; // <-- use any math library you like
 
 // Create a circle
-let circle = shapes::Circle::new(1.0);
-let circle_transform = Transform::default();
+let circle = CollisionShape::new_circle(1.0);
 
 // Create a rectangle
-let rect = shapes::Rectangle::from_half_extents(Vec2::splat(2.0));
-let rect_transform: Transform = Affine2::from_translation(Vec2::new(2.0, 0.0)).try_into()?;
+let mut rect = CollisionShape::new_rectangle(4.0, 4.0)
+    .with_transform(Transform::from_translation(Vec2::new(2.0, 0.0)));
 
-// Test if the shapes collide
-assert!(impacted::are_collided(
-    &TransformedShape::new(&circle_transform, &circle),
-    &TransformedShape::new(&rect_transform, &rect)
-));
+// Test for collision
+assert!(circle.is_collided_with(&rect1));
 ```
 
-Note: This example is using the provided `Circle` and `Rectangle` shapes to be as simple as possible.
-But one can create their own shapes by implementing a `Support` trait (as this crate is using a [GJK] algorithm)
-
-[GJK]: https://en.wikipedia.org/wiki/Gilbert%E2%80%93Johnson%E2%80%93Keerthi_distance_algorithm
-
+You may also look in the [examples](https://github.com/jcornaz/impacted/tree/main/examples) directory
+for more complete/concrete usage examples (e.g. using the bevy engine)
 
 ## Cargo features
 

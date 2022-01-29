@@ -67,6 +67,7 @@ fn startup(mut commands: Commands) {
         .insert(CollisionShape::new_rectangle(100.0, 100.0));
 }
 
+/// Update the `CollisionShape` transform if the `GlobalTransform` has changed
 fn update_shape_transforms(
     mut shapes: Query<(&mut CollisionShape, &GlobalTransform), Changed<GlobalTransform>>,
 ) {
