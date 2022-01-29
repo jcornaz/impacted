@@ -10,7 +10,7 @@ pub struct Transform {
 }
 
 impl Transform {
-    fn new(local_to_world: Affine2) -> Self {
+    pub(crate) fn new(local_to_world: Affine2) -> Self {
         let world_to_local = local_to_world.matrix2.inverse();
         Self {
             local_to_world,
@@ -120,40 +120,6 @@ impl Support for CollisionShape {
     }
 }
 
-#[cfg(feature = "glam-020")]
-impl From<glam::Affine2> for Transform {
-    #[inline]
-    fn from(affine: Affine2) -> Self {
-        Self::new(affine)
-    }
-}
-
-#[cfg(feature = "bevy-transform-06")]
-impl From<bevy_transform_06::components::GlobalTransform> for Transform {
-    #[inline]
-    fn from(transform: bevy_transform_06::components::GlobalTransform) -> Self {
-        Self::from(Affine2::from_scale_angle_translation(
-            transform.scale.truncate(),
-            angle_2d_from_quat(transform.rotation),
-            transform.translation.truncate(),
-        ))
-    }
-}
-
-#[cfg(feature = "bevy-transform-06")]
-fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
-    if quat.is_near_identity() {
-        return 0.0;
-    }
-    let projected = quat.to_scaled_axis().project_onto(glam::Vec3::Z);
-    let angle = projected.length();
-    if projected.z < 0.0 {
-        -angle
-    } else {
-        angle
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use core::f32::consts;
@@ -175,23 +141,5 @@ mod tests {
             .support(Vec2::X);
         assert!((3.5..4.0).contains(&support_point.x));
         assert_eq!(2.0, support_point.y);
-    }
-
-    #[cfg(all(feature = "std", feature = "bevy-transform-06"))]
-    mod angle_from_quat {
-        use glam::{Quat, Vec3};
-        use rstest::rstest;
-
-        use super::*;
-
-        #[rstest]
-        #[case(Quat::from_axis_angle(Vec3::Z, 1.0), 1.0)]
-        #[case(Quat::from_axis_angle(- Vec3::Z, 1.0), - 1.0)]
-        #[case(Quat::from_axis_angle(Vec3::Z, - 1.0), - 1.0)]
-        #[case(Quat::from_axis_angle(- Vec3::Z, - 1.0), 1.0)]
-        #[cfg(all(feature = "std", feature = "bevy-transform-06"))]
-        fn angle_from_quat(#[case] quat: Quat, #[case] expected: f32) {
-            assert!((angle_2d_from_quat(quat) - expected).abs() < f32::EPSILON);
-        }
     }
 }

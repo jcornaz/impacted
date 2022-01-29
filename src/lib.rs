@@ -41,6 +41,7 @@ pub use crate::transform::Transform;
 use self::simplex::Simplex;
 
 mod gjk;
+mod interop;
 mod minkowski;
 pub mod shapes;
 mod simplex;
