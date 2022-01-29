@@ -85,11 +85,13 @@ fn update_shape_transforms(
 /// For bigger games, you may consider to pair it with a broad-phase (like [bvh-arena] or [broccoli])
 /// to reduce the number of collision test to perform.
 ///
+/// Also, remember that this implementation is quite generic,
+/// and it might be simplified for your use-case.
+/// Example: check for collision between each enemy that has moved and the player.
+/// You may even have many of this kind of system for different aspect of the game logic, and bevy can run them in parallel!
+///
 /// [bvh-arena]: https://crates.io/crates/bvh-arena
 /// [broccoli]: https://crates.io/crates/broccoli
-///
-/// Red: collided
-/// Blue: not collided
 fn update_color(
     mut all_shapes: Query<(Entity, &mut Sprite, &CollisionShape)>,
     moved_shapes: Query<(Entity, &CollisionShape), Changed<CollisionShape>>,

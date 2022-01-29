@@ -1,6 +1,15 @@
 # impacted
 
-2d collision test for arbitrary convex shapes in rust
+2d collision test for game-development in rust
+
+This provides a low-level "narrow-phase" collision-detection logic,
+with some integration for the [bevy] game engine (behind feature flag).
+
+If you want to pair it with a broad-phase, you may look at [bvh-arena] or [broccoli].
+
+[bevy]: https://bevyengine.org
+[bvh-arena]: https://crates.io/crates/bvh-arena
+[broccoli]: https://crates.io/crates/broccoli
 
 
 ## Roadmap
@@ -37,7 +46,7 @@ for more complete/concrete usage examples (e.g. using the bevy engine)
 ## Cargo features
 
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
-* `bevy-06` All [bevy](https://bevyengine.org) 0.6 interoperabilities (alias for `["bevy-transform-06", "bevy-ecs-06"]`)
+* `bevy-06` All [bevy](https://bevyengine.org) 0.6 interop (alias for `["bevy-transform-06", "bevy-ecs-06"]`)
 * `bevy-transform-06` Interoperability with [bevy_transform](https://crates.io/crates/bevy_transform) 0.6
 * `bevy-ecs-06` Interoperability with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.6
 
