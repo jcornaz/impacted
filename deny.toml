@@ -9,7 +9,21 @@ ignore = []
 default = "deny"
 unlicensed = "deny"
 copyleft = "deny"
-allow = ["Unlicense"]
+allow = [
+  "Unlicense",
+  "MIT",
+  "Apache-2.0",
+  "Zlib",
+  "BSD-3-Clause",
+  "CC0-1.0",
+  "ISC",
+]
+
+
+[[licenses.clarify]]
+name = "stretch"
+expression = "MIT"
+license-files = []
 
 [sources]
 unknown-registry = "deny"
