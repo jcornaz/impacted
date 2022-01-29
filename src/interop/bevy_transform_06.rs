@@ -1,5 +1,6 @@
 use bevy_transform_06::prelude::GlobalTransform;
 
+#[cfg(feature = "bevy-transform-06")] // Repeated to appear in the docs
 impl From<GlobalTransform> for crate::Transform {
     #[inline]
     fn from(transform: bevy_transform_06::components::GlobalTransform) -> Self {

@@ -10,6 +10,9 @@ repository = "https://github.com/jcornaz/impacted"
 categories = ["game-development"]
 keywords = ["collision", "convex", "geometry", "gamedev", "gjk"]
 
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 default = ["std"]
 std = ["glam/std", "thiserror"]
@@ -25,3 +28,6 @@ thiserror = { version = "1.0", default-features = false, optional = true }
 
 [dev-dependencies]
 rstest = "0.12.0"
+
+[build-dependencies]
+rustc_version = "0.4.0"
