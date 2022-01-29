@@ -42,7 +42,6 @@ pub use crate::transform::Transform;
 use self::simplex::Simplex;
 
 mod gjk;
-mod interop;
 mod minkowski;
 pub mod shapes;
 mod simplex;
@@ -103,15 +102,15 @@ impl CollisionShape {
     /// useful to set the transform directly at creation
     #[inline]
     #[must_use]
-    pub fn with_transform(mut self, transform: Transform) -> Self {
+    pub fn with_transform(mut self, transform: impl Into<Transform>) -> Self {
         self.set_transform(transform);
         self
     }
 
     /// Set the transform (translation, rotation and scale)
     #[inline]
-    pub fn set_transform(&mut self, transform: Transform) {
-        self.transform = transform;
+    pub fn set_transform(&mut self, transform: impl Into<Transform>) {
+        self.transform = transform.into();
     }
 
     /// Returns true if the two convex shapes geometries are overlapping
@@ -130,4 +129,9 @@ impl CollisionShape {
 trait Support {
     /// Returns the farthest point of the shape in the given direction
     fn support(&self, direction: Vec2) -> Vec2;
+}
+
+#[cfg(feature = "bevy-ecs-06")]
+impl bevy_ecs_06::prelude::Component for CollisionShape {
+    type Storage = bevy_ecs_06::component::SparseStorage;
 }

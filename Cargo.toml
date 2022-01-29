@@ -16,11 +16,12 @@ all-features = true
 [features]
 default = ["std"]
 std = ["glam/std", "thiserror"]
-glam-020 = []
+bevy-06 = ["bevy-transform-06", "bevy-ecs-06"]
 
 [dependencies]
 # Public
 bevy-transform-06 = { package = "bevy_transform", version = "0.6.0", default-features = false, optional = true }
+bevy-ecs-06 = { package = "bevy_ecs", version = "0.6.0", default-features = false, optional = true }
 
 # Private
 glam = { version = "0.20.2", default-features = false, features = ["libm"] }
@@ -28,6 +29,11 @@ thiserror = { version = "1.0", default-features = false, optional = true }
 
 [dev-dependencies]
 rstest = "0.12.0"
+bevy = { version = "0.6.0", default-features = false, features = ["bevy_winit", "render", "x11"]}
 
 [build-dependencies]
 rustc_version = "0.4.0"
+
+[[example]]
+name = "bevy"
+required-features = ["bevy-06"]
