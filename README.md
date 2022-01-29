@@ -6,7 +6,7 @@
 [![Build](https://img.shields.io/github/workflow/status/jcornaz/impacted/build)](https://github.com/jcornaz/impacted/actions)
 
 
-2d collision test for game-development in rust
+2d collision test for game-development in rust (with optional integration and example for bevy)
 
 This provides a low-level "narrow-phase" collision-detection logic,
 with some integration for the [bevy] game engine (behind feature flag).
@@ -14,8 +14,8 @@ with some integration for the [bevy] game engine (behind feature flag).
 If you want to pair it with a broad-phase, you may look at [bvh-arena] or [broccoli].
 
 [bevy]: https://bevyengine.org
-[bvh-arena]: https://crates.io/crates/bvh-arena
-[broccoli]: https://crates.io/crates/broccoli
+[bvh-arena]: https://github.com/jcornaz/bvh-arena
+[broccoli]: https://github.com/tiby312/broccoli
 
 
 ## Roadmap
