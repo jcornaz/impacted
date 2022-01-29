@@ -1,6 +1,6 @@
 use glam::{Affine2, Mat2, Vec2};
 
-use crate::{CollisionShape, Error, Support};
+use crate::{CollisionShape, Support};
 
 /// Transform that can be used for a [`CollisionShape`]
 #[derive(Debug, Clone)]
@@ -10,15 +10,11 @@ pub struct Transform {
 }
 
 impl Transform {
-    fn new(local_to_world: Affine2) -> Result<Self, Error> {
+    fn new(local_to_world: Affine2) -> Self {
         let world_to_local = local_to_world.matrix2.inverse();
-        if world_to_local.is_nan() {
-            Err(Error::NonInvertibleTransform)
-        } else {
-            Ok(Self {
-                local_to_world,
-                world_to_local,
-            })
+        Self {
+            local_to_world,
+            world_to_local,
         }
     }
 
@@ -38,7 +34,7 @@ impl Transform {
     #[inline]
     #[must_use]
     pub fn from_translation(translation: impl Into<[f32; 2]>) -> Self {
-        Self::new(Affine2::from_translation(translation.into().into())).unwrap()
+        Self::new(Affine2::from_translation(translation.into().into()))
     }
 
     /// Create a translation and rotation transform
@@ -62,7 +58,6 @@ impl Transform {
             angle,
             translation.into().into(),
         ))
-        .unwrap()
     }
 
     /// Create a translation, rotation and scale transform
@@ -97,7 +92,6 @@ impl Transform {
             angle,
             translation.into().into(),
         ))
-        .unwrap()
     }
 
     pub(crate) fn position(&self) -> Vec2 {
@@ -107,6 +101,7 @@ impl Transform {
 
 impl Default for Transform {
     /// The default transform is the identity transform
+    #[inline]
     fn default() -> Self {
         Self {
             local_to_world: Affine2::IDENTITY,
@@ -126,58 +121,18 @@ impl Support for CollisionShape {
 }
 
 #[cfg(feature = "glam-020")]
-impl TryFrom<glam::Affine2> for Transform {
-    type Error = crate::Error;
-
-    /// Try to create a transform from the glam `Affine2`
-    ///
-    /// It returns an error if the affine is not reversible
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # use core::convert::TryFrom;
-    /// # use impacted::Transform;
-    /// # use glam::{Vec2, Affine2};
-    /// assert!(Transform::try_from(Affine2::IDENTITY).is_ok());
-    /// assert!(Transform::try_from(Affine2::from_scale(Vec2::ZERO)).is_err());
-    /// ```
-    fn try_from(local_to_world: glam::Affine2) -> Result<Self, Self::Error> {
-        let world_to_local = local_to_world.matrix2.inverse();
-        if world_to_local.is_nan() {
-            Err(Error::NonInvertibleTransform)
-        } else {
-            Ok(Self {
-                local_to_world,
-                world_to_local,
-            })
-        }
+impl From<glam::Affine2> for Transform {
+    #[inline]
+    fn from(affine: Affine2) -> Self {
+        Self::new(affine)
     }
 }
 
 #[cfg(feature = "bevy-transform-06")]
-impl TryFrom<bevy_transform_06::components::GlobalTransform> for Transform {
-    type Error = Error;
-
-    /// Try to create a transform from the bevy `GlobalTransform`
-    ///
-    /// It returns an error if the transform is not reversible
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # use core::convert::TryFrom;
-    /// # use glam::Vec3;
-    /// # use bevy_transform_06 as bevy;
-    /// use bevy::prelude::{GlobalTransform, Transform as BevyTransform};
-    /// use impacted::Transform;
-    /// assert!(Transform::try_from(GlobalTransform::default()).is_ok());
-    /// assert!(Transform::try_from(GlobalTransform::from(BevyTransform::from_scale(Vec3::ZERO))).is_err());
-    /// ```
-    fn try_from(
-        transform: bevy_transform_06::components::GlobalTransform,
-    ) -> Result<Self, Self::Error> {
-        Self::try_from(Affine2::from_scale_angle_translation(
+impl From<bevy_transform_06::components::GlobalTransform> for Transform {
+    #[inline]
+    fn from(transform: bevy_transform_06::components::GlobalTransform) -> Self {
+        Self::from(Affine2::from_scale_angle_translation(
             transform.scale.truncate(),
             angle_2d_from_quat(transform.rotation),
             transform.translation.truncate(),

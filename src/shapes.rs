@@ -51,7 +51,12 @@ impl From<Circle> for ShapeData {
 
 impl Support for Circle {
     fn support(&self, direction: Vec2) -> Vec2 {
-        direction.clamp_length(self.radius, self.radius)
+        let point = direction.clamp_length(self.radius, self.radius);
+        if point.is_nan() {
+            Vec2::new(self.radius, 0.0)
+        } else {
+            point
+        }
     }
 }
 
@@ -106,11 +111,31 @@ mod tests {
     }
 
     #[test]
+    fn circle_with_invalid_direction() {
+        assert_eq!(
+            Circle::new(1.)
+                .support(Vec2::splat(f32::NAN))
+                .length_squared(),
+            1.0
+        );
+    }
+
+    #[test]
     fn rectangle() {
         let rectangle = Rectangle::new(6.0, 4.0);
         assert_eq!(rectangle.support(Vec2::new(1., 1.)), Vec2::new(3., 2.));
         assert_eq!(rectangle.support(Vec2::new(-1., 1.)), Vec2::new(-3., 2.));
         assert_eq!(rectangle.support(Vec2::new(1., -1.)), Vec2::new(3., -2.));
         assert_eq!(rectangle.support(Vec2::new(-1., -1.)), Vec2::new(-3., -2.));
+    }
+
+    #[test]
+    fn rectangle_with_invalid_direction() {
+        assert_eq!(
+            Rectangle::new(2., 2.)
+                .support(Vec2::splat(f32::NAN))
+                .length_squared(),
+            2.0
+        );
     }
 }
