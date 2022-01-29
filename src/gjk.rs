@@ -16,7 +16,7 @@ pub(crate) fn find_simplex_enclosing_origin(
             .dot(initial_direction)
             .partial_cmp(&0.0)
             .unwrap_or(Ordering::Less)
-            .is_le()
+            .is_lt()
         {
             return None;
         }
@@ -29,7 +29,7 @@ pub(crate) fn find_simplex_enclosing_origin(
             .dot(direction)
             .partial_cmp(&0.0)
             .unwrap_or(Ordering::Less)
-            .is_le()
+            .is_lt()
         {
             return None;
         }

@@ -15,6 +15,10 @@ use impacted::{CollisionShape, Transform};
 )]
 #[case(
     CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::new(2.0, 0.0))),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
     CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::X * 1.0)),
 )]
 #[case(
