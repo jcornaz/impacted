@@ -39,11 +39,8 @@ pub(crate) fn find_simplex_enclosing_origin(
     Some(simplex)
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Simplex(Primitive);
-
 #[derive(Debug, Copy, Clone, PartialEq)]
-enum Primitive {
+pub(crate) enum Simplex {
     Point(Vec2),
     Line(Vec2, Vec2),
     Triangle(Vec2, Vec2, Vec2),
@@ -51,14 +48,14 @@ enum Primitive {
 
 impl Simplex {
     pub(crate) fn new(point: Vec2) -> Self {
-        Self(Primitive::Point(point))
+        Self::Point(point)
     }
 
     pub(crate) fn insert(&mut self, new_point: Vec2) {
-        match self.0 {
-            Primitive::Point(p) => self.0 = Primitive::Line(p, new_point),
-            Primitive::Line(p1, p2) => self.0 = Primitive::Triangle(p1, p2, new_point),
-            Primitive::Triangle(_, _, _) => {
+        match *self {
+            Self::Point(p) => *self = Self::Line(p, new_point),
+            Self::Line(p1, p2) => *self = Self::Triangle(p1, p2, new_point),
+            Self::Triangle(_, _, _) => {
                 panic!("Cannot expand 2d simplex further than triangle")
             }
         }
@@ -68,15 +65,15 @@ impl Simplex {
     ///
     /// If the origin is inside the simplex returns None. Otherwise returns the next direction to test.
     pub(crate) fn next(&mut self) -> Option<Vec2> {
-        match self.0 {
-            Primitive::Point(point) => {
+        match *self {
+            Self::Point(point) => {
                 if point.length_squared() > f32::EPSILON {
                     Some(-point)
                 } else {
                     None
                 }
             }
-            Primitive::Line(p1, p2) => {
+            Self::Line(p1, p2) => {
                 let mut dir = (p2 - p1).perp();
                 if dir.dot(p1) > 0.0 {
                     dir = -dir;
@@ -87,15 +84,15 @@ impl Simplex {
                     None
                 }
             }
-            Primitive::Triangle(p1, p2, p3) => {
+            Self::Triangle(p1, p2, p3) => {
                 let mut dir = perp(p3 - p1, p3 - p2);
                 if dir.dot(-p3) > 0.0 {
-                    self.0 = Primitive::Line(p1, p3);
+                    *self = Self::Line(p1, p3);
                     return Some(dir);
                 }
                 dir = perp(p3 - p2, p3 - p1);
                 if dir.dot(-p3) > 0.0 {
-                    self.0 = Primitive::Line(p2, p3);
+                    *self = Self::Line(p2, p3);
                     Some(dir)
                 } else {
                     None
@@ -135,17 +132,17 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Primitive::Point(Vec2::default()))]
-    #[case(Primitive::Line(-Vec2::X, Vec2::X))]
-    #[case(Primitive::Line(Vec2::X, Vec2::default()))]
-    #[case(Primitive::Line(Vec2::default(), Vec2::Y))]
-    #[case(Primitive::Triangle(Vec2::X, Vec2::Y, Vec2::default()))]
-    #[case(Primitive::Triangle(Vec2::new(-1.0, -1.0), Vec2::new(1.0, -1.0), Vec2::Y))]
+    #[case(Simplex::Point(Vec2::default()))]
+    #[case(Simplex::Line(-Vec2::X, Vec2::X))]
+    #[case(Simplex::Line(Vec2::X, Vec2::default()))]
+    #[case(Simplex::Line(Vec2::default(), Vec2::Y))]
+    #[case(Simplex::Triangle(Vec2::X, Vec2::Y, Vec2::default()))]
+    #[case(Simplex::Triangle(Vec2::new(-1.0, -1.0), Vec2::new(1.0, -1.0), Vec2::Y))]
     #[cfg(feature = "std")]
-    fn contains_origin(#[case] primitive: Primitive) {
-        let mut modified = Simplex(primitive);
+    fn contains_origin(#[case] simplex: Simplex) {
+        let mut modified = simplex;
         assert!(modified.next().is_none());
-        assert_eq!(modified.0, primitive);
+        assert_eq!(modified, simplex);
     }
 
     #[test]
@@ -157,14 +154,14 @@ mod tests {
 
     #[test]
     fn line() {
-        let mut simplex = Simplex(Primitive::Line(Vec2::Y, Vec2::new(1.0, 1.0)));
+        let mut simplex = Simplex::Line(Vec2::Y, Vec2::new(1.0, 1.0));
         assert_eq!(simplex.next(), Some(-Vec2::Y));
-        assert_eq!(simplex.0, Primitive::Line(Vec2::Y, Vec2::new(1.0, 1.0)));
+        assert_eq!(simplex, Simplex::Line(Vec2::Y, Vec2::new(1.0, 1.0)));
     }
 
     #[test]
     fn triangle() {
-        let mut simplex = Simplex(Primitive::Triangle(Vec2::Y, Vec2::new(1.0, 1.0), Vec2::X));
+        let mut simplex = Simplex::Triangle(Vec2::Y, Vec2::new(1.0, 1.0), Vec2::X);
         assert_eq!(
             simplex.next().map(glam::Vec2::normalize),
             Some(Vec2::new(-1.0, -1.0).normalize())
