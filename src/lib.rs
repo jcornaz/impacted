@@ -41,13 +41,10 @@ pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
-use self::simplex::Simplex;
-
 mod deprecated;
 mod gjk;
 mod minkowski;
 pub mod shapes;
-mod simplex;
 mod transform;
 
 /// A collision shape
