@@ -26,6 +26,7 @@ bevy-ecs-06 = { package = "bevy_ecs", version = "0.6.0", default-features = fals
 # Private
 glam = { version = "0.20.2", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
+smallvec = { version = "1.8", default-features = false }
 
 [dev-dependencies]
 rstest = "0.12.0"

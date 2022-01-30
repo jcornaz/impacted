@@ -42,6 +42,7 @@ use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
 mod deprecated;
+mod epa;
 mod gjk;
 mod minkowski;
 pub mod shapes;
