@@ -10,6 +10,29 @@ struct Simplex {
     points: SmallVec<[Vec2; 7]>,
 }
 
+impl Simplex {
+    fn next(&self) -> (usize, Vec2) {
+        let mut min_dist = f32::MIN;
+        let mut result = (0, Vec2::ZERO);
+        for index in 0..self.points.len() {
+            let p1 = self.points[index];
+            let p2 = self
+                .points
+                .get(index + 1)
+                .copied()
+                .unwrap_or_else(|| self.points[0]);
+            let edge = p2 - p1;
+            let outward = edge.perp().normalize_or_zero();
+            let dist = p1.dot(outward);
+            if dist > min_dist {
+                result = (index, outward);
+                min_dist = dist;
+            }
+        }
+        result
+    }
+}
+
 impl From<gjk::Simplex> for Simplex {
     fn from(simplex: gjk::Simplex) -> Self {
         Self {
@@ -41,6 +64,16 @@ mod tests {
             assert_eq!(simplex1.points, expected);
             let simplex2: Simplex = gjk::Simplex::Triangle(Vec2::ZERO, Vec2::Y, Vec2::X).into();
             assert_eq!(simplex2.points, expected);
+        }
+
+        #[test]
+        fn next_returns_feature_index_and_outward_direction() {
+            let simplex = Simplex {
+                points: smallvec![Vec2::Y * 2.0, Vec2::X - Vec2::Y, -Vec2::X - Vec2::Y],
+            };
+            let (index, direction) = simplex.next();
+            assert_eq!(index, 1);
+            assert_eq!(direction.normalize(), -Vec2::Y);
         }
     }
 }
