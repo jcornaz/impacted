@@ -3,7 +3,11 @@ use core::mem;
 use glam::Vec2;
 use smallvec::{smallvec, SmallVec};
 
-use crate::gjk;
+use crate::{gjk, Contact, Support};
+
+pub(crate) fn generate_contact(difference: &impl Support, simplex: gjk::Simplex) -> Contact {
+    todo!()
+}
 
 #[derive(Debug, Clone, PartialEq)]
 struct Simplex {

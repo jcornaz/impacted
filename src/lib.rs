@@ -124,7 +124,13 @@ impl CollisionShape {
 
     #[must_use]
     pub fn contact_with(&self, other: &Self) -> Option<Contact> {
-        todo!()
+        let difference = minkowski::Difference {
+            shape1: self,
+            shape2: other,
+        };
+        let initial_axis = other.transform.position() - self.transform.position();
+        let simplex = gjk::find_simplex_enclosing_origin(&difference, initial_axis)?;
+        Some(epa::generate_contact(&difference, simplex))
     }
 }
 
