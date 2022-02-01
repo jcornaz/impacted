@@ -16,7 +16,7 @@ pub(crate) fn generate_contact(difference: &impl Support, simplex: gjk::Simplex)
         }
         simplex.insert(edge.index, support);
     }
-    panic!("Couldn't generate data");
+    panic!("Couldn't generate contact data");
 }
 
 struct Edge {
@@ -90,6 +90,8 @@ impl From<gjk::Simplex> for Simplex {
 
 #[cfg(test)]
 mod tests {
+    use approx::assert_ulps_eq;
+
     use super::*;
 
     mod simplex {
@@ -119,7 +121,7 @@ mod tests {
                 distance,
             } = simplex.closest_edge();
             assert_eq!(index, 1);
-            assert_eq!(distance, 1.0);
+            assert_ulps_eq!(distance, 1.0);
             assert_eq!(normal, -Vec2::Y);
         }
 
