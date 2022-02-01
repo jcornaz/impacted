@@ -36,26 +36,19 @@
 
 use glam::Vec2;
 
+#[allow(deprecated)]
+pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
 use self::simplex::Simplex;
 
+mod deprecated;
 mod gjk;
 mod minkowski;
 pub mod shapes;
 mod simplex;
 mod transform;
-
-/// Error returned on invalid input
-#[non_exhaustive]
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "std", derive(thiserror::Error))]
-pub enum Error {
-    /// Error returned when trying to create a [`Transform`] from a non-invertible matrix
-    #[cfg_attr(feature = "std", error("non-invertible transform"))]
-    NonInvertibleTransform,
-}
 
 /// A collision shape
 ///
