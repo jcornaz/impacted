@@ -11,8 +11,8 @@
 //!
 //! # Example
 //!
-//! ```
-//! use impacted::{CollisionShape, Transform};
+//! ```ignore
+//! use impacted::{CollisionShape, Transform, Contact};
 //!
 //! // The examples of this crate use glam.
 //! // But you may use another math library instead.
@@ -32,6 +32,12 @@
 //! // Then we can test for collision
 //! assert!(circle.is_collided_with(&rect1));
 //! assert!(!circle.is_collided_with(&rect2));
+//!
+//! // And generate contact data
+//! // (It returns `None` if there is no contact)
+//! let contact = circle.contact_with(&rect1).unwrap();
+//! assert_eq!(Vec2::from(contact.normal), -Vec2::X);
+//! assert_eq!(contact.penetration, 1.0);
 //! ```
 
 use glam::Vec2;
@@ -115,6 +121,18 @@ impl CollisionShape {
         let initial_axis = other.transform.position() - self.transform.position();
         gjk::find_simplex_enclosing_origin(&difference, initial_axis).is_some()
     }
+
+    #[must_use]
+    pub fn contact_with(&self, other: &Self) -> Option<Contact> {
+        todo!()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct Contact {
+    pub normal: [f32; 2],
+    pub penetration: f32,
 }
 
 trait Support {
