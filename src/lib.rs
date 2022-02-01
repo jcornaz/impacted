@@ -11,7 +11,8 @@
 //!
 //! # Example
 //!
-//! ```ignore
+//! ```
+//! # use approx::assert_ulps_eq;
 //! use impacted::{CollisionShape, Transform, Contact};
 //!
 //! // The examples of this crate use glam.
@@ -36,8 +37,9 @@
 //! // And generate contact data
 //! // (It returns `None` if there is no contact)
 //! let contact = circle.contact_with(&rect1).unwrap();
-//! assert_eq!(Vec2::from(contact.normal), -Vec2::X);
-//! assert_eq!(contact.penetration, 1.0);
+//! let normal: Vec2 = contact.normal.into();
+//! assert_ulps_eq!(normal, -Vec2::X);
+//! assert_ulps_eq!(contact.penetration, 1.0);
 //! ```
 
 use glam::Vec2;

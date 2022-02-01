@@ -6,7 +6,32 @@ use smallvec::{smallvec, SmallVec};
 use crate::{gjk, Contact, Support};
 
 pub(crate) fn generate_contact(difference: &impl Support, simplex: gjk::Simplex) -> Contact {
-    todo!()
+    let mut simplex: Simplex = simplex.into();
+    for _ in 0..1000 {
+        let edge = simplex.closest_edge();
+        let support = difference.support(edge.normal);
+        let penetration = support.dot(edge.normal);
+        if penetration - edge.distance <= f32::EPSILON {
+            return edge.into();
+        }
+        simplex.insert(edge.index, support);
+    }
+    panic!("Couldn't generate data");
+}
+
+struct Edge {
+    index: usize,
+    normal: Vec2,
+    distance: f32,
+}
+
+impl From<Edge> for Contact {
+    fn from(edge: Edge) -> Self {
+        Contact {
+            normal: (-edge.normal).into(),
+            penetration: edge.distance,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -15,9 +40,13 @@ struct Simplex {
 }
 
 impl Simplex {
-    fn next(&self) -> (usize, Vec2) {
-        let mut min_dist = f32::MIN;
-        let mut result = (0, Vec2::ZERO);
+    fn closest_edge(&self) -> Edge {
+        let mut closest_edge = Edge {
+            index: 0,
+            distance: f32::MAX,
+            normal: Vec2::ZERO,
+        };
+
         for index in 0..self.points.len() {
             let p1 = self.points[index];
             let p2 = self
@@ -27,13 +56,14 @@ impl Simplex {
                 .unwrap_or_else(|| self.points[0]);
             let edge = p2 - p1;
             let outward = edge.perp().normalize_or_zero();
-            let dist = p1.dot(outward);
-            if dist > min_dist {
-                result = (index, outward);
-                min_dist = dist;
+            let distance = p1.dot(outward);
+            if distance < closest_edge.distance {
+                closest_edge.index = index;
+                closest_edge.distance = distance;
+                closest_edge.normal = outward;
             }
         }
-        result
+        closest_edge
     }
 
     fn insert(&mut self, index: usize, point: Vec2) {
@@ -77,11 +107,20 @@ mod tests {
         #[test]
         fn next_returns_feature_index_and_outward_direction() {
             let simplex = Simplex {
-                points: smallvec![Vec2::Y * 2.0, Vec2::X - Vec2::Y, -Vec2::X - Vec2::Y],
+                points: smallvec![
+                    Vec2::Y * 9.0,
+                    Vec2::X * 5.0 - Vec2::Y,
+                    -Vec2::X * 5.0 - Vec2::Y
+                ],
             };
-            let (index, direction) = simplex.next();
+            let Edge {
+                index,
+                normal,
+                distance,
+            } = simplex.closest_edge();
             assert_eq!(index, 1);
-            assert_eq!(direction.normalize(), -Vec2::Y);
+            assert_eq!(distance, 1.0);
+            assert_eq!(normal, -Vec2::Y);
         }
 
         #[test]
