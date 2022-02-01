@@ -7,7 +7,7 @@ use crate::gjk;
 
 #[derive(Debug, Clone, PartialEq)]
 struct Simplex {
-    points: SmallVec<[Vec2; 7]>,
+    points: SmallVec<[Vec2; 10]>,
 }
 
 impl Simplex {
@@ -30,6 +30,10 @@ impl Simplex {
             }
         }
         result
+    }
+
+    fn insert(&mut self, index: usize, point: Vec2) {
+        self.points.insert(index + 1, point);
     }
 }
 
@@ -59,11 +63,11 @@ mod tests {
 
         #[test]
         fn starts_with_left_winding() {
-            let expected: SmallVec<[Vec2; 7]> = smallvec![Vec2::ZERO, Vec2::X, Vec2::Y];
+            let expected = [Vec2::ZERO, Vec2::X, Vec2::Y];
             let simplex1: Simplex = gjk::Simplex::Triangle(Vec2::ZERO, Vec2::X, Vec2::Y).into();
-            assert_eq!(simplex1.points, expected);
+            assert_eq!(&simplex1.points[..], &expected);
             let simplex2: Simplex = gjk::Simplex::Triangle(Vec2::ZERO, Vec2::Y, Vec2::X).into();
-            assert_eq!(simplex2.points, expected);
+            assert_eq!(&simplex2.points[..], &expected);
         }
 
         #[test]
@@ -74,6 +78,23 @@ mod tests {
             let (index, direction) = simplex.next();
             assert_eq!(index, 1);
             assert_eq!(direction.normalize(), -Vec2::Y);
+        }
+
+        #[test]
+        fn insert_point() {
+            let mut simplex = Simplex {
+                points: smallvec![Vec2::Y * 2.0, Vec2::X - Vec2::Y, -Vec2::X - Vec2::Y],
+            };
+            simplex.insert(1, -Vec2::Y);
+            assert_eq!(
+                &simplex.points[..],
+                &[
+                    Vec2::Y * 2.0,
+                    Vec2::X - Vec2::Y,
+                    -Vec2::Y,
+                    -Vec2::X - Vec2::Y
+                ]
+            );
         }
     }
 }
