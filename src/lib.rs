@@ -12,7 +12,8 @@
 //! # Example
 //!
 //! ```
-//! use impacted::{CollisionShape, Transform};
+//! # use approx::assert_ulps_eq;
+//! use impacted::{CollisionShape, Transform, Contact};
 //!
 //! // The examples of this crate use glam.
 //! // But you may use another math library instead.
@@ -32,6 +33,13 @@
 //! // Then we can test for collision
 //! assert!(circle.is_collided_with(&rect1));
 //! assert!(!circle.is_collided_with(&rect2));
+//!
+//! // And generate contact data
+//! // (It returns `None` if there is no contact)
+//! let contact = circle.contact_with(&rect1).unwrap();
+//! let normal: Vec2 = contact.normal.into();
+//! assert_ulps_eq!(normal, -Vec2::X);
+//! assert_ulps_eq!(contact.penetration, 1.0);
 //! ```
 
 use glam::Vec2;
@@ -41,13 +49,11 @@ pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
-use self::simplex::Simplex;
-
 mod deprecated;
+mod epa;
 mod gjk;
 mod minkowski;
 pub mod shapes;
-mod simplex;
 mod transform;
 
 /// A collision shape
@@ -107,7 +113,6 @@ impl CollisionShape {
     }
 
     /// Returns true if the two convex shapes geometries are overlapping
-    #[inline]
     #[must_use]
     pub fn is_collided_with(&self, other: &Self) -> bool {
         let difference = minkowski::Difference {
@@ -117,6 +122,39 @@ impl CollisionShape {
         let initial_axis = other.transform.position() - self.transform.position();
         gjk::find_simplex_enclosing_origin(&difference, initial_axis).is_some()
     }
+
+    /// Returns contact data with the other shape if they collide. Returns `None` if they don't collide.
+    ///
+    /// The normal of the contact data is pointing toward this shape.
+    /// In other words, ff this shape is moved by `contact.normal * contact.penetration`
+    /// the two shapes will no longer be inter-penetrating.
+    #[must_use]
+    pub fn contact_with(&self, other: &Self) -> Option<Contact> {
+        let difference = minkowski::Difference {
+            shape1: self,
+            shape2: other,
+        };
+        let initial_axis = other.transform.position() - self.transform.position();
+        let simplex = gjk::find_simplex_enclosing_origin(&difference, initial_axis)?;
+        Some(epa::generate_contact(&difference, simplex))
+    }
+}
+
+/// Contact data between two shapes
+///
+/// See [`CollisionShape::contact_with`]
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct Contact {
+    /// Contact normal
+    ///
+    /// This is the direction on which the first shape should be moved to resolve inter-penetration
+    /// This is also on that direction that impulse should be applied to the first shape to resolve velocities
+    pub normal: [f32; 2],
+    /// Penetration
+    ///
+    /// This is "how much" the two shapes are inter-penetrating
+    pub penetration: f32,
 }
 
 trait Support {

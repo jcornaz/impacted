@@ -26,7 +26,7 @@ If you want to pair it with a broad-phase, you may look at [bvh-arena] or [brocc
   * [x] rectangle
   * [ ] convex-hull
   * [ ] capsule
-* [ ] contact generation (EPA implementation)
+* [x] contact generation (EPA implementation)
 
 
 ## Usage example
