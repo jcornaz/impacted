@@ -7,6 +7,23 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 [release pull-request]: https://github.com/jcornaz/impacted/pulls?q=is%3Apr+is%3Aopen+label%3A%22autorelease%3A+pending%22
 
 
+## [1.1.0](https://github.com/jcornaz/impacted/compare/v1.0.0...v1.1.0) (2022-02-01)
+
+
+### Features
+
+* contact data generation ([#3](https://github.com/jcornaz/impacted/issues/3)) ([cbc9a0d](https://github.com/jcornaz/impacted/commit/cbc9a0dd9853425c77d70086b6411dbb8b055cf9))
+
+
+### Bug Fixes
+
+* consider collided shapes that have an interpenetration of exactly 0 ([cc2177a](https://github.com/jcornaz/impacted/commit/cc2177a50269920a07bd021e5a7769010242e449))
+
+
+### Deprecation
+
+* `Error` type that is not used ([0cb4b81](https://github.com/jcornaz/impacted/commit/0cb4b812bdc4b825c7ad99da13dc9b46929de7ed))
+
 ## 1.0.0 (2022-01-29)
 
 ### Features
