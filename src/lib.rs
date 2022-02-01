@@ -113,7 +113,6 @@ impl CollisionShape {
     }
 
     /// Returns true if the two convex shapes geometries are overlapping
-    #[inline]
     #[must_use]
     pub fn is_collided_with(&self, other: &Self) -> bool {
         let difference = minkowski::Difference {
@@ -124,6 +123,11 @@ impl CollisionShape {
         gjk::find_simplex_enclosing_origin(&difference, initial_axis).is_some()
     }
 
+    /// Returns contact data with the other shape if they collide. Returns `None` if they don't collide.
+    ///
+    /// The normal of the contact data is pointing toward this shape.
+    /// In other words, ff this shape is moved by `contact.normal * contact.penetration`
+    /// the two shapes will no longer be inter-penetrating.
     #[must_use]
     pub fn contact_with(&self, other: &Self) -> Option<Contact> {
         let difference = minkowski::Difference {
@@ -136,10 +140,20 @@ impl CollisionShape {
     }
 }
 
+/// Contact data between two shapes
+///
+/// See [`CollisionShape::contact_with`]
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct Contact {
+    /// Contact normal
+    ///
+    /// This is the direction on which the first shape should be moved to resolve inter-penetration
+    /// This is also on that direction that impulse should be applied to the first shape to resolve velocities
     pub normal: [f32; 2],
+    /// Penetration
+    ///
+    /// This is "how much" the two shapes are inter-penetrating
     pub penetration: f32,
 }
 
