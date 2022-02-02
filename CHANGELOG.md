@@ -24,6 +24,8 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 
 * `Error` type that is not used ([0cb4b81](https://github.com/jcornaz/impacted/commit/0cb4b812bdc4b825c7ad99da13dc9b46929de7ed))
 
+
+
 ## 1.0.0 (2022-01-29)
 
 ### Features
