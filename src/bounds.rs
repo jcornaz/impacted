@@ -48,4 +48,12 @@ impl Bounds {
     pub fn size(&self) -> Vec2 {
         self.position + self.half_extents
     }
+
+    /// Expand the bounds by increasing its size by amount along each side
+    #[must_use]
+    pub fn expand(&self, amount: Vec2) -> Self {
+        let mut expanded_bounds = *self;
+        expanded_bounds.half_extents += amount;
+        expanded_bounds
+    }
 }
