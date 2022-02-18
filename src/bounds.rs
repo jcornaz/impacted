@@ -2,27 +2,27 @@
 
 use glam::Vec2;
 
-use crate::Transform;
-
 /// Represents an axis aligned bounding box.
+#[derive(Debug, Clone, Copy)]
 pub struct Bounds {
     half_extents: Vec2,
-    transform: Transform,
+    position: Vec2,
 }
 
 impl Bounds {
     /// Creates a new bounding box from a translation and half extents
-    pub fn new(translation: impl Into<[f32; 2]>, half_extents: Vec2) -> Self {
+    #[must_use]
+    pub fn new(position: Vec2, half_extents: Vec2) -> Self {
         Bounds {
             half_extents,
-            transform: Transform::from_translation(translation),
+            position,
         }
     }
 
     /// The center of the bounding box
     #[must_use]
     pub fn center(&self) -> Vec2 {
-        self.transform.position()
+        self.position
     }
 
     /// The extents of the bounding box. This is always half of the size of the Bounds.
@@ -34,18 +34,18 @@ impl Bounds {
     /// The minimal point of the box. This is always equal to center - extents.
     #[must_use]
     pub fn min(&self) -> Vec2 {
-        self.transform.position() - self.half_extents
+        self.position - self.half_extents
     }
 
     /// The maximal point of the box. This is always equal to center + extents.
     #[must_use]
     pub fn max(&self) -> Vec2 {
-        self.transform.position() + self.half_extents
+        self.position + self.half_extents
     }
 
     /// The total size of the box. This is always twice as large as the extents.
     #[must_use]
     pub fn size(&self) -> Vec2 {
-        self.transform.position() + self.half_extents
+        self.position + self.half_extents
     }
 }
