@@ -6,7 +6,7 @@ use crate::Support;
 
 /// Geometric information about a shape
 #[non_exhaustive]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum ShapeData {
     /// A circle
     ///

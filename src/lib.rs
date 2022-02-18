@@ -138,6 +138,12 @@ impl CollisionShape {
         let simplex = gjk::find_simplex_enclosing_origin(&difference, initial_axis)?;
         Some(epa::generate_contact(&difference, simplex))
     }
+
+    /// Returns the shape data of the collider
+    #[must_use]
+    pub fn shape_data(&self) -> ShapeData {
+        self.data
+    }
 }
 
 /// Contact data between two shapes
