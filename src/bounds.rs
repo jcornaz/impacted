@@ -46,7 +46,7 @@ impl Bounds {
     /// The total size of the box. This is always twice as large as the extents.
     #[must_use]
     pub fn size(&self) -> Vec2 {
-        self.position + self.half_extents
+        self.half_extents * 2.0
     }
 
     /// Expand the bounds by increasing its size by amount along each side
