@@ -145,11 +145,11 @@ impl CollisionShape {
     #[must_use]
     pub fn bounds(&self) -> Bounds {
         let half_extents = match self.data {
-            ShapeData::Circle(circle) => Vec2::new(circle.radius(), circle.radius()),
+            ShapeData::Circle(circle) => [circle.radius(), circle.radius()],
             ShapeData::Rectangle(rectangle) => rectangle.half_extents(),
         };
 
-        Bounds::new(self.transform.position(), half_extents)
+        Bounds::new(self.transform.position(), half_extents.into())
     }
 
     /// Returns the shape data of the collider
