@@ -42,7 +42,6 @@
 //! assert_ulps_eq!(contact.penetration, 1.0);
 //! ```
 
-use bounds::Bounds;
 use glam::Vec2;
 
 #[allow(deprecated)]
@@ -50,7 +49,6 @@ pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
-pub mod bounds;
 mod deprecated;
 mod epa;
 mod gjk;
@@ -139,17 +137,6 @@ impl CollisionShape {
         let initial_axis = other.transform.position() - self.transform.position();
         let simplex = gjk::find_simplex_enclosing_origin(&difference, initial_axis)?;
         Some(epa::generate_contact(&difference, simplex))
-    }
-
-    /// Returns the world space bounding box of the collider
-    #[must_use]
-    pub fn bounds(&self) -> Bounds {
-        let half_extents = match self.data {
-            ShapeData::Circle(circle) => Vec2::new(circle.radius(), circle.radius()),
-            ShapeData::Rectangle(rectangle) => rectangle.half_extents().into(),
-        };
-
-        Bounds::new(self.transform.position(), half_extents)
     }
 
     /// Returns the shape data of the collider
