@@ -141,8 +141,8 @@ impl CollisionShape {
 
     /// Returns the shape data of the collider
     #[must_use]
-    pub fn shape_data(&self) -> ShapeData {
-        self.data
+    pub fn shape_data(&self) -> &ShapeData {
+        &self.data
     }
 }
 
