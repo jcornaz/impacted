@@ -40,6 +40,12 @@ impl Circle {
     pub fn new(radius: f32) -> Self {
         Self { radius }
     }
+
+    /// Returns the radius of the circle
+    #[must_use]
+    pub fn radius(&self) -> f32 {
+        self.radius
+    }
 }
 
 impl From<Circle> for ShapeData {
@@ -76,6 +82,12 @@ impl Rectangle {
         Self {
             half_extents: Vec2::new(width * 0.5, height * 0.5).abs(),
         }
+    }
+
+    /// Returns the half width and height of the rectangle
+    #[must_use]
+    pub fn half_extents(&self) -> [f32; 2] {
+        self.half_extents.into()
     }
 }
 
