@@ -86,8 +86,8 @@ impl Rectangle {
 
     /// Returns the half width and height of the rectangle
     #[must_use]
-    pub fn half_extents(&self) -> Vec2 {
-        self.half_extents
+    pub fn half_extents(&self) -> [f32; 2] {
+        self.half_extents.into()
     }
 }
 
