@@ -16,6 +16,10 @@ pub enum ShapeData {
     ///
     /// See [`Rectangle`]
     Rectangle(Rectangle),
+    /// A segment
+    ///
+    /// See [`Segment`]
+    Segment(Segment),
 }
 
 impl Support for ShapeData {
@@ -23,6 +27,7 @@ impl Support for ShapeData {
         match self {
             ShapeData::Circle(circle) => circle.support(direction),
             ShapeData::Rectangle(rect) => rect.support(direction),
+            ShapeData::Segment(segment) => segment.support(direction),
         }
     }
 }
@@ -125,6 +130,12 @@ impl Segment {
             p1: p1.into().into(),
             p2: p2.into().into(),
         }
+    }
+}
+
+impl From<Segment> for ShapeData {
+    fn from(segment: Segment) -> Self {
+        Self::Segment(segment)
     }
 }
 
