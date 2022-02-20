@@ -7,6 +7,14 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 [release pull-request]: https://github.com/jcornaz/impacted/pulls?q=is%3Apr+is%3Aopen+label%3A%22autorelease%3A+pending%22
 
 
+## [1.3.0](https://github.com/jcornaz/impacted/compare/v1.2.0...v1.3.0) (2022-02-20)
+
+
+### Features
+
+* add interop with the crate `bvh-arena` ([#13](https://github.com/jcornaz/impacted/issues/13)) ([c53d308](https://github.com/jcornaz/impacted/commit/c53d308143a5da9b0478bed05010e2bc6aed54d1))
+* segment collision shape ([#11](https://github.com/jcornaz/impacted/issues/11)) ([17c8de5](https://github.com/jcornaz/impacted/commit/17c8de5da5068d129ead93c47d3f28a18281738e))
+
 ## [1.2.0](https://github.com/jcornaz/impacted/compare/v1.1.0...v1.2.0) (2022-02-19)
 
 
