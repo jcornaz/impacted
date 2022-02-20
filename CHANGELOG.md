@@ -12,7 +12,8 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 
 ### Features
 
-* allow to access `shape_data` information from `CollisionShape` ([#7](https://github.com/jcornaz/impacted/issues/7)) ([cc60f4e](https://github.com/jcornaz/impacted/commit/cc60f4eab816fd072d2fd1c60d8b7491d82f06c9))
+* give access to `shape_data` information from `CollisionShape` ([#7](https://github.com/jcornaz/impacted/issues/7)) ([cc60f4e](https://github.com/jcornaz/impacted/commit/cc60f4eab816fd072d2fd1c60d8b7491d82f06c9))
+
 
 ## [1.1.0](https://github.com/jcornaz/impacted/compare/v1.0.0...v1.1.0) (2022-02-01)
 
