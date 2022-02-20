@@ -22,6 +22,7 @@ bevy-06 = ["bevy-transform-06", "bevy-ecs-06"]
 # Public
 bevy-transform-06 = { package = "bevy_transform", version = "0.6.0", default-features = false, optional = true }
 bevy-ecs-06 = { package = "bevy_ecs", version = "0.6.0", default-features = false, optional = true }
+bvh-arena = { version = "1.0", default-features = false, optional = true }
 
 # Private
 glam = { version = "0.20.2", default-features = false, features = ["libm"] }
