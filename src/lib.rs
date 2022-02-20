@@ -95,6 +95,13 @@ impl CollisionShape {
         shapes::Rectangle::new(width, height).into()
     }
 
+    /// Create a segment from two points
+    #[inline]
+    #[must_use]
+    pub fn new_segment(p1: impl Into<[f32; 2]>, p2: impl Into<[f32; 2]>) -> Self {
+        shapes::Segment::new(p1, p2).into()
+    }
+
     /// Set the transform (translation, rotation and scale)
     ///
     /// This is equivalent to [`set_transform`](Self::set_transform), but in a builder style,

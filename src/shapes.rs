@@ -16,6 +16,10 @@ pub enum ShapeData {
     ///
     /// See [`Rectangle`]
     Rectangle(Rectangle),
+    /// A segment
+    ///
+    /// See [`Segment`]
+    Segment(Segment),
 }
 
 impl Support for ShapeData {
@@ -23,6 +27,7 @@ impl Support for ShapeData {
         match self {
             ShapeData::Circle(circle) => circle.support(direction),
             ShapeData::Rectangle(rect) => rect.support(direction),
+            ShapeData::Segment(segment) => segment.support(direction),
         }
     }
 }
@@ -111,6 +116,39 @@ impl Support for Rectangle {
     }
 }
 
+/// A segment
+#[derive(Debug, Clone)]
+pub struct Segment {
+    p1: Vec2,
+    p2: Vec2,
+}
+
+impl Segment {
+    /// Returns a new segment
+    pub fn new(p1: impl Into<[f32; 2]>, p2: impl Into<[f32; 2]>) -> Self {
+        Self {
+            p1: p1.into().into(),
+            p2: p2.into().into(),
+        }
+    }
+}
+
+impl From<Segment> for ShapeData {
+    fn from(segment: Segment) -> Self {
+        Self::Segment(segment)
+    }
+}
+
+impl Support for Segment {
+    fn support(&self, direction: Vec2) -> Vec2 {
+        if self.p1.dot(direction) > self.p2.dot(direction) {
+            self.p1
+        } else {
+            self.p2
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -149,5 +187,14 @@ mod tests {
                 .length_squared(),
             2.0
         );
+    }
+
+    #[test]
+    fn line() {
+        let segment = Segment::new(Vec2::ZERO, Vec2::X * 2.0);
+        assert_eq!(segment.support(Vec2::X), Vec2::X * 2.0);
+        assert_eq!(segment.support(Vec2::X + Vec2::X), Vec2::X * 2.0);
+        assert_eq!(segment.support(-Vec2::X), Vec2::ZERO);
+        assert_eq!(segment.support(-Vec2::X - Vec2::X), Vec2::ZERO);
     }
 }
