@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 export RUSTFLAGS='-D warnings'
 export RUSTDOCFLAGS='-D warnings'
