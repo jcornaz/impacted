@@ -43,7 +43,7 @@ let mut rect = CollisionShape::new_rectangle(4.0, 4.0)
     .with_transform(Transform::from_translation(Vec2::new(2.0, 0.0)));
 
 // Test for collision
-assert!(circle.is_collided_with(&rect1));
+assert!(circle.is_collided_with(&rect));
 ```
 
 You may also look in the [examples](https://github.com/jcornaz/impacted/tree/main/examples) directory
