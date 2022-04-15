@@ -58,7 +58,7 @@ jobs:
           override: true
           components: clippy, rustfmt
       - run: cargo fmt --all -- --check
-      - run: cargo clippy --all-features
+      - run: cargo clippy --all-features --all-targets
 
   documentation:
     runs-on: ubuntu-latest
@@ -110,7 +110,7 @@ jobs:
           release-type: rust
           command: release-pr
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"perf","section":"Performance","hidden":false},{"type":"docs","section":"Documentation","hidden":false}]'
-          
+
   release:
     needs: [test, documentation, release-pr]
     if: ${{ !needs.release-pr.outputs.pr }}
@@ -122,15 +122,15 @@ jobs:
           toolchain: stable
           override: true
           profile: minimal
-          
+
       - run: cargo publish --dry-run
-      
+
       - uses: google-github-actions/release-please-action@v3.1
         id: release
         with:
           release-type: rust
           command: github-release
-          
+
       - run: cargo publish
         if: steps.release.outputs.release_created
         env:

@@ -1,6 +1,7 @@
 #![deny(future_incompatible)]
 #![warn(nonstandard_style, rust_2018_idioms, missing_docs, clippy::pedantic)]
 #![deny(unsafe_code)]
+#![allow(clippy::wildcard_imports)]
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 

@@ -130,6 +130,7 @@ mod tests {
     use glam::Vec2;
 
     use super::*;
+    use approx::assert_ulps_eq;
 
     #[test]
     fn transformed_shape_support() {
@@ -143,6 +144,6 @@ mod tests {
             .with_transform(transform)
             .support(Vec2::X);
         assert!((3.5..4.0).contains(&support_point.x));
-        assert_eq!(2.0, support_point.y);
+        assert_ulps_eq!(2.0, support_point.y);
     }
 }

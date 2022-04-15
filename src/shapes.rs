@@ -153,6 +153,8 @@ impl Support for Segment {
 mod tests {
     use super::*;
 
+    use approx::assert_ulps_eq;
+
     #[test]
     fn circle() {
         assert_eq!(Circle::new(2.0).support(Vec2::X), Vec2::X * 2.0);
@@ -162,7 +164,7 @@ mod tests {
 
     #[test]
     fn circle_with_invalid_direction() {
-        assert_eq!(
+        assert_ulps_eq!(
             Circle::new(1.)
                 .support(Vec2::splat(f32::NAN))
                 .length_squared(),
@@ -181,7 +183,7 @@ mod tests {
 
     #[test]
     fn rectangle_with_invalid_direction() {
-        assert_eq!(
+        assert_ulps_eq!(
             Rectangle::new(2., 2.)
                 .support(Vec2::splat(f32::NAN))
                 .length_squared(),
