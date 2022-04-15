@@ -2,11 +2,17 @@ tasks:
   - before: rustup component add clippy
     init: |
       cargo update
-      cargo clippy --all-features
+      cargo clippy --all-features --all-targets
       cargo doc --all-features --no-deps
       cargo test --tests --all-features
-      cargo test --tests --features bevy-06
-    command: cargo watch -x 'test --tests' --features bevy-06
+    command: cargo watch -x 'test --all-features' -x 'clippy --all-targets --all-features' -x 'doc --all-features --no-deps'
+
+vscode:
+  extensions:
+    - belfz.search-crates-io
+    - matklad.rust-analyzer
+    - serayuzgur.crates
+    - bungcip.better-toml
 
 github:
   prebuilds:
