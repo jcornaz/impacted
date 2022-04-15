@@ -5,6 +5,9 @@ use crate::{CollisionShape, Support};
 #[cfg(feature = "bevy-transform-06")]
 mod bevy_transform_06;
 
+#[cfg(feature = "bevy-transform-07")]
+mod bevy_transform_07;
+
 /// Transform that can be used for a [`CollisionShape`]
 #[derive(Debug, Clone)]
 pub struct Transform {
