@@ -72,11 +72,13 @@ impacted = { version = "1.0.0", features = ["bevy-06"] }
 ## Cargo features
 
 * `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
+* `bvh-arena` Interoperability with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
+* `bevy-07` All [bevy](https://bevyengine.org) 0.7 interop (alias for `["bevy-transform-07", "bevy-ecs-07"]`)
 * `bevy-06` All [bevy](https://bevyengine.org) 0.6 interop (alias for `["bevy-transform-06", "bevy-ecs-06"]`)
 * `bevy-transform-07` Interoperability with [bevy_transform](https://crates.io/crates/bevy_transform) 0.7
 * `bevy-transform-06` Interoperability with [bevy_transform](https://crates.io/crates/bevy_transform) 0.6
+* `bevy-ecs-07` Interoperability with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.7
 * `bevy-ecs-06` Interoperability with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.6
-* `bvh-arena` Interoperability with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
 
 
 ## MSRV

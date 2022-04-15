@@ -181,3 +181,8 @@ trait Support {
 impl bevy_ecs_06::prelude::Component for CollisionShape {
     type Storage = bevy_ecs_06::component::SparseStorage;
 }
+
+#[cfg(feature = "bevy-ecs-07")]
+impl bevy_ecs_07::prelude::Component for CollisionShape {
+    type Storage = bevy_ecs_07::component::SparseStorage;
+}

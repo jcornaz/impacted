@@ -2,7 +2,7 @@ use std::f32::consts;
 
 use bevy::input::system::exit_on_esc_system;
 use bevy::prelude::*;
-use bevy_transform_06::TransformSystem;
+use bevy::transform::TransformSystem;
 
 use impacted::CollisionShape;
 
