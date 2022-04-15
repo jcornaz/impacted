@@ -12,13 +12,14 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 
 ### Features
 
-* interoperabiliby with bevy transform 0.7 ([1c394f7](https://github.com/jcornaz/impacted/commit/1c394f795e2d47d5cf6f8479237d77491bbe6674))
+* interoperability with bevy transform 0.7 ([1c394f7](https://github.com/jcornaz/impacted/commit/1c394f795e2d47d5cf6f8479237d77491bbe6674))
 * interoperability with bevy ecs 0.7 ([8bff495](https://github.com/jcornaz/impacted/commit/8bff495bd18be4894d2ce05136bc67ec7ba5ba3c))
 
 
 ### Documentation
 
 * **readme:** fix example ([692d4f8](https://github.com/jcornaz/impacted/commit/692d4f8815b575b06217e25fbf34142d3041d817))
+
 
 ## [1.3.0](https://github.com/jcornaz/impacted/compare/v1.2.0...v1.3.0) (2022-02-20)
 
