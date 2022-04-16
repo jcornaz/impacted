@@ -35,10 +35,16 @@ jobs:
 
       - run: cargo test --no-default-features
       - run: cargo test --no-default-features --features std
+      - run: cargo test --no-default-features --features bevy-transform-07
+      - run: cargo test --no-default-features --features bevy-ecs-07
+      - run: cargo test --no-default-features --features bevy-07
       - run: cargo test --no-default-features --features bevy-transform-06
       - run: cargo test --no-default-features --features bevy-ecs-06
       - run: cargo test --no-default-features --features bevy-06
       - run: cargo test
+      - run: cargo test --features bevy-transform-07
+      - run: cargo test --features bevy-ecs-07
+      - run: cargo test --features bevy-07
       - run: cargo test --features bevy-transform-06
       - run: cargo test --features bevy-ecs-06
       - run: cargo test --features bevy-06
