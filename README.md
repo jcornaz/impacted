@@ -55,16 +55,17 @@ for more complete/concrete usage examples (e.g. using the bevy engine)
 <!--- x-release-please-start-version --->
 ```toml
 [dependencies]
-impacted = "1.0.0"
+impacted = "1.4.0"
 ```
 <!--- x-release-please-end-version --->
 
 
 ### For bevy users
+
 <!--- x-release-please-start-version --->
 ```toml
 [dependencies]
-impacted = { version = "1.0.0", features = ["bevy-06"] }
+impacted = { version = "1.4.0", features = ["bevy-07"] }
 ```
 <!--- x-release-please-end-version --->
 
