@@ -1,5 +1,13 @@
 {
   "extends": [
-    "config:base"
-  ]
+    "config:base", ":automergePatch", "schedule:weekends", ":semanticCommitTypeAll(chore)"
+  ],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+     {
+       "matchPackagePatterns": ["^bevy-.*"],
+       "groupName": "bevy",
+       "enabled": false
+     }
+   ]
 }
