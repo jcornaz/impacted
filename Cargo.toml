@@ -28,14 +28,14 @@ bevy-ecs-07 = { package = "bevy_ecs", version = "0.7.0", default-features = fals
 bvh-arena = { version = "1.0", default-features = false, optional = true }
 
 # Private
-glam = { version = "0.20.2", default-features = false, features = ["libm"] }
+glam = { version = "0.20.5", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
 smallvec = { version = "1.8", default-features = false }
 
 [dev-dependencies]
 rstest = "0.12.0"
 bevy = { version = "0.7.0", default-features = false, features = ["bevy_winit", "render", "x11"]}
-glam = { version = "0.20.2", default-features = false, features = ["libm", "approx"] }
+glam = { version = "0.20.5", default-features = false, features = ["libm", "approx"] }
 approx = "0.5.1"
 
 [build-dependencies]
