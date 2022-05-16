@@ -7,6 +7,13 @@ Unreleased changes (if any) can be found in the latest [release pull-request].
 [release pull-request]: https://github.com/jcornaz/impacted/pulls?q=is%3Apr+is%3Aopen+label%3A%22autorelease%3A+pending%22
 
 
+### [1.4.1](https://github.com/jcornaz/impacted/compare/v1.4.0...v1.4.1) (2022-05-16)
+
+
+### Documentation
+
+* **readme:** update version ([cc89220](https://github.com/jcornaz/impacted/commit/cc892205a842ebc0fccb16127dca19f75f0ba9e1))
+
 ## [1.4.0](https://github.com/jcornaz/impacted/compare/v1.3.0...v1.4.0) (2022-04-15)
 
 
