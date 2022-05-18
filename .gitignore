@@ -12,3 +12,6 @@
 .DS_Store
 .trashes
 *.db
+
+# NodeJS tools
+/node_modules
