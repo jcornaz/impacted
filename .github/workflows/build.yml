@@ -28,6 +28,7 @@ jobs:
           profile: minimal
           target: thumbv6m-none-eabi
 
+      - run: cargo update -p async-global-executor --precise 2.0.4
       - run: cargo check --all-targets
 
       - name: Check no_std
@@ -60,7 +61,7 @@ jobs:
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
           override: true
           components: clippy, rustfmt
       - run: cargo fmt --all -- --check
