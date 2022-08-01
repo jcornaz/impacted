@@ -35,22 +35,19 @@ jobs:
         run: cargo check --no-default-features --target thumbv6m-none-eabi
 
       - run: cargo test --no-default-features
+      - run: cargo test
       - run: cargo test --no-default-features --features std
+      - run: cargo test --no-default-features --features bvh-arena
+      - run: cargo test --no-default-features --features bevy-transform-08
+      - run: cargo test --no-default-features --features bevy-ecs-08
+      - run: cargo test --no-default-features --features bevy-08
       - run: cargo test --no-default-features --features bevy-transform-07
       - run: cargo test --no-default-features --features bevy-ecs-07
       - run: cargo test --no-default-features --features bevy-07
       - run: cargo test --no-default-features --features bevy-transform-06
       - run: cargo test --no-default-features --features bevy-ecs-06
       - run: cargo test --no-default-features --features bevy-06
-      - run: cargo test
-      - run: cargo test --features bevy-transform-07
-      - run: cargo test --features bevy-ecs-07
-      - run: cargo test --features bevy-07
-      - run: cargo test --features bevy-transform-06
-      - run: cargo test --features bevy-ecs-06
-      - run: cargo test --features bevy-06
       - run: cargo test --all-features
-      - run: cargo test --all-features -- --ignored
 
   code-style:
     runs-on: ubuntu-latest
