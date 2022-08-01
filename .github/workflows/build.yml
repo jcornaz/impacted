@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  RUST_VERSION: 1.58.1
+  RUST_VERSION: 1.60
 
 jobs:
   test:

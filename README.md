@@ -90,7 +90,7 @@ impacted = { version = "1", features = ["bevy-07"] }
 
 ## MSRV
 
-The minimum supported rust version is currently: `1.58`
+The minimum supported rust version is currently: `1.60`
 
 It may be increased to a newer stable version in a minor release.
 
