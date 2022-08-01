@@ -12,11 +12,13 @@ copyleft = "deny"
 allow = [
   "Unlicense",
   "MIT",
+  "MIT-0",
   "Apache-2.0",
   "Zlib",
   "BSD-3-Clause",
   "CC0-1.0",
   "ISC",
+  "Unicode-DFS-2016",
 ]
 
 
