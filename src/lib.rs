@@ -186,3 +186,8 @@ impl bevy_ecs_06::prelude::Component for CollisionShape {
 impl bevy_ecs_07::prelude::Component for CollisionShape {
     type Storage = bevy_ecs_07::component::SparseStorage;
 }
+
+#[cfg(feature = "bevy-ecs-08")]
+impl bevy_ecs_08::prelude::Component for CollisionShape {
+    type Storage = bevy_ecs_08::component::SparseStorage;
+}

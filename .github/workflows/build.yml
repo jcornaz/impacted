@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  RUST_VERSION: 1.58.1
+  RUST_VERSION: 1.62.0
 
 jobs:
   test:
@@ -28,29 +28,25 @@ jobs:
           profile: minimal
           target: thumbv6m-none-eabi
 
-      - run: cargo update -p async-global-executor --precise 2.0.4
       - run: cargo check --all-targets
 
       - name: Check no_std
         run: cargo check --no-default-features --target thumbv6m-none-eabi
 
       - run: cargo test --no-default-features
+      - run: cargo test
       - run: cargo test --no-default-features --features std
+      - run: cargo test --no-default-features --features bvh-arena
+      - run: cargo test --no-default-features --features bevy-transform-08
+      - run: cargo test --no-default-features --features bevy-ecs-08
+      - run: cargo test --no-default-features --features bevy-08
       - run: cargo test --no-default-features --features bevy-transform-07
       - run: cargo test --no-default-features --features bevy-ecs-07
       - run: cargo test --no-default-features --features bevy-07
       - run: cargo test --no-default-features --features bevy-transform-06
       - run: cargo test --no-default-features --features bevy-ecs-06
       - run: cargo test --no-default-features --features bevy-06
-      - run: cargo test
-      - run: cargo test --features bevy-transform-07
-      - run: cargo test --features bevy-ecs-07
-      - run: cargo test --features bevy-07
-      - run: cargo test --features bevy-transform-06
-      - run: cargo test --features bevy-ecs-06
-      - run: cargo test --features bevy-06
       - run: cargo test --all-features
-      - run: cargo test --all-features -- --ignored
 
   code-style:
     runs-on: ubuntu-latest
