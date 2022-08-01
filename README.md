@@ -72,15 +72,21 @@ impacted = { version = "1", features = ["bevy-07"] }
 
 ## Cargo features
 
-* `std` (enabled by default) Allow to use the standard library (need to be disabled for `no_std` crates)
-* `bvh-arena` Interoperability with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
-* `bevy-07` All [bevy](https://bevyengine.org) 0.7 interop (alias for `["bevy-transform-07", "bevy-ecs-07"]`)
-* `bevy-06` All [bevy](https://bevyengine.org) 0.6 interop (alias for `["bevy-transform-06", "bevy-ecs-06"]`)
-* `bevy-transform-07` Interoperability with [bevy_transform](https://crates.io/crates/bevy_transform) 0.7
-* `bevy-transform-06` Interoperability with [bevy_transform](https://crates.io/crates/bevy_transform) 0.6
-* `bevy-ecs-07` Interoperability with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.7
-* `bevy-ecs-06` Interoperability with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.6
+| Feature             | Description                                                                       |
+|---------------------|-----------------------------------------------------------------------------------|
+| `std` (default)     | Allow to use rust the standard library (need to be disabled for `no_std` crates)  |
+| `bvh-arena`         | Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes |
+| `bevy-ecs-08`       | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.8                |
+| `bevy-transform-08` | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.8    |
+| `bevy-08`           | All bevy 0.8 integrations (alias for `["bevy-ecs-08", "bevy-transform-08"]`)      |
+| `bevy-ecs-07`       | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.7                |
+| `bevy-transform-07` | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.7    |
+| `bevy-07`           | All bevy 0.7 integrations (alias for `["bevy-ecs-07", "bevy-transform-07"]`)      |
+| `bevy-ecs-06`       | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.6                |
+| `bevy-transform-06` | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.6    |
+| `bevy-06`           | All bevy 0.6 integrations (alias for `["bevy-ecs-06", "bevy-transform-06"]`)      |
 
+*Feature flags not listed in the table above are not part of the public API and are subject to breaking changes*
 
 ## MSRV
 

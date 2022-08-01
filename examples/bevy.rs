@@ -1,6 +1,5 @@
 use std::f32::consts;
 
-use bevy::input::system::exit_on_esc_system;
 use bevy::prelude::*;
 use bevy::transform::TransformSystem;
 
@@ -16,7 +15,6 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(startup)
         .add_system(control_shape)
-        .add_system(exit_on_esc_system)
         // Collision detection
         .add_system_to_stage(
             CoreStage::PostUpdate,
@@ -30,7 +28,7 @@ fn main() {
 /// Initialize the "game"
 fn startup(mut commands: Commands) {
     // Camera
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    commands.spawn_bundle(Camera2dBundle::default());
 
     // Left shape (controlled)
     commands
