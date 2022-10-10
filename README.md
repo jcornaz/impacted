@@ -6,14 +6,12 @@
 [![Build](https://img.shields.io/github/workflow/status/jcornaz/impacted/build)](https://github.com/jcornaz/impacted/actions)
 
 
-2d collision test for game-development in rust (with optional integration and example for bevy)
+2d collision test for game-development in rust
 
-This provides a low-level "narrow-phase" collision-detection logic,
-with some integration for the [bevy] game engine (behind feature flag).
+This provides a low-level "narrow-phase" collision-detection logic.
 
 If you want to pair it with a broad-phase, you may look at [bvh-arena] or [broccoli].
 
-[bevy]: https://bevyengine.org
 [bvh-arena]: https://github.com/jcornaz/bvh-arena
 [broccoli]: https://github.com/tiby312/broccoli
 
@@ -47,28 +45,14 @@ assert!(circle.is_collided_with(&rect));
 ```
 
 You may also look in the [examples](https://github.com/jcornaz/impacted/tree/main/examples) directory
-for more complete/concrete usage examples (e.g. using the bevy engine)
+for more complete/concrete usage examples.
 
 
 ## Installation
 
-<!--- x-release-please-start-version --->
-```toml
-[dependencies]
-impacted = "1"
+```sh
+cargo add impacted
 ```
-<!--- x-release-please-end-version --->
-
-
-### For bevy users
-
-<!--- x-release-please-start-version --->
-```toml
-[dependencies]
-impacted = { version = "1", features = ["bevy-07"] }
-```
-<!--- x-release-please-end-version --->
-
 
 ## Cargo features
 
