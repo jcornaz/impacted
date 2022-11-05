@@ -1,3 +1,4 @@
+use bevy_math_07::{Quat, Vec3};
 use bevy_transform_07::prelude::GlobalTransform;
 
 #[cfg(feature = "bevy-transform-07")] // Repeated to appear in the docs
@@ -12,11 +13,11 @@ impl From<GlobalTransform> for crate::Transform {
     }
 }
 
-fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
+fn angle_2d_from_quat(quat: Quat) -> f32 {
     if quat.is_near_identity() {
         return 0.0;
     }
-    let projected = quat.to_scaled_axis().project_onto(glam::Vec3::Z);
+    let projected = quat.to_scaled_axis().project_onto(Vec3::Z);
     let angle = projected.length();
     if projected.z < 0.0 {
         -angle
@@ -27,7 +28,6 @@ fn angle_2d_from_quat(quat: glam::Quat) -> f32 {
 
 #[cfg(all(test, feature = "std"))]
 mod angle_from_quat {
-    use glam::{Quat, Vec3};
     use rstest::rstest;
 
     use super::*;
