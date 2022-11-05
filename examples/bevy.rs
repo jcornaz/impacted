@@ -3,7 +3,8 @@ use std::f32::consts;
 use bevy::prelude::*;
 use bevy::transform::TransformSystem;
 
-use impacted::CollisionShape;
+#[derive(Debug, Component, Deref, DerefMut)]
+struct CollisionShape(impacted::CollisionShape);
 
 /// As simple "tag" component to mark the entity controlled by keyboard
 /// (Nothing specific about collision detection)
@@ -44,7 +45,7 @@ fn startup(mut commands: Commands) {
         })
         .insert_bundle((
             // Add the collision shape
-            CollisionShape::new_rectangle(100.0, 100.0),
+            CollisionShape(impacted::CollisionShape::new_rectangle(100.0, 100.0)),
             // Mark this shape as the one being controlled (nothing specific to collision detection)
             Controlled,
         ));
@@ -62,7 +63,7 @@ fn startup(mut commands: Commands) {
             ..Default::default()
         })
         // Add the collision shape
-        .insert(CollisionShape::new_rectangle(100.0, 100.0));
+        .insert(CollisionShape(impacted::CollisionShape::new_rectangle(100.0, 100.0)));
 }
 
 /// Update the `CollisionShape` transform if the `GlobalTransform` has changed
@@ -70,9 +71,30 @@ fn update_shape_transforms(
     mut shapes: Query<(&mut CollisionShape, &GlobalTransform), Changed<GlobalTransform>>,
 ) {
     for (mut shape, transform) in shapes.iter_mut() {
-        shape.set_transform(*transform);
+        let (scale, rotation, translation) = transform.to_scale_rotation_translation();
+        shape.set_transform(
+            impacted::Transform::from_scale_angle_translation(
+                scale.truncate(),
+                angle_2d_from_quat(rotation),
+                translation.truncate(),
+            )
+        );
     }
 }
+
+fn angle_2d_from_quat(quat: Quat) -> f32 {
+    if quat.is_near_identity() {
+        return 0.0;
+    }
+    let projected = quat.to_scaled_axis().project_onto(Vec3::Z);
+    let angle = projected.length();
+    if projected.z < 0.0 {
+        -angle
+    } else {
+        angle
+    }
+}
+
 
 /// Detect collision and update shape colors
 ///

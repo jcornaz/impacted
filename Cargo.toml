@@ -54,4 +54,3 @@ rustc_version = "0.4.0"
 
 [[example]]
 name = "bevy"
-required-features = ["bevy-08"]
