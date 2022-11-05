@@ -63,7 +63,9 @@ fn startup(mut commands: Commands) {
             ..Default::default()
         })
         // Add the collision shape
-        .insert(CollisionShape(impacted::CollisionShape::new_rectangle(100.0, 100.0)));
+        .insert(CollisionShape(impacted::CollisionShape::new_rectangle(
+            100.0, 100.0,
+        )));
 }
 
 /// Update the `CollisionShape` transform if the `GlobalTransform` has changed
@@ -72,13 +74,11 @@ fn update_shape_transforms(
 ) {
     for (mut shape, transform) in shapes.iter_mut() {
         let (scale, rotation, translation) = transform.to_scale_rotation_translation();
-        shape.set_transform(
-            impacted::Transform::from_scale_angle_translation(
-                scale.truncate(),
-                angle_2d_from_quat(rotation),
-                translation.truncate(),
-            )
-        );
+        shape.set_transform(impacted::Transform::from_scale_angle_translation(
+            scale.truncate(),
+            angle_2d_from_quat(rotation),
+            translation.truncate(),
+        ));
     }
 }
 
@@ -94,7 +94,6 @@ fn angle_2d_from_quat(quat: Quat) -> f32 {
         angle
     }
 }
-
 
 /// Detect collision and update shape colors
 ///
