@@ -45,7 +45,7 @@ bevy-math-06 = { package = "bevy_math", version = "0.6.0", default-features = fa
 # Private
 glam = { version = "0.20.5", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
-smallvec = { version = "1.9", default-features = false }
+smallvec = { version = "1.10", default-features = false }
 
 [dev-dependencies]
 rstest = "0.15.0"
