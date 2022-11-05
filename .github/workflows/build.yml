@@ -14,40 +14,42 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     env:
       RUSTFLAGS: "-D warnings"
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ env.RUST_VERSION }}
           override: true
           profile: minimal
           target: thumbv6m-none-eabi
-
-      - run: cargo check --all-targets
-
-      - name: Check no_std
-        run: cargo check --no-default-features --target thumbv6m-none-eabi
-
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --no-default-features --target thumbv6m-none-eabi
       - run: cargo test --no-default-features
       - run: cargo test
-      - run: cargo test --no-default-features --features std
-      - run: cargo test --no-default-features --features bvh-arena
-      - run: cargo test --no-default-features --features bevy-transform-08
-      - run: cargo test --no-default-features --features bevy-ecs-08
-      - run: cargo test --no-default-features --features bevy-08
-      - run: cargo test --no-default-features --features bevy-transform-07
-      - run: cargo test --no-default-features --features bevy-ecs-07
-      - run: cargo test --no-default-features --features bevy-07
-      - run: cargo test --no-default-features --features bevy-transform-06
-      - run: cargo test --no-default-features --features bevy-ecs-06
-      - run: cargo test --no-default-features --features bevy-06
-      - run: cargo test --all-features
 
+  test-bevy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RUSTFLAGS: "-D warnings"
+    strategy:
+      matrix:
+        bevy: ['06', '07', '08']
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+          profile: minimal
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --features bevy-ecs-${{ matrix.bevy }}
+      - run: cargo test --features bevy-transform-${{ matrix.bevy }}
+      - run: cargo test --features bevy-${{ matrix.bevy }}
+  
   code-style:
     runs-on: ubuntu-latest
     env:
@@ -103,7 +105,7 @@ jobs:
 
   release:
     if: ${{ github.event_name != 'pull_request' }}
-    needs: [test, documentation]
+    needs: [test, test-bevy, documentation]
     environment: release
     runs-on: ubuntu-latest
     steps:
