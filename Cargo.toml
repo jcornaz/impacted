@@ -49,7 +49,7 @@ smallvec = { version = "1.10", default-features = false }
 
 [dev-dependencies]
 rstest = "0.15.0"
-bevy = { version = "0.8.0", default-features = false, features = ["bevy_winit", "render", "x11"]}
+bevy = { version = "0.8.0", default-features = false, features = ["bevy_winit", "render", "x11", "bevy_asset"]}
 glam = { version = "0.22.0", default-features = false, features = ["libm", "approx"] }
 approx = "0.5.1"
 
