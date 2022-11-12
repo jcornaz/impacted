@@ -74,7 +74,7 @@ cargo add impacted
 
 ## MSRV
 
-The minimum supported rust version is currently: `1.62`
+The minimum supported rust version is currently: `1.65`
 
 It may be increased to a newer stable version in a minor release.
 
