@@ -16,12 +16,14 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(startup)
         .add_system(control_shape)
-        // Collision detection
         .add_system_to_stage(
             CoreStage::PostUpdate,
-            update_shape_transforms // First update transforms
-                .chain(update_color) // Then update the colors
+            update_shape_transforms // Update the transforms
                 .after(TransformSystem::TransformPropagate), // Better to consider the up-to-date transforms
+        )
+        .add_system_to_stage(
+            CoreStage::PostUpdate,
+            update_color.after(update_shape_transforms), // Detect collisions and update the colors
         )
         .run();
 }
@@ -29,12 +31,12 @@ fn main() {
 /// Initialize the "game"
 fn startup(mut commands: Commands) {
     // Camera
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default());
 
     // Left shape (controlled)
     commands
         // Add a sprite so we can see it (nothing specific about collision detection)
-        .spawn_bundle(SpriteBundle {
+        .spawn(SpriteBundle {
             sprite: Sprite {
                 custom_size: Some(Vec2::splat(100.0)),
                 color: Color::BLUE,
@@ -43,7 +45,7 @@ fn startup(mut commands: Commands) {
             transform: Transform::from_translation(Vec3::new(-200., 0.0, 0.0)),
             ..Default::default()
         })
-        .insert_bundle((
+        .insert((
             // Add the collision shape
             CollisionShape(impacted::CollisionShape::new_rectangle(100.0, 100.0)),
             // Mark this shape as the one being controlled (nothing specific to collision detection)
@@ -53,7 +55,7 @@ fn startup(mut commands: Commands) {
     // Right shape (static)
     commands
         // Add a sprite so we can see it (nothing specific about collision detection)
-        .spawn_bundle(SpriteBundle {
+        .spawn(SpriteBundle {
             sprite: Sprite {
                 custom_size: Some(Vec2::splat(100.0)),
                 color: Color::BLUE,
