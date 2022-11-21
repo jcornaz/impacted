@@ -16,6 +16,8 @@ all-features = true
 [features]
 default = ["std"]
 std = ["glam/std", "thiserror"]
+bevy-09 = ["bevy-transform-09", "bevy-ecs-09"]
+bevy-transform-09 = ["dep:bevy-transform-09", "bevy-math-09"]
 bevy-08 = ["bevy-transform-08", "bevy-ecs-08"]
 bevy-transform-08 = ["dep:bevy-transform-08", "bevy-math-08"]
 bevy-07 = ["bevy-transform-07", "bevy-ecs-07"]
@@ -26,6 +28,11 @@ bevy-transform-06 = ["dep:bevy-transform-06", "bevy-math-06"]
 [dependencies]
 # Public
 bvh-arena = { version = "1.1", default-features = false, optional = true }
+
+## Bevy 0.9
+bevy-ecs-09 = { package = "bevy_ecs", version = "0.9", default-features = false, optional = true }
+bevy-transform-09 = { package = "bevy_transform", version = "0.9", default-features = false, optional = true }
+bevy-math-09 = { package = "bevy_math", version = "0.9", default-features = false, optional = true }
 
 ## Bevy 0.8
 bevy-ecs-08 = { package = "bevy_ecs", version = "0.8.0", default-features = false, optional = true }
@@ -45,7 +52,7 @@ bevy-math-06 = { package = "bevy_math", version = "0.6.0", default-features = fa
 # Private
 glam = { version = "0.22.0", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
-smallvec = { version = "1.10", default-features = false }
+smallvec = { version = "1.6", default-features = false }
 
 [dev-dependencies]
 rstest = "0.15.0"
