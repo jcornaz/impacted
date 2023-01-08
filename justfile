@@ -47,5 +47,5 @@ release-dry-run: (release "--dry-run")
 
 # Run the release process (requires `npm`, a `GITHUB_TOKEN` and a `CARGO_REGISTRY_TOKEN`)
 release *args:
-	npm install --no-save conventional-changelog-conventionalcommits @semantic-release/exec @semantic-release/changelog @semantic-release/git
+	npm install --no-save conventional-changelog-conventionalcommits @semantic-release/exec
 	npx semantic-release {{args}}
