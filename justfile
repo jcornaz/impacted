@@ -41,3 +41,11 @@ install-git-hooks:
 	echo "#!/usr/bin/env sh" > .git/hooks/pre-commit
 	echo "just verify" >> .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
+
+# run the release process in dry run mode (requires npm and a `GITHUB_TOKEN`)
+release-dry-run: (release "--dry-run")
+
+# Run the release process (requires `npm`, a `GITHUB_TOKEN` and a `CARGO_REGISTRY_TOKEN`)
+release *args:
+	npm install --no-save conventional-changelog-conventionalcommits @semantic-release/exec @semantic-release/changelog @semantic-release/git
+	npx semantic-release {{args}}

@@ -45,7 +45,7 @@
     [
       "@semantic-release/exec",
       {
-        "verifyConditionsCmd": "cargo publish --dry-run --allow-dirty",
+        "verifyReleaseCmd": "just verify && cargo publish --dry-run",
         "prepareCmd": "cargo install cargo-edit && cargo set-version ${nextRelease.version}",
         "publishCmd": "cargo publish --allow-dirty"
       }
