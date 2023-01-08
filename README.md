@@ -1,10 +1,9 @@
 # impacted
 
-[![License](https://img.shields.io/github/license/jcornaz/impacted)](https://github.com/jcornaz/impacted/blob/main/UNLICENSE)
+[![License](https://img.shields.io/crates/l/impacted)](#Unlicense)
 [![Crates.io](https://img.shields.io/crates/v/impacted)](https://crates.io/crates/impacted)
-[![Docs](https://img.shields.io/docsrs/impacted)](https://docs.rs/impacted)
-[![Build](https://img.shields.io/github/actions/workflow/status/jcornaz/impacted/build.yml)](https://github.com/jcornaz/impacted/actions)
-
+![rustc](https://img.shields.io/badge/rustc-1.65+-blue?logo=rust)
+[![Docs](https://docs.rs/impacted/badge.svg)](https://docs.rs/impacted)
 
 2d collision test for game-development in rust
 
