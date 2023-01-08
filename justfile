@@ -13,7 +13,7 @@ watch:
 
 # Run the tests
 test:
-	cargo hack test --feature-powerset --depth 2 --optional-deps bvh-arena --exclude-features bevy-06,bevy-07,bevy-08
+	cargo hack test --each-feature --optional-deps bvh-arena
 
 # Run the static code analysis
 lint:
