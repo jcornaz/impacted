@@ -43,14 +43,14 @@ bevy-transform-06 = { package = "bevy_transform", version = "0.6.0", default-fea
 bevy-math-06 = { package = "bevy_math", version = "0.6.0", default-features = false, optional = true }
 
 # Private
-glam = { version = "0.23.0", default-features = false, features = ["libm"] }
+glam = { version = "0.24.0", default-features = false, features = ["libm"] }
 thiserror = { version = "1.0", default-features = false, optional = true }
 smallvec = { version = "1.10", default-features = false }
 
 [dev-dependencies]
 rstest = "0.17.0"
 bevy = { version = "0.9.0", default-features = false, features = ["bevy_winit", "render", "x11", "bevy_asset"]}
-glam = { version = "0.23.0", default-features = false, features = ["libm", "approx"] }
+glam = { version = "0.24.0", default-features = false, features = ["libm", "approx"] }
 approx = "0.5.1"
 
 [build-dependencies]
