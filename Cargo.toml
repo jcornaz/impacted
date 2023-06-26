@@ -25,7 +25,7 @@ bevy-transform-06 = ["dep:bevy-transform-06", "bevy-math-06"]
 
 [dependencies]
 # Public
-bvh-arena = { version = "1.1", default-features = false, optional = true }
+bvh-arena = { version = "1.1.3", default-features = false, optional = true }
 
 ## Bevy 0.8
 bevy-ecs-08 = { package = "bevy_ecs", version = "0.8.0", default-features = false, optional = true }
@@ -44,8 +44,8 @@ bevy-math-06 = { package = "bevy_math", version = "0.6.0", default-features = fa
 
 # Private
 glam = { version = "0.24.1", default-features = false, features = ["libm"] }
-thiserror = { version = "1.0", default-features = false, optional = true }
-smallvec = { version = "1.10", default-features = false }
+thiserror = { version = "1.0.40", default-features = false, optional = true }
+smallvec = { version = "1.10.0", default-features = false }
 
 [dev-dependencies]
 rstest = "0.17.0"
