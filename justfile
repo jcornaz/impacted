@@ -11,6 +11,10 @@ verify: test lint doc check-msrv
 watch:
 	cargo watch --delay 0.1 --clear --why -- just verify
 
+# Run the bevy example
+run-bevy-example:
+    cargo run --example bevy
+
 # Run the tests
 test:
     cargo hack test --tests --feature-powerset --optional-deps

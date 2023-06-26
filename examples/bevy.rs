@@ -1,7 +1,6 @@
 use std::f32::consts;
 
 use bevy::prelude::*;
-use bevy::transform::TransformSystem;
 
 #[derive(Debug, Component, Deref, DerefMut)]
 struct CollisionShape(impacted::CollisionShape);
@@ -16,15 +15,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(startup)
         .add_system(control_shape)
-        .add_system_to_stage(
-            CoreStage::PostUpdate,
-            update_shape_transforms // Update the transforms
-                .after(TransformSystem::TransformPropagate), // Better to consider the up-to-date transforms
-        )
-        .add_system_to_stage(
-            CoreStage::PostUpdate,
-            update_color.after(update_shape_transforms), // Detect collisions and update the colors
-        )
+        .add_systems((update_shape_transforms, update_color).chain())
         .run();
 }
 
