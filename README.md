@@ -59,25 +59,12 @@ cargo add impacted
 |---------------------|--------------------|-----------------------------------------------------------------------------------|
 | `std`               | Enabled by default | Allow to use rust the standard library (need to be disabled for `no_std` crates)  |
 | `bvh-arena`         |                    | Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes |
-| `bevy-ecs-08`       | ***Deprecated***   | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.8                |
-| `bevy-transform-08` | ***Deprecated***   | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.8    |
-| `bevy-08`           | ***Deprecated***   | All bevy 0.8 integrations (alias for `["bevy-ecs-08", "bevy-transform-08"]`)      |
-| `bevy-ecs-07`       | ***Deprecated***   | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.7                |
-| `bevy-transform-07` | ***Deprecated***   | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.7    |
-| `bevy-07`           | ***Deprecated***   | All bevy 0.7 integrations (alias for `["bevy-ecs-07", "bevy-transform-07"]`)      |
-| `bevy-ecs-06`       | ***Deprecated***   | Integration with [bevy_ecs](https://crates.io/crates/bevy_ecs) 0.6                |
-| `bevy-transform-06` | ***Deprecated***   | Integration with [bevy_transform](https://crates.io/crates/bevy_transform) 0.6    |
-| `bevy-06`           | ***Deprecated***   | All bevy 0.6 integrations (alias for `["bevy-ecs-06", "bevy-transform-06"]`)      |
+
 
 > **Warning**
 >
 > Feature flags not listed in the table above are not part of the public API and are subject to breaking changes
 
-> **Note**
->
-> There won't be any integration for the upcoming bevy versions.
->
-> Though, `impacted` can still be used from a bevy project. Look at the [examples](https://github.com/jcornaz/impacted/tree/main/examples) for more details. 
 
 ## MSRV
 

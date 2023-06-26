@@ -13,12 +13,14 @@ watch:
 
 # Run the tests
 test:
-	cargo hack test --each-feature --optional-deps bvh-arena
+    cargo hack test --tests --feature-powerset --optional-deps
+    cargo test --examples --all-features
+    cargo test --doc --all-features
 
 # Run the static code analysis
 lint:
 	cargo fmt -- --check
-	cargo clippy --all-features --all-targets 
+	cargo hack clippy --each-feature --all-targets
 
 # Build the documentation
 doc *args:

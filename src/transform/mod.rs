@@ -2,15 +2,6 @@ use glam::{Affine2, Mat2, Vec2};
 
 use crate::{CollisionShape, Support};
 
-#[cfg(feature = "bevy-transform-06")]
-mod bevy_transform_06;
-
-#[cfg(feature = "bevy-transform-07")]
-mod bevy_transform_07;
-
-#[cfg(feature = "bevy-transform-08")]
-mod bevy_transform_08;
-
 /// Transform that can be used for a [`CollisionShape`]
 #[derive(Debug, Clone)]
 pub struct Transform {
@@ -133,10 +124,10 @@ impl Support for CollisionShape {
 mod tests {
     use core::f32::consts;
 
+    use approx::assert_ulps_eq;
     use glam::Vec2;
 
     use super::*;
-    use approx::assert_ulps_eq;
 
     #[test]
     fn transformed_shape_support() {
