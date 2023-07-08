@@ -27,7 +27,7 @@ thiserror = { version = "1.0.43", default-features = false, optional = true }
 smallvec = { version = "1.10.0", default-features = false }
 
 [dev-dependencies]
-rstest = "0.17.0"
+rstest = "0.18.1"
 bevy = { version = "0.10.1", default-features = false, features = ["bevy_render", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_asset", "x11"]}
 glam = { version = "0.24.1", default-features = false, features = ["libm", "approx"] }
 approx = "0.5.1"
