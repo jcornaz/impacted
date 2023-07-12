@@ -13,9 +13,9 @@ struct Controlled;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_startup_system(startup)
-        .add_system(control_shape)
-        .add_systems((update_shape_transforms, update_color).chain())
+        .add_systems(Startup, startup)
+        .add_systems(PreUpdate, control_shape)
+        .add_systems(Update, (update_shape_transforms, update_color).chain())
         .run();
 }
 
