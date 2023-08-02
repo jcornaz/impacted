@@ -9,8 +9,8 @@ pub(crate) struct Difference<'a, S1, S2> {
 
 impl<P, V, S1, S2> Support<P, V> for Difference<'_, S1, S2>
 where
-    P: Sub<P, Output = V> + From<V>,
-    V: Copy + Neg<Output = V>,
+    P: Sub<P, Output = V>,
+    V: Copy + Neg<Output = V> + Into<P>,
     S1: Support<P, V>,
     S2: Support<P, V>,
 {
