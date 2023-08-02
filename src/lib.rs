@@ -5,12 +5,19 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 
-//! 2d collision test
+//! 2d collision test for game-development in rust
+//!
+//! This provides a low-level "narrow-phase" collision-detection logic.
+//!
+//! If you want to pair it with a broad-phase, you may look at [bvh-arena] or [broccoli].
+//!
+//! [bvh-arena]: https://github.com/jcornaz/bvh-arena
+//! [broccoli]: https://github.com/tiby312/broccoli
+//!
+//! # Usage
 //!
 //! The central type is [`CollisionShape`]. Once a collision shape is created and positioned (with a [`Transform`])
 //! is is possible to call [`CollisionShape::is_collided_with`] to test for collision with another shape.
-//!
-//! # Example
 //!
 //! ```
 //! # use approx::assert_ulps_eq;
@@ -42,6 +49,12 @@
 //! assert_ulps_eq!(normal, -Vec2::X);
 //! assert_ulps_eq!(contact.penetration, 1.0);
 //! ```
+//!
+//! ## Feature flags
+//!
+//! * `std` (enabled by default) Allow to use rust the standard library (need to be disabled for `no_std` apps)
+//! * `bvh-arena` Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
+//!
 
 use glam::Vec2;
 

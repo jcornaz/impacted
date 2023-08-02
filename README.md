@@ -15,17 +15,6 @@ If you want to pair it with a broad-phase, you may look at [bvh-arena] or [brocc
 [broccoli]: https://github.com/tiby312/broccoli
 
 
-## Roadmap
-
-* [x] collision test (GJK implementation)
-* [ ] collision shapes
-  * [x] circle
-  * [x] rectangle
-  * [ ] convex-hull
-  * [ ] capsule
-* [x] contact generation (EPA implementation)
-
-
 ## Usage example
 
 ```rust
@@ -55,24 +44,16 @@ cargo add impacted
 
 ## Cargo features
 
-| Feature             | Status             | Description                                                                       |
-|---------------------|--------------------|-----------------------------------------------------------------------------------|
-| `std`               | Enabled by default | Allow to use rust the standard library (need to be disabled for `no_std` crates)  |
-| `bvh-arena`         |                    | Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes |
-
-
-> **Warning**
->
-> Feature flags not listed in the table above are not part of the public API and are subject to breaking changes
+* `std` (enabled by default) Allow to use rust the standard library (need to be disabled for `no_std` apps)
+* `bvh-arena` Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
 
 
 ## MSRV
 
 The minimum supported rust version is currently: `1.60`
 
-It may be increased to a newer stable version in a minor release.
-
-It will be increased to the latest stable version in a major release.
+Bumping the minimum supported rust version to a newer stable version
+is not considered a breaking change.
 
 
 ## Unlicense
