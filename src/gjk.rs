@@ -1,8 +1,11 @@
-use core::cmp::Ordering;
+use core::{cmp::Ordering, ops::Neg};
 
 use glam::Vec2;
 
-use crate::Support;
+use crate::{
+    math::{Dot, IsNegative, Perp},
+    Support,
+};
 
 pub(crate) fn find_simplex_enclosing_origin(
     shape: &impl Support<Vec2, Vec2>,
@@ -104,12 +107,16 @@ impl Simplex<Vec2> {
 }
 
 /// Returns a perpendicular to `axis` that has a positive dot product with `direction`
-fn perp(axis: Vec2, direction: Vec2) -> Vec2 {
+fn perp<V>(axis: V, direction: V) -> V
+where
+    V: Copy + Perp + Neg<Output = V> + Dot,
+    <V as Dot>::Scalar: IsNegative,
+{
     let perp = axis.perp();
-    if perp.dot(direction) >= 0.0 {
-        perp
-    } else {
+    if perp.dot(direction).is_negative() {
         -perp
+    } else {
+        perp
     }
 }
 
