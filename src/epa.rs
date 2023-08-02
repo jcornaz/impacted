@@ -48,29 +48,29 @@ struct Simplex<V> {
 
 impl Simplex<Vec2> {
     fn closest_edge(&self) -> Edge<Vec2> {
-        let mut closest_edge = Edge {
-            index: 0,
-            distance: f32::MAX,
-            normal: Vec2::ZERO,
-        };
-
-        for index in 0..self.points.len() {
-            let p1 = self.points[index];
-            let p2 = self
-                .points
-                .get(index + 1)
-                .copied()
-                .unwrap_or_else(|| self.points[0]);
-            let edge = p2 - p1;
-            let outward = edge.perp().normalize_or_zero();
-            let distance = p1.dot(outward);
-            if distance < closest_edge.distance {
-                closest_edge.index = index;
-                closest_edge.distance = distance;
-                closest_edge.normal = outward;
-            }
-        }
-        closest_edge
+        (0..self.points.len())
+            .map(|index| {
+                let p1 = self.points[index];
+                let p2 = self
+                    .points
+                    .get(index + 1)
+                    .copied()
+                    .unwrap_or_else(|| self.points[0]);
+                let edge = p2 - p1;
+                let normal = edge.perp().normalize_or_zero();
+                let distance = p1.dot(normal);
+                Edge {
+                    index,
+                    normal,
+                    distance,
+                }
+            })
+            .min_by(|e1, e2| {
+                e1.distance
+                    .partial_cmp(&e2.distance)
+                    .unwrap_or(core::cmp::Ordering::Equal)
+            })
+            .expect("no edge in epa simplex")
     }
 
     fn insert(&mut self, index: usize, point: Vec2) {
