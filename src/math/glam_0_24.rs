@@ -21,3 +21,9 @@ impl Perp for Vec2 {
         Vec2::perp(self)
     }
 }
+
+impl Normalize for Vec2 {
+    fn normalize(self) -> Option<Self> {
+        Vec2::try_normalize(self)
+    }
+}

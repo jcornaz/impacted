@@ -12,7 +12,14 @@ pub(crate) trait Cross {
 }
 
 pub(crate) trait Perp {
+    /// Rotate the vector by 90 degrees
+    ///
+    /// The rotation direction should be so that the perpendicular of the x-axis is the y-axis.
     fn perp(self) -> Self;
+}
+
+pub(crate) trait Normalize: Sized {
+    fn normalize(self) -> Option<Self>;
 }
 
 pub(crate) trait CmpToZero: Copy {

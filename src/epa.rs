@@ -3,11 +3,7 @@ use core::{mem, ops::Sub};
 use glam::Vec2;
 use smallvec::{smallvec, SmallVec};
 
-use crate::{
-    gjk,
-    math::{CmpToZero, Cross, Dot},
-    Contact, Support,
-};
+use crate::{gjk, math::*, Contact, Support};
 
 pub(crate) fn generate_contact(
     difference: &impl Support<Vec2>,
@@ -46,8 +42,12 @@ struct Simplex<V> {
     points: SmallVec<[V; 10]>,
 }
 
-impl Simplex<Vec2> {
-    fn closest_edge(&self) -> Edge<Vec2> {
+impl<V> Simplex<V>
+where
+    V: Dot + Copy + Sub<V, Output = V> + Perp + Normalize + Default,
+    V::Scalar: PartialOrd,
+{
+    fn closest_edge(&self) -> Edge<V> {
         (0..self.points.len())
             .map(|index| {
                 let p1 = self.points[index];
@@ -57,7 +57,7 @@ impl Simplex<Vec2> {
                     .copied()
                     .unwrap_or_else(|| self.points[0]);
                 let edge = p2 - p1;
-                let normal = edge.perp().normalize_or_zero();
+                let normal = edge.perp().normalize().unwrap_or_default();
                 let distance = p1.dot(normal);
                 Edge {
                     index,
@@ -72,7 +72,9 @@ impl Simplex<Vec2> {
             })
             .expect("no edge in epa simplex")
     }
+}
 
+impl Simplex<Vec2> {
     fn insert(&mut self, index: usize, point: Vec2) {
         self.points.insert(index + 1, point);
     }
