@@ -1,24 +1,18 @@
-use core::{
-    cmp::Ordering,
-    ops::{Neg, Sub},
-};
-
-use glam::Vec2;
+use core::ops::{Neg, Sub};
 
 use crate::{math::*, Support};
 
-pub(crate) fn find_simplex_enclosing_origin(
-    shape: &impl Support<Vec2>,
-    initial_direction: Vec2,
-) -> Option<Simplex<Vec2>> {
+pub(crate) fn find_simplex_enclosing_origin<V>(
+    shape: &impl Support<V>,
+    initial_direction: V,
+) -> Option<Simplex<V>>
+where
+    V: Copy + Dot + Perp + Neg<Output = V> + Sub<V, Output = V>,
+    <V as Dot>::Scalar: CmpToZero,
+{
     let mut simplex = {
         let first_point = shape.support(initial_direction);
-        if first_point
-            .dot(initial_direction)
-            .partial_cmp(&0.0)
-            .unwrap_or(Ordering::Less)
-            .is_lt()
-        {
+        if is_negative_or_invalid(first_point.dot(initial_direction)) {
             return None;
         }
         Simplex::new(first_point)
@@ -26,17 +20,16 @@ pub(crate) fn find_simplex_enclosing_origin(
 
     while let Some(direction) = simplex.next() {
         let point = shape.support(direction);
-        if point
-            .dot(direction)
-            .partial_cmp(&0.0)
-            .unwrap_or(Ordering::Less)
-            .is_lt()
-        {
+        if is_negative_or_invalid(point.dot(direction)) {
             return None;
         }
         simplex.insert(point);
     }
     Some(simplex)
+}
+
+fn is_negative_or_invalid(dot: impl CmpToZero) -> bool {
+    !dot.is_positive() && !dot.is_zero()
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -130,6 +123,7 @@ mod tests {
     use rstest::rstest;
 
     use super::*;
+    use glam::Vec2;
 
     struct InvalidSupport;
     impl Support<Vec2> for InvalidSupport {
