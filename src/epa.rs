@@ -9,7 +9,7 @@ pub(crate) fn generate_contact(
     difference: &impl Support<Vec2>,
     simplex: gjk::Simplex<Vec2>,
 ) -> Contact {
-    let mut simplex: Simplex = simplex.into();
+    let mut simplex: Simplex<Vec2> = simplex.into();
     for _ in 0..1000 {
         let edge = simplex.closest_edge();
         let support = difference.support(edge.normal);
@@ -38,11 +38,11 @@ impl From<Edge> for Contact {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-struct Simplex {
-    points: SmallVec<[Vec2; 10]>,
+struct Simplex<V> {
+    points: SmallVec<[V; 10]>,
 }
 
-impl Simplex {
+impl Simplex<Vec2> {
     fn closest_edge(&self) -> Edge {
         let mut closest_edge = Edge {
             index: 0,
@@ -74,7 +74,7 @@ impl Simplex {
     }
 }
 
-impl From<gjk::Simplex<Vec2>> for Simplex {
+impl From<gjk::Simplex<Vec2>> for Simplex<Vec2> {
     fn from(simplex: gjk::Simplex<Vec2>) -> Self {
         Self {
             points: match simplex {
@@ -103,9 +103,11 @@ mod tests {
         #[test]
         fn starts_with_left_winding() {
             let expected = [Vec2::ZERO, Vec2::X, Vec2::Y];
-            let simplex1: Simplex = gjk::Simplex::Triangle(Vec2::ZERO, Vec2::X, Vec2::Y).into();
+            let simplex1: Simplex<Vec2> =
+                gjk::Simplex::Triangle(Vec2::ZERO, Vec2::X, Vec2::Y).into();
             assert_eq!(&simplex1.points[..], &expected);
-            let simplex2: Simplex = gjk::Simplex::Triangle(Vec2::ZERO, Vec2::Y, Vec2::X).into();
+            let simplex2: Simplex<Vec2> =
+                gjk::Simplex::Triangle(Vec2::ZERO, Vec2::Y, Vec2::X).into();
             assert_eq!(&simplex2.points[..], &expected);
         }
 
