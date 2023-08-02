@@ -7,7 +7,7 @@ use crate::Support;
 pub(crate) fn find_simplex_enclosing_origin(
     shape: &impl Support<Vec2, Vec2>,
     initial_direction: Vec2,
-) -> Option<Simplex> {
+) -> Option<Simplex<Vec2>> {
     let mut simplex = {
         let first_point = shape.support(initial_direction);
         if first_point
@@ -37,18 +37,20 @@ pub(crate) fn find_simplex_enclosing_origin(
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub(crate) enum Simplex {
-    Point(Vec2),
-    Line(Vec2, Vec2),
-    Triangle(Vec2, Vec2, Vec2),
+pub(crate) enum Simplex<P> {
+    Point(P),
+    Line(P, P),
+    Triangle(P, P, P),
 }
 
-impl Simplex {
-    pub(crate) fn new(point: Vec2) -> Self {
+impl<P> Simplex<P> {
+    pub(crate) fn new(point: P) -> Self {
         Self::Point(point)
     }
+}
 
-    pub(crate) fn insert(&mut self, new_point: Vec2) {
+impl<P: Copy> Simplex<P> {
+    pub(crate) fn insert(&mut self, new_point: P) {
         match *self {
             Self::Point(p) => *self = Self::Line(p, new_point),
             Self::Line(p1, p2) => *self = Self::Triangle(p1, p2, new_point),
@@ -57,7 +59,9 @@ impl Simplex {
             }
         }
     }
+}
 
+impl Simplex<Vec2> {
     /// Set to the simpler simplex that is closest to the origin.
     ///
     /// If the origin is inside the simplex returns None. Otherwise returns the next direction to test.
@@ -136,7 +140,7 @@ mod tests {
     #[case(Simplex::Triangle(Vec2::X, Vec2::Y, Vec2::default()))]
     #[case(Simplex::Triangle(Vec2::new(-1.0, -1.0), Vec2::new(1.0, -1.0), Vec2::Y))]
     #[cfg(feature = "std")]
-    fn contains_origin(#[case] simplex: Simplex) {
+    fn contains_origin(#[case] simplex: Simplex<Vec2>) {
         let mut modified = simplex;
         assert!(modified.next().is_none());
         assert_eq!(modified, simplex);

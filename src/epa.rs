@@ -7,7 +7,7 @@ use crate::{gjk, Contact, Support};
 
 pub(crate) fn generate_contact(
     difference: &impl Support<Vec2, Vec2>,
-    simplex: gjk::Simplex,
+    simplex: gjk::Simplex<Vec2>,
 ) -> Contact {
     let mut simplex: Simplex = simplex.into();
     for _ in 0..1000 {
@@ -74,8 +74,8 @@ impl Simplex {
     }
 }
 
-impl From<gjk::Simplex> for Simplex {
-    fn from(simplex: gjk::Simplex) -> Self {
+impl From<gjk::Simplex<Vec2>> for Simplex {
+    fn from(simplex: gjk::Simplex<Vec2>) -> Self {
         Self {
             points: match simplex {
                 gjk::Simplex::Point(p) => smallvec![p],
