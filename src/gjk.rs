@@ -1,4 +1,7 @@
-use core::{cmp::Ordering, ops::Neg};
+use core::{
+    cmp::Ordering,
+    ops::{Neg, Sub},
+};
 
 use glam::Vec2;
 
@@ -61,14 +64,18 @@ impl<P: Copy> Simplex<P> {
     }
 }
 
-impl Simplex<Vec2> {
+impl<V> Simplex<V>
+where
+    V: Copy + Dot + Perp + Neg<Output = V> + Sub<V, Output = V>,
+    <V as Dot>::Scalar: CmpToZero,
+{
     /// Set to the simpler simplex that is closest to the origin.
     ///
     /// If the origin is inside the simplex returns None. Otherwise returns the next direction to test.
-    pub(crate) fn next(&mut self) -> Option<Vec2> {
+    pub(crate) fn next(&mut self) -> Option<V> {
         match *self {
             Self::Point(point) => {
-                if point.length_squared() > f32::EPSILON {
+                if point.magnitude_squared().is_positive() {
                     Some(-point)
                 } else {
                     None
@@ -76,10 +83,10 @@ impl Simplex<Vec2> {
             }
             Self::Line(p1, p2) => {
                 let mut dir = (p2 - p1).perp();
-                if dir.dot(p1) > 0.0 {
+                if dir.dot(p1).is_positive() {
                     dir = -dir;
                 }
-                if dir.dot(p1) < -f32::EPSILON {
+                if dir.dot(p1).is_negative() {
                     Some(dir)
                 } else {
                     None
@@ -87,12 +94,12 @@ impl Simplex<Vec2> {
             }
             Self::Triangle(p1, p2, p3) => {
                 let mut dir = perp(p3 - p1, p3 - p2);
-                if dir.dot(-p3) > 0.0 {
+                if dir.dot(-p3).is_positive() {
                     *self = Self::Line(p1, p3);
                     return Some(dir);
                 }
                 dir = perp(p3 - p2, p3 - p1);
-                if dir.dot(-p3) > 0.0 {
+                if dir.dot(-p3).is_positive() {
                     *self = Self::Line(p2, p3);
                     Some(dir)
                 } else {
