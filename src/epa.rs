@@ -1,9 +1,13 @@
-use core::mem;
+use core::{mem, ops::Sub};
 
 use glam::Vec2;
 use smallvec::{smallvec, SmallVec};
 
-use crate::{gjk, Contact, Support};
+use crate::{
+    gjk,
+    math::{CmpToZero, Cross},
+    Contact, Support,
+};
 
 pub(crate) fn generate_contact(
     difference: &impl Support<Vec2>,
@@ -74,14 +78,18 @@ impl Simplex<Vec2> {
     }
 }
 
-impl From<gjk::Simplex<Vec2>> for Simplex<Vec2> {
-    fn from(simplex: gjk::Simplex<Vec2>) -> Self {
+impl<V> From<gjk::Simplex<V>> for Simplex<V>
+where
+    V: Copy + Sub<V, Output = V> + Cross,
+    <V as Cross>::Output: CmpToZero,
+{
+    fn from(simplex: gjk::Simplex<V>) -> Self {
         Self {
             points: match simplex {
                 gjk::Simplex::Point(p) => smallvec![p],
                 gjk::Simplex::Line(p1, p2) => smallvec![p1, p2],
                 gjk::Simplex::Triangle(p1, mut p2, mut p3) => {
-                    if (p2 - p1).perp_dot(p3 - p2) < 0.0 {
+                    if (p2 - p1).cross(p3 - p2).is_negative() {
                         mem::swap(&mut p2, &mut p3);
                     }
                     smallvec![p1, p2, p3]

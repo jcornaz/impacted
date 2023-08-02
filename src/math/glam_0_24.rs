@@ -9,6 +9,13 @@ impl Dot for Vec2 {
     }
 }
 
+impl Cross for Vec2 {
+    type Output = f32;
+    fn cross(self, other: Self) -> Self::Output {
+        Vec2::perp_dot(self, other)
+    }
+}
+
 impl Perp for Vec2 {
     fn perp(self) -> Self {
         Vec2::perp(self)

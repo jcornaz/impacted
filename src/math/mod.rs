@@ -6,6 +6,11 @@ pub(crate) trait Dot {
     fn dot(self, other: Self) -> Self::Scalar;
 }
 
+pub(crate) trait Cross {
+    type Output;
+    fn cross(self, other: Self) -> Self::Output;
+}
+
 pub(crate) trait CmpToZero: Copy {
     fn is_negative(self) -> bool;
     fn is_zero(self) -> bool;
