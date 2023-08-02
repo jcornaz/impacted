@@ -110,7 +110,7 @@ impl Default for Transform {
     }
 }
 
-impl Support for CollisionShape {
+impl Support<Vec2, Vec2> for CollisionShape {
     fn support(&self, direction: Vec2) -> Vec2 {
         let local_direction = self.transform.world_to_local * direction;
         let local_support = self.data.support(local_direction);

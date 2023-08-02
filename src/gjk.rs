@@ -5,7 +5,7 @@ use glam::Vec2;
 use crate::Support;
 
 pub(crate) fn find_simplex_enclosing_origin(
-    shape: &impl Support,
+    shape: &impl Support<Vec2, Vec2>,
     mut initial_direction: Vec2,
 ) -> Option<Simplex> {
     if initial_direction.length_squared() <= f32::EPSILON {
@@ -120,7 +120,7 @@ mod tests {
     use super::*;
 
     struct InvalidSupport;
-    impl Support for InvalidSupport {
+    impl Support<Vec2, Vec2> for InvalidSupport {
         fn support(&self, _: Vec2) -> Vec2 {
             Vec2::NAN
         }

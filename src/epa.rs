@@ -5,7 +5,10 @@ use smallvec::{smallvec, SmallVec};
 
 use crate::{gjk, Contact, Support};
 
-pub(crate) fn generate_contact(difference: &impl Support, simplex: gjk::Simplex) -> Contact {
+pub(crate) fn generate_contact(
+    difference: &impl Support<Vec2, Vec2>,
+    simplex: gjk::Simplex,
+) -> Contact {
     let mut simplex: Simplex = simplex.into();
     for _ in 0..1000 {
         let edge = simplex.closest_edge();

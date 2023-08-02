@@ -56,8 +56,6 @@
 //! * `bvh-arena` Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
 //!
 
-use glam::Vec2;
-
 #[allow(deprecated)]
 pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
@@ -188,7 +186,7 @@ pub struct Contact {
     pub penetration: f32,
 }
 
-trait Support {
+trait Support<P, V> {
     /// Returns the farthest point of the shape in the given direction
-    fn support(&self, direction: Vec2) -> Vec2;
+    fn support(&self, direction: V) -> P;
 }
