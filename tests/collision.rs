@@ -11,7 +11,15 @@ use impacted::{CollisionShape, Transform};
 #[case(CollisionShape::new_circle(1.0), CollisionShape::new_circle(1.0))]
 #[case(
     CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::ZERO)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
     CollisionShape::new_circle(1.0).with_transform(Transform::from_angle_translation(2.0, Vec2::ZERO)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_scale_angle_translation(Vec2::splat(2.0), 2.0, Vec2::ZERO)),
 )]
 #[case(
     CollisionShape::new_circle(1.0),
@@ -38,7 +46,52 @@ use impacted::{CollisionShape, Transform};
     CollisionShape::new_segment(Vec2::ZERO, Vec2::X)
 )]
 fn collides(#[case] shape1: CollisionShape, #[case] shape2: CollisionShape) {
-    assert!(shape1.is_collided_with(&shape2))
+    assert!(shape1.is_collided_with(&shape2));
+}
+
+#[rstest]
+#[case(CollisionShape::new_circle(1.0), CollisionShape::new_circle(1.0))]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::ZERO)),
+)]
+#[ignore = "not fixed yet"]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_angle_translation(2.0, Vec2::ZERO)),
+)]
+#[ignore = "not fixed yet"]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_scale_angle_translation(Vec2::splat(2.0), 2.0, Vec2::ZERO)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::new(2.0, 0.0))),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::X * 1.0)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.5).with_transform(Transform::from_translation(Vec2::Y * 2.1)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_translation(Vec2::X * 1.9)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.3)),
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_segment(Vec2::ZERO, Vec2::X)
+)]
+fn contacts(#[case] shape1: CollisionShape, #[case] shape2: CollisionShape) {
+    let contact = shape1.contact_with(&shape2);
+    assert!(contact.is_some(), "{contact:?}");
 }
 
 #[rstest]

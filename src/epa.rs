@@ -57,7 +57,11 @@ where
                     .copied()
                     .unwrap_or_else(|| self.points[0]);
                 let edge = p2 - p1;
-                let normal = edge.perp().normalize().unwrap_or_default();
+                let normal = edge
+                    .perp()
+                    .normalize()
+                    .or_else(|| p1.normalize())
+                    .unwrap_or_default();
                 let distance = p1.dot(normal);
                 Edge {
                     index,
