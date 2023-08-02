@@ -8,7 +8,7 @@ pub(crate) fn find_simplex_enclosing_origin<V>(
 ) -> Option<Simplex<V>>
 where
     V: Copy + Dot + Perp + Neg<Output = V> + Sub<V, Output = V>,
-    <V as Dot>::Scalar: CmpToZero,
+    <V as Dot>::Output: CmpToZero,
 {
     let mut simplex = {
         let first_point = shape.support(initial_direction);
@@ -60,7 +60,7 @@ impl<P: Copy> Simplex<P> {
 impl<V> Simplex<V>
 where
     V: Copy + Dot + Perp + Neg<Output = V> + Sub<V, Output = V>,
-    <V as Dot>::Scalar: CmpToZero,
+    <V as Dot>::Output: CmpToZero,
 {
     /// Set to the simpler simplex that is closest to the origin.
     ///
@@ -107,7 +107,7 @@ where
 fn perp<V>(axis: V, direction: V) -> V
 where
     V: Copy + Perp + Neg<Output = V> + Dot,
-    <V as Dot>::Scalar: CmpToZero,
+    <V as Dot>::Output: CmpToZero,
 {
     let perp = axis.perp();
     if perp.dot(direction).is_negative() {

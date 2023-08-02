@@ -2,8 +2,8 @@ mod array;
 mod glam_0_24;
 
 pub(crate) trait Dot {
-    type Scalar;
-    fn dot(self, other: Self) -> Self::Scalar;
+    type Output;
+    fn dot(self, other: Self) -> Self::Output;
 }
 
 pub(crate) trait Cross {
@@ -34,7 +34,7 @@ pub(crate) trait MagnitudeSquared {
 }
 
 impl<V: Dot + Copy> MagnitudeSquared for V {
-    type Scalar = <V as Dot>::Scalar;
+    type Scalar = <V as Dot>::Output;
     fn magnitude_squared(self) -> Self::Scalar {
         self.dot(self)
     }

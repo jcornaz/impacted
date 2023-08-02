@@ -3,8 +3,8 @@ use core::ops::{Add, Mul};
 use super::Dot;
 
 impl<S: Copy + Add<S, Output = S> + Mul<S, Output = S>> Dot for [S; 2] {
-    type Scalar = S;
-    fn dot(self, other: Self) -> Self::Scalar {
+    type Output = S;
+    fn dot(self, other: Self) -> Self::Output {
         (self[0] * other[0]) + (self[1] * other[1])
     }
 }

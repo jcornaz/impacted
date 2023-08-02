@@ -3,8 +3,8 @@ use glam::Vec2;
 use super::*;
 
 impl Dot for Vec2 {
-    type Scalar = f32;
-    fn dot(self, other: Self) -> Self::Scalar {
+    type Output = f32;
+    fn dot(self, other: Self) -> Self::Output {
         Vec2::dot(self, other)
     }
 }

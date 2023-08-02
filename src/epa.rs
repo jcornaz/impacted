@@ -1,4 +1,7 @@
-use core::{mem, ops::Sub};
+use core::{
+    mem,
+    ops::{Neg, Sub},
+};
 
 use glam::Vec2;
 use smallvec::{smallvec, SmallVec};
@@ -25,11 +28,14 @@ pub(crate) fn generate_contact(
 struct Edge<V: Dot> {
     index: usize,
     normal: V,
-    distance: <V as Dot>::Scalar,
+    distance: <V as Dot>::Output,
 }
 
-impl From<Edge<Vec2>> for Contact {
-    fn from(edge: Edge<Vec2>) -> Self {
+impl<V> From<Edge<V>> for Contact
+where
+    V: Neg<Output = V> + Into<[f32; 2]> + Dot<Output = f32>,
+{
+    fn from(edge: Edge<V>) -> Self {
         Contact {
             normal: (-edge.normal).into(),
             penetration: edge.distance,
@@ -45,7 +51,7 @@ struct Simplex<V> {
 impl<V> Simplex<V>
 where
     V: Dot + Copy + Sub<V, Output = V> + Perp + Normalize + Default,
-    V::Scalar: PartialOrd,
+    <V as Dot>::Output: PartialOrd,
 {
     fn closest_edge(&self) -> Edge<V> {
         (0..self.points.len())
@@ -78,8 +84,8 @@ where
     }
 }
 
-impl Simplex<Vec2> {
-    fn insert(&mut self, index: usize, point: Vec2) {
+impl<V> Simplex<V> {
+    fn insert(&mut self, index: usize, point: V) {
         self.points.insert(index + 1, point);
     }
 }
