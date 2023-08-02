@@ -2,10 +2,7 @@ use core::{cmp::Ordering, ops::Neg};
 
 use glam::Vec2;
 
-use crate::{
-    math::{Dot, IsNegative, Perp},
-    Support,
-};
+use crate::{math::*, Support};
 
 pub(crate) fn find_simplex_enclosing_origin(
     shape: &impl Support<Vec2, Vec2>,
@@ -110,7 +107,7 @@ impl Simplex<Vec2> {
 fn perp<V>(axis: V, direction: V) -> V
 where
     V: Copy + Perp + Neg<Output = V> + Dot,
-    <V as Dot>::Scalar: IsNegative,
+    <V as Dot>::Scalar: CmpToZero,
 {
     let perp = axis.perp();
     if perp.dot(direction).is_negative() {
