@@ -22,7 +22,7 @@ pub enum ShapeData {
     Segment(Segment),
 }
 
-impl Support<Vec2, Vec2> for ShapeData {
+impl Support<Vec2> for ShapeData {
     fn support(&self, direction: Vec2) -> Vec2 {
         match self {
             ShapeData::Circle(circle) => circle.support(direction),
@@ -60,7 +60,7 @@ impl From<Circle> for ShapeData {
     }
 }
 
-impl Support<Vec2, Vec2> for Circle {
+impl Support<Vec2> for Circle {
     fn support(&self, direction: Vec2) -> Vec2 {
         let point = direction.clamp_length(self.radius, self.radius);
         if point.is_nan() {
@@ -103,7 +103,7 @@ impl From<Rectangle> for ShapeData {
     }
 }
 
-impl Support<Vec2, Vec2> for Rectangle {
+impl Support<Vec2> for Rectangle {
     fn support(&self, direction: Vec2) -> Vec2 {
         let mut support = self.half_extents;
         if direction.x < 0.0 {
@@ -139,7 +139,7 @@ impl From<Segment> for ShapeData {
     }
 }
 
-impl Support<Vec2, Vec2> for Segment {
+impl Support<Vec2> for Segment {
     fn support(&self, direction: Vec2) -> Vec2 {
         if self.p1.dot(direction) > self.p2.dot(direction) {
             self.p1

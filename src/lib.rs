@@ -186,7 +186,7 @@ pub struct Contact {
     pub penetration: f32,
 }
 
-trait Support<P, V> {
+trait Support<V> {
     /// Returns the farthest point of the shape in the given direction.
     ///
     /// More formaly: For a direction `v` return the point `p` of the shape that maximize the dot product `p . v`
@@ -195,5 +195,5 @@ trait Support<P, V> {
     /// then one of the is choosen arbitrarily.
     ///
     /// Note the direction may not be normalized, and may have a magnitude of zero.
-    fn support(&self, direction: V) -> P;
+    fn support(&self, direction: V) -> V;
 }

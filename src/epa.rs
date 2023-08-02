@@ -6,7 +6,7 @@ use smallvec::{smallvec, SmallVec};
 use crate::{gjk, Contact, Support};
 
 pub(crate) fn generate_contact(
-    difference: &impl Support<Vec2, Vec2>,
+    difference: &impl Support<Vec2>,
     simplex: gjk::Simplex<Vec2>,
 ) -> Contact {
     let mut simplex: Simplex = simplex.into();

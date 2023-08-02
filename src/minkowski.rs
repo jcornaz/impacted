@@ -7,14 +7,13 @@ pub(crate) struct Difference<'a, S1, S2> {
     pub(crate) shape2: &'a S2,
 }
 
-impl<P, V, S1, S2> Support<P, V> for Difference<'_, S1, S2>
+impl<V, S1, S2> Support<V> for Difference<'_, S1, S2>
 where
-    P: Sub<P, Output = V>,
-    V: Copy + Neg<Output = V> + Into<P>,
-    S1: Support<P, V>,
-    S2: Support<P, V>,
+    V: Copy + Sub<Output = V> + Neg<Output = V> + Into<V>,
+    S1: Support<V>,
+    S2: Support<V>,
 {
-    fn support(&self, direction: V) -> P {
-        (self.shape1.support(direction) - self.shape2.support(-direction)).into()
+    fn support(&self, direction: V) -> V {
+        self.shape1.support(direction) - self.shape2.support(-direction)
     }
 }

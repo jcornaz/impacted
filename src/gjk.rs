@@ -5,7 +5,7 @@ use glam::Vec2;
 use crate::{math::*, Support};
 
 pub(crate) fn find_simplex_enclosing_origin(
-    shape: &impl Support<Vec2, Vec2>,
+    shape: &impl Support<Vec2>,
     initial_direction: Vec2,
 ) -> Option<Simplex<Vec2>> {
     let mut simplex = {
@@ -125,7 +125,7 @@ mod tests {
     use super::*;
 
     struct InvalidSupport;
-    impl Support<Vec2, Vec2> for InvalidSupport {
+    impl Support<Vec2> for InvalidSupport {
         fn support(&self, _: Vec2) -> Vec2 {
             Vec2::NAN
         }
