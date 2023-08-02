@@ -68,6 +68,8 @@ mod deprecated;
 mod epa;
 mod gjk;
 mod minkowski;
+#[cfg(test)]
+mod ray;
 pub mod shapes;
 mod transform;
 
