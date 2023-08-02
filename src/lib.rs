@@ -67,6 +67,7 @@ mod broad_phase_interop;
 mod deprecated;
 mod epa;
 mod gjk;
+mod math;
 mod minkowski;
 #[cfg(test)]
 mod ray;
