@@ -5,7 +5,7 @@ use smallvec::{smallvec, SmallVec};
 
 use crate::{
     gjk,
-    math::{CmpToZero, Cross},
+    math::{CmpToZero, Cross, Dot},
     Contact, Support,
 };
 
@@ -26,14 +26,14 @@ pub(crate) fn generate_contact(
     panic!("Couldn't generate contact data");
 }
 
-struct Edge {
+struct Edge<V: Dot> {
     index: usize,
-    normal: Vec2,
-    distance: f32,
+    normal: V,
+    distance: <V as Dot>::Scalar,
 }
 
-impl From<Edge> for Contact {
-    fn from(edge: Edge) -> Self {
+impl From<Edge<Vec2>> for Contact {
+    fn from(edge: Edge<Vec2>) -> Self {
         Contact {
             normal: (-edge.normal).into(),
             penetration: edge.distance,
@@ -47,7 +47,7 @@ struct Simplex<V> {
 }
 
 impl Simplex<Vec2> {
-    fn closest_edge(&self) -> Edge {
+    fn closest_edge(&self) -> Edge<Vec2> {
         let mut closest_edge = Edge {
             index: 0,
             distance: f32::MAX,

@@ -11,14 +11,14 @@ pub(crate) trait Cross {
     fn cross(self, other: Self) -> Self::Output;
 }
 
+pub(crate) trait Perp {
+    fn perp(self) -> Self;
+}
+
 pub(crate) trait CmpToZero: Copy {
     fn is_negative(self) -> bool;
     fn is_zero(self) -> bool;
     fn is_positive(self) -> bool;
-}
-
-pub(crate) trait Perp {
-    fn perp(self) -> Self;
 }
 
 pub(crate) trait MagnitudeSquared {
