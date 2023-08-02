@@ -51,9 +51,9 @@ install-dev-tools:
 
 # Install a git hook to run tests before every commits
 install-git-hooks:
-	echo '#!/usr/bin/env sh' > .git/hooks/pre-commit
-	echo 'just verify' >> .git/hooks/pre-commit
-	chmod +x .git/hooks/pre-commit
+	echo '#!/usr/bin/env sh' > .git/hooks/pre-push
+	echo 'just verify' >> .git/hooks/pre-push
+	chmod +x .git/hooks/pre-push
 
 release *args: verify
 	cargo release {{args}}
