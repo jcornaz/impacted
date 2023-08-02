@@ -187,6 +187,13 @@ pub struct Contact {
 }
 
 trait Support<P, V> {
-    /// Returns the farthest point of the shape in the given direction
+    /// Returns the farthest point of the shape in the given direction.
+    ///
+    /// More formaly: For a direction `v` return the point `p` of the shape that maximize the dot product `p . v`
+    ///
+    /// If many points are equaly far in the given direction (have the same dot product `p . v`),
+    /// then one of the is choosen arbitrarily.
+    ///
+    /// Note the direction may not be normalized, and may have a magnitude of zero.
     fn support(&self, direction: V) -> P;
 }

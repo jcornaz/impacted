@@ -6,11 +6,8 @@ use crate::Support;
 
 pub(crate) fn find_simplex_enclosing_origin(
     shape: &impl Support<Vec2, Vec2>,
-    mut initial_direction: Vec2,
+    initial_direction: Vec2,
 ) -> Option<Simplex> {
-    if initial_direction.length_squared() <= f32::EPSILON {
-        initial_direction = Vec2::X;
-    }
     let mut simplex = {
         let first_point = shape.support(initial_direction);
         if first_point
