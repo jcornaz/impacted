@@ -1,8 +1,8 @@
 use core::ops::{Neg, Sub};
 
-use crate::{math::*, Support};
+use super::{math::*, Support};
 
-pub(crate) fn find_simplex_enclosing_origin<V>(
+pub(super) fn find_simplex_enclosing_origin<V>(
     shape: &impl Support<V>,
     initial_direction: V,
 ) -> Option<Simplex<V>>

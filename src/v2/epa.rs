@@ -5,9 +5,9 @@ use core::{
 
 use smallvec::{smallvec, SmallVec};
 
-use crate::{gjk, math::*, Contact, Support};
+use super::{gjk, math::*, Contact, Support};
 
-pub(crate) fn generate_contact<S, V>(
+pub(super) fn generate_contact<S, V>(
     difference: &impl Support<V>,
     simplex: gjk::Simplex<V>,
 ) -> Contact<S, V>

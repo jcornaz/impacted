@@ -1,7 +1,7 @@
 use bvh_arena::volumes::Aabb;
 use glam::Vec2;
 
-use crate::{CollisionShape, Support};
+use crate::v2::{CollisionShape, Support};
 
 impl From<&CollisionShape> for Aabb<2> {
     fn from(shape: &CollisionShape) -> Self {

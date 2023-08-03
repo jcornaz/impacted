@@ -2,7 +2,7 @@
 
 use glam::Vec2;
 
-use crate::Support;
+use super::Support;
 
 /// Geometric information about a shape
 #[non_exhaustive]

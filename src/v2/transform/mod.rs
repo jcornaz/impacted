@@ -1,6 +1,6 @@
 use glam::{Affine2, Mat2, Vec2};
 
-use crate::{CollisionShape, Support};
+use super::{CollisionShape, Support};
 
 /// Transform that can be used for a [`CollisionShape`]
 #[derive(Debug, Clone)]

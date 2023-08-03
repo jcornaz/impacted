@@ -1,6 +1,6 @@
 use core::ops::{Neg, Sub};
 
-use crate::Support;
+use super::Support;
 
 pub(crate) struct Difference<'a, S1, S2> {
     pub(crate) shape1: &'a S1,
