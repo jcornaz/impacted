@@ -113,3 +113,38 @@ fn contact_normal(
     let contact = shape1.contact_with(&shape2).unwrap();
     assert_abs_diff_eq!(Vec2::from(contact.normal), expected_normal, epsilon = 0.001);
 }
+
+#[rstest]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::X * 1.95)),
+    0.05
+)]
+#[case(
+    CollisionShape::new_circle(1.0),
+    CollisionShape::new_circle(1.0).with_transform(Transform::from_translation(Vec2::Y * 1.0)),
+    1.0
+)]
+#[case(
+    CollisionShape::new_rectangle(1.0, 1.0),
+    CollisionShape::new_rectangle(1.0, 1.0).with_transform(Transform::from_translation(Vec2::X * -0.95)),
+    0.05
+)]
+#[case(
+    CollisionShape::new_rectangle(1.0, 1.0),
+    CollisionShape::new_rectangle(1.0, 1.0).with_transform(Transform::from_translation(Vec2::X * -0.5)),
+    0.5
+)]
+#[case(
+    CollisionShape::new_rectangle(2.0, 2.0),
+    CollisionShape::new_rectangle(2.0, 2.0).with_transform(Transform::from_angle_translation(consts::FRAC_PI_4, Vec2::X * 2.3)),
+    0.1142
+)]
+fn contact_penetration(
+    #[case] shape1: CollisionShape,
+    #[case] shape2: CollisionShape,
+    #[case] expected_penetration: f32,
+) {
+    let contact = shape1.contact_with(&shape2).unwrap();
+    assert_abs_diff_eq!(contact.penetration, expected_penetration, epsilon = 0.0001);
+}
