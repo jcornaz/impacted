@@ -1,31 +1,29 @@
-use glam::Vec2;
-
 use crate::CollisionShape;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-struct Ray {
-    origin: Vec2,
-    vector: Vec2,
+struct Ray<V> {
+    origin: V,
+    vector: V,
 }
 
-impl Ray {
-    fn new(origin: impl Into<[f32; 2]>, vector: impl Into<[f32; 2]>) -> Self {
-        Self {
-            origin: origin.into().into(),
-            vector: vector.into().into(),
-        }
+impl<V> Ray<V> {
+    fn new(origin: V, vector: V) -> Self {
+        Self { origin, vector }
     }
 
     #[allow(clippy::unused_self)]
-    fn cast(self, _shape: &CollisionShape) -> Option<[f32; 2]> {
+    fn cast(self, _shape: &CollisionShape) -> Option<V> {
         None
     }
 }
 
 mod tests {
-    use super::*;
-    use crate::{CollisionShape, Transform};
     use rstest::rstest;
+
+    use crate::{CollisionShape, Transform};
+
+    type Vector = [f32; 2];
+    type Ray = super::Ray<Vector>;
 
     #[rstest]
     #[case(Ray::new([0.0, 0.0], [0.0, 0.0]), CollisionShape::new_circle(1.0).with_transform(Transform::from_translation([1.0, 1.0])))]
