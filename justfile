@@ -56,4 +56,6 @@ install-git-hooks:
 	chmod +x .git/hooks/pre-push
 
 release *args: verify
-	cargo release {{args}}
+    test $GITHUB_TOKEN
+    test $CARGO_REGISTRY_TOKEN
+    cargo release {{args}}
