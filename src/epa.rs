@@ -22,7 +22,7 @@ pub(crate) fn generate_contact(
         }
         simplex.insert(edge.index, support);
     }
-    panic!("Couldn't generate contact data");
+    simplex.closest_edge().into()
 }
 
 struct Edge<V: Dot> {

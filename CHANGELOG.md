@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed all bevy interoperability features.
   Note that this crate, despite being now engine agnostic, is still usable from bevy, and an example of usage from bevy is still provided.
 
+### Bug fixes
+
+* Fix panic of contact generation that could occur if a circle was tested against its rotated version
 
 ### Dependencies
 
