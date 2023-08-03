@@ -1,6 +1,6 @@
 [package]
 name = "impacted"
-version = "1.5.4"
+version = "2.0.0"
 license = "Unlicense"
 authors = ["Jonathan Cornaz"]
 edition = "2021"

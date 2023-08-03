@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+
+## [2.0.0] - 2023-08-03
+
 ### Breaking changes
 
 * Removed all bevy interoperability features.
@@ -38,5 +41,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * **readme:** fix build badge ([1f91bf8](https://github.com/jcornaz/impacted/commit/1f91bf88ee4a57eddc4a1ed4b47fc5ffea04e85d))
 
 
-[Unreleased]: https://github.com/jcornaz/beancount_parser_2/compare/v1.5.3...HEAD
+[Unreleased]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/jcornaz/beancount_parser_2/compare/v1.5.3...v2.0.0
 [1.5.4]: https://github.com/jcornaz/impacted/compare/v1.5.3...v1.5.4
