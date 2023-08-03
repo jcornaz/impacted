@@ -56,13 +56,10 @@
 //! * `bvh-arena` Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
 //!
 
-#[allow(deprecated)]
-pub use crate::deprecated::Error;
 use crate::shapes::ShapeData;
 pub use crate::transform::Transform;
 
 mod broad_phase_interop;
-mod deprecated;
 mod epa;
 mod gjk;
 mod math;
