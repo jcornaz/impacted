@@ -156,7 +156,14 @@ impl CollisionShape {
         };
         let initial_axis = other.transform.position() - self.transform.position();
         let simplex = gjk::find_simplex_enclosing_origin(&difference, initial_axis)?;
-        Some(epa::generate_contact(&difference, simplex))
+        let Contact {
+            normal,
+            penetration,
+        } = epa::generate_contact(&difference, simplex);
+        Some(Contact::<f32, [f32; 2]> {
+            normal: normal.into(),
+            penetration,
+        })
     }
 
     /// Returns the shape data of the collider
@@ -171,16 +178,16 @@ impl CollisionShape {
 /// See [`CollisionShape::contact_with`]
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct Contact {
+pub struct Contact<S = f32, V = [S; 2]> {
     /// Contact normal
     ///
     /// This is the direction on which the first shape should be moved to resolve inter-penetration
     /// This is also on that direction that impulse should be applied to the first shape to resolve velocities
-    pub normal: [f32; 2],
+    pub normal: V,
     /// Penetration
     ///
     /// This is "how much" the two shapes are inter-penetrating
-    pub penetration: f32,
+    pub penetration: S,
 }
 
 trait Support<V> {

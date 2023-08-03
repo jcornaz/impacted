@@ -3,21 +3,31 @@ use core::{
     ops::{Neg, Sub},
 };
 
-use glam::Vec2;
 use smallvec::{smallvec, SmallVec};
 
 use crate::{gjk, math::*, Contact, Support};
 
-pub(crate) fn generate_contact(
-    difference: &impl Support<Vec2>,
-    simplex: gjk::Simplex<Vec2>,
-) -> Contact {
-    let mut simplex: Simplex<Vec2> = simplex.into();
+pub(crate) fn generate_contact<S, V>(
+    difference: &impl Support<V>,
+    simplex: gjk::Simplex<V>,
+) -> Contact<S, V>
+where
+    V: Copy
+        + Default
+        + Sub<V, Output = V>
+        + Neg<Output = V>
+        + Dot<Output = S>
+        + Cross<Output = S>
+        + Perp
+        + Normalize,
+    S: PartialOrd + Sub<Output = S> + CmpToZero,
+{
+    let mut simplex: Simplex<V> = simplex.into();
     for _ in 0..1000 {
         let edge = simplex.closest_edge();
         let support = difference.support(edge.normal);
         let penetration = support.dot(edge.normal);
-        if penetration - edge.distance <= f32::EPSILON {
+        if (penetration - edge.distance).is_negative() {
             return edge.into();
         }
         simplex.insert(edge.index, support);
@@ -31,13 +41,13 @@ struct Edge<V: Dot> {
     distance: <V as Dot>::Output,
 }
 
-impl<V> From<Edge<V>> for Contact
+impl<V, S> From<Edge<V>> for Contact<S, V>
 where
-    V: Neg<Output = V> + Into<[f32; 2]> + Dot<Output = f32>,
+    V: Neg<Output = V> + Dot<Output = S>,
 {
     fn from(edge: Edge<V>) -> Self {
         Contact {
-            normal: (-edge.normal).into(),
+            normal: -edge.normal,
             penetration: edge.distance,
         }
     }
@@ -116,6 +126,7 @@ where
 #[cfg(test)]
 mod tests {
     use approx::assert_ulps_eq;
+    use glam::Vec2;
 
     use super::*;
 
