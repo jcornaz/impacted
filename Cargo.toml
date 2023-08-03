@@ -15,7 +15,7 @@ all-features = true
 
 [features]
 default = ["std"]
-std = ["glam/std", "thiserror", "bvh-arena?/std"]
+std = ["glam/std", "bvh-arena?/std"]
 
 [dependencies]
 # Public
@@ -23,13 +23,12 @@ bvh-arena = { version = "1.1.3", default-features = false, optional = true }
 
 # Private
 glam = { version = "0.24.1", default-features = false, features = ["libm"] }
-thiserror = { version = "1.0.44", default-features = false, optional = true }
 smallvec = { version = "1.11.0", default-features = false }
 
 [dev-dependencies]
 rstest = { version = "0.18.1", default-features = false }
 bevy = { version = "0.11.0", default-features = false, features = ["bevy_render", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_asset", "x11"]}
-glam = { version = "0.24.1", default-features = false, features = ["libm", "approx"] }
+glam = { version = "0.24.1", features = ["libm", "approx"] }
 approx = "0.5.1"
 
 [build-dependencies]
