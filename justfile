@@ -17,7 +17,7 @@ run-bevy-example:
 
 # Run the tests
 test:
-    cargo hack test --tests --feature-powerset --optional-deps
+    cargo hack test --tests --feature-powerset
     cargo test --examples --all-features
     cargo test --doc --all-features
 
