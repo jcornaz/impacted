@@ -55,32 +55,34 @@ where
 {
     fn closest_edge(&self) -> Edge<V> {
         (0..self.points.len())
-            .map(|index| {
-                let p1 = self.points[index];
-                let p2 = self
-                    .points
-                    .get(index + 1)
-                    .copied()
-                    .unwrap_or_else(|| self.points[0]);
-                let edge = p2 - p1;
-                let normal = edge
-                    .perp()
-                    .normalize()
-                    .or_else(|| p1.normalize())
-                    .unwrap_or_default();
-                let distance = p1.dot(normal);
-                Edge {
-                    index,
-                    normal,
-                    distance,
-                }
-            })
+            .map(|index| self.edge(index))
             .min_by(|e1, e2| {
                 e1.distance
                     .partial_cmp(&e2.distance)
                     .unwrap_or(core::cmp::Ordering::Equal)
             })
             .expect("no edge in epa simplex")
+    }
+
+    fn edge(&self, index: usize) -> Edge<V> {
+        let p1 = self.points[index];
+        let p2 = self
+            .points
+            .get(index + 1)
+            .copied()
+            .unwrap_or_else(|| self.points[0]);
+        let edge = p2 - p1;
+        let normal = edge
+            .perp()
+            .normalize()
+            .or_else(|| p1.normalize())
+            .unwrap_or_default();
+        let distance = p1.dot(normal);
+        Edge {
+            index,
+            normal,
+            distance,
+        }
     }
 }
 
