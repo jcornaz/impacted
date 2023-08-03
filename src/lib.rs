@@ -57,6 +57,7 @@
 //!
 
 mod v2;
+#[allow(unused)]
 mod v3;
 
 pub use v2::*;
