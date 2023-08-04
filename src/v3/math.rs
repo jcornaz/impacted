@@ -7,9 +7,14 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
-    pub(super) fn new(x: f32, y: f32) -> Self {
+    pub(super) const ZERO: Self = Self::new(0.0, 0.0);
+    pub(super) const X: Self = Self::new(1.0, 0.0);
+    pub(super) const Y: Self = Self::new(0.0, 1.0);
+
+    pub(super) const fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
+
     pub(super) fn dot(self, other: Self) -> f32 {
         (self.x * other.x) + (self.y * other.y)
     }
@@ -93,11 +98,11 @@ mod tests {
     use rstest::rstest;
 
     #[rstest]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), 0.0)]
-    #[case(Vec2::new(1.0, 0.0), Vec2::new(1.0, 0.0), 1.0)]
-    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), 0.0)]
-    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 1.0), 1.0)]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), 0.0)]
+    #[case(Vec2::ZERO, Vec2::ZERO, 0.0)]
+    #[case(Vec2::X, Vec2::X, 1.0)]
+    #[case(Vec2::X, Vec2::ZERO, 0.0)]
+    #[case(Vec2::Y, Vec2::Y, 1.0)]
+    #[case(Vec2::ZERO, Vec2::Y, 0.0)]
     #[case(Vec2::new(2.0, 3.0), Vec2::new(5.0, 7.0), 31.0)]
     #[case(Vec2::new(5.0, 7.0), Vec2::new(2.0, 3.0), 31.0)]
     fn test_dot(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: f32) {
@@ -105,11 +110,11 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0))]
-    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0))]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0), Vec2::new(1.0, 0.0))]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), Vec2::new(0.0, 1.0))]
-    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0))]
+    #[case(Vec2::ZERO, Vec2::ZERO, Vec2::ZERO)]
+    #[case(Vec2::X, Vec2::ZERO, Vec2::X)]
+    #[case(Vec2::ZERO, Vec2::X, Vec2::X)]
+    #[case(Vec2::ZERO, Vec2::Y, Vec2::Y)]
+    #[case(Vec2::Y, Vec2::ZERO, Vec2::Y)]
     #[case(Vec2::new(1.0, 2.0), Vec2::new(3.0, 4.0), Vec2::new(4.0, 6.0))]
     #[case(Vec2::new(-1.0, 2.0), Vec2::new(3.0, -4.0), Vec2::new(2.0, -2.0))]
     fn test_add(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: Vec2) {
@@ -120,11 +125,11 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0))]
-    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0))]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0), Vec2::new(-1.0, 0.0))]
-    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0))]
-    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), Vec2::new(0.0, -1.0))]
+    #[case(Vec2::ZERO, Vec2::ZERO, Vec2::ZERO)]
+    #[case(Vec2::X, Vec2::ZERO, Vec2::X)]
+    #[case(Vec2::ZERO, Vec2::X, Vec2::new(-1.0, 0.0))]
+    #[case(Vec2::Y, Vec2::ZERO, Vec2::Y)]
+    #[case(Vec2::ZERO, Vec2::Y, Vec2::new(0.0, -1.0))]
     #[case(Vec2::new(10.0, 11.0), Vec2::new(3.0, 5.0), Vec2::new(7.0, 6.0))]
     #[case(Vec2::new(3.0, 5.0), Vec2::new(10.0, 11.0), Vec2::new(-7.0, -6.0))]
     fn test_sub(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: Vec2) {
@@ -135,9 +140,9 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Vec2::new(0.0, 0.0), 1.0, Vec2::new(0.0, 0.0))]
-    #[case(Vec2::new(1.0, 0.0), 2.0, Vec2::new(2.0, 0.0))]
-    #[case(Vec2::new(0.0, 1.0), 2.0, Vec2::new(0.0, 2.0))]
+    #[case(Vec2::ZERO, 1.0, Vec2::ZERO)]
+    #[case(Vec2::X, 2.0, Vec2::new(2.0, 0.0))]
+    #[case(Vec2::Y, 2.0, Vec2::new(0.0, 2.0))]
     #[case(Vec2::new(2.0, 3.0), 4.0, Vec2::new(8.0, 12.0))]
     fn test_mul_div(#[case] v: Vec2, #[case] f: f32, #[case] expected: Vec2) {
         assert_abs_diff_eq!(v * f, expected);
