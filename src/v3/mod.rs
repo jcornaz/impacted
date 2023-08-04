@@ -1,4 +1,4 @@
-use math::{Point, Vector};
+use math::Vector;
 use shapes::Aabb;
 
 trait ConvexPolygon {
@@ -9,23 +9,13 @@ trait Collides<Rhs> {
     fn collides(&self, other: &Rhs) -> bool;
 }
 
-mod math {
-    pub(super) struct Point {
-        x: f32,
-        y: f32,
-    }
-
-    pub(super) struct Vector {
-        x: f32,
-        y: f32,
-    }
-}
+mod math;
 
 mod shapes {
-    use super::math::{Point, Vector};
+    use super::math::Vector;
 
     pub(super) struct Aabb {
-        top_left: Point,
-        bottom_right: Point,
+        top_left: Vector,
+        bottom_right: Vector,
     }
 }
