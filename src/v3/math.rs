@@ -15,12 +15,6 @@ impl Vec2 {
     }
 }
 
-impl From<[f32; 2]> for Vec2 {
-    fn from([x, y]: [f32; 2]) -> Self {
-        Self::new(x, y)
-    }
-}
-
 impl AddAssign for Vec2 {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
@@ -65,56 +59,48 @@ impl approx::AbsDiffEq for Vec2 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use approx::{assert_abs_diff_eq, assert_ulps_eq};
+    use approx::{assert_abs_diff_eq, assert_abs_diff_ne, assert_ulps_eq};
     use rstest::rstest;
 
     #[rstest]
-    #[case([0.0, 0.0], [0.0, 0.0], [0.0, 0.0])]
-    #[case([1.0, 2.0], [3.0, 4.0], [4.0, 6.0])]
-    #[case([3.0, 4.0], [1.0, 2.0], [4.0, 6.0])]
-    #[case([-1.0, 2.0], [3.0, 4.0], [2.0, 6.0])]
-    #[case([-1.0, 2.0], [3.0, 5.5], [2.0, 7.5])]
-    fn test_add(
-        #[case] a: impl Into<Vec2>,
-        #[case] b: impl Into<Vec2>,
-        #[case] expected: impl Into<Vec2>,
-    ) {
-        let mut a = a.into();
-        let b = b.into();
-        let expected = expected.into();
-        assert_abs_diff_eq!(a + b, expected);
-        assert_abs_diff_eq!(b + a, expected);
-        a += b;
-        assert_abs_diff_eq!(a, expected);
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), 0.0)]
+    #[case(Vec2::new(1.0, 0.0), Vec2::new(1.0, 0.0), 1.0)]
+    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), 0.0)]
+    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 1.0), 1.0)]
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), 0.0)]
+    #[case(Vec2::new(2.0, 3.0), Vec2::new(5.0, 7.0), 31.0)]
+    #[case(Vec2::new(5.0, 7.0), Vec2::new(2.0, 3.0), 31.0)]
+    fn test_dot(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: f32) {
+        assert_abs_diff_eq!(v1.dot(v2), expected);
     }
 
     #[rstest]
-    #[case([0.0, 0.0], [0.0, 0.0], [0.0, 0.0])]
-    #[case([1.0, 2.0], [3.0, 4.0], [-2.0, -2.0])]
-    #[case([2.0, 7.5], [-1.0, 2.0], [3.0, 5.5])]
-    #[case([2.0, 7.5], [3.0, 5.5], [-1.0, 2.0])]
-    fn test_sub(
-        #[case] a: impl Into<Vec2>,
-        #[case] b: impl Into<Vec2>,
-        #[case] expected: impl Into<Vec2>,
-    ) {
-        let mut a = a.into();
-        let b = b.into();
-        let expected = expected.into();
-        assert_abs_diff_eq!(a - b, expected);
-        a -= b;
-        assert_abs_diff_eq!(a, expected);
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0))]
+    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0))]
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0), Vec2::new(1.0, 0.0))]
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), Vec2::new(0.0, 1.0))]
+    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0))]
+    #[case(Vec2::new(1.0, 2.0), Vec2::new(3.0, 4.0), Vec2::new(4.0, 6.0))]
+    #[case(Vec2::new(-1.0, 2.0), Vec2::new(3.0, -4.0), Vec2::new(2.0, -2.0))]
+    fn test_add(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: Vec2) {
+        assert_abs_diff_eq!(v1 + v2, expected);
+        let mut sum = v1;
+        sum += v2;
+        assert_abs_diff_eq!(sum, expected);
     }
 
     #[rstest]
-    #[case([0.0, 0.0], [0.0, 0.0], 0.0)]
-    #[case([1.0, 0.0], [2.0, 0.0], 2.0)]
-    #[case([2.0, 0.0], [3.0, 0.0], 6.0)]
-    #[case([2.0, 1.0], [3.0, 1.0], 7.0)]
-    #[case([2.0, 3.0], [3.0, 4.0], 18.0)]
-    #[case(Vec2::new(2.0, 3.0), Vec2::new(3.0, 4.0), 18.0)]
-    #[case([2.0, 3.0], [-3.0, 4.0], 6.0)]
-    fn test_dot(#[case] v1: impl Into<Vec2>, #[case] v2: impl Into<Vec2>, #[case] expected: f32) {
-        assert_ulps_eq!(v1.into().dot(v2.into()), expected);
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 0.0))]
+    #[case(Vec2::new(1.0, 0.0), Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0))]
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(1.0, 0.0), Vec2::new(-1.0, 0.0))]
+    #[case(Vec2::new(0.0, 1.0), Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0))]
+    #[case(Vec2::new(0.0, 0.0), Vec2::new(0.0, 1.0), Vec2::new(0.0, -1.0))]
+    #[case(Vec2::new(10.0, 11.0), Vec2::new(3.0, 5.0), Vec2::new(7.0, 6.0))]
+    #[case(Vec2::new(3.0, 5.0), Vec2::new(10.0, 11.0), Vec2::new(-7.0, -6.0))]
+    fn test_sub(#[case] v1: Vec2, #[case] v2: Vec2, #[case] expected: Vec2) {
+        assert_abs_diff_eq!(v1 - v2, expected);
+        let mut res = v1;
+        res -= v2;
+        assert_abs_diff_eq!(res, expected);
     }
 }
