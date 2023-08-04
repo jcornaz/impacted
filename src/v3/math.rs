@@ -1,16 +1,16 @@
 use core::ops::{Add, AddAssign, Sub, SubAssign};
 
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub(super) struct Vec2 {
+#[derive(Debug, Copy, Clone, Default, PartialEq)]
+pub struct Vec2 {
     x: f32,
     y: f32,
 }
 
 impl Vec2 {
-    fn new(x: f32, y: f32) -> Self {
+    pub(super) fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
-    fn dot(self, other: Self) -> f32 {
+    pub(super) fn dot(self, other: Self) -> f32 {
         (self.x * other.x) + (self.y * other.y)
     }
 }
