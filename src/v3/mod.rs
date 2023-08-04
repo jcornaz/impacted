@@ -41,9 +41,13 @@ mod shapes {
 
     impl AxisProjection for Aabb {
         fn project(&self, axis: Vec2) -> (f32, f32) {
-            let p = self.half_size.dot(axis);
-            let add = self.center.dot(axis);
-            (-p + add, p + add)
+            let r1 = self.half_size.dot(axis).abs();
+            let r2 = Vec2::new(self.half_size.x, -self.half_size.y)
+                .dot(axis)
+                .abs();
+            let r = r1.max(r2);
+            let shift = self.center.dot(axis);
+            (shift - r, shift + r)
         }
     }
 
@@ -56,10 +60,14 @@ mod shapes {
         #[rstest]
         #[case(Aabb::from_size(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), (0.0, 0.0))]
         #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(1.0, 0.0), (-1.0, 1.0))]
+        #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(-1.0, 0.0), (-1.0, 1.0))]
         #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, 1.0), (-1.0, 1.0))]
+        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, -1.0), (-1.0, 1.0))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.0, 0.0), (-1.5, 1.5))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(0.0, 1.0), (-2.0, 2.0))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, 2.0), (-6.25, 6.25))]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, -2.0), (-6.25, 6.25))]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(-1.5, 2.0), (-6.25, 6.25))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), (-1.5, 1.5))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), (-0.5, 2.5))]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), (-1.5, 1.5))]
