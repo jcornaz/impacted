@@ -21,18 +21,21 @@ mod shapes {
     use super::{math::Vec2, AxisProjection};
 
     pub(super) struct Aabb {
-        size: Vec2,
+        half_size: Vec2,
     }
 
     impl Aabb {
         fn from_size(size: Vec2) -> Self {
-            Self { size }
+            Self {
+                half_size: size / 2.0,
+            }
         }
     }
 
     impl AxisProjection for Aabb {
         fn project(&self, axis: Vec2) -> (f32, f32) {
-            (0.0, 0.0)
+            let p = self.half_size.dot(axis);
+            (-p, p)
         }
     }
 
@@ -44,8 +47,9 @@ mod shapes {
 
         #[rstest]
         #[case(Aabb::from_size(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), (0.0, 0.0))]
-        #[ignore = "not implemented"]
         #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(1.0, 0.0), (-1.0, 1.0))]
+        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, 1.0), (-1.0, 1.0))]
+        #[case(Aabb::from_size(Vec2::new(2.0, 2.0)), Vec2::new(0.0, -1.0), (1.0, -1.0))]
         fn test_axis_project(
             #[case] shape: Aabb,
             #[case] axis: Vec2,
