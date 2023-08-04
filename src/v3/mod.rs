@@ -1,10 +1,13 @@
 use math::Vec2;
+use sealed::sealed;
 use shapes::Aabb;
 
+#[sealed]
 trait ConvexPolygon {
     fn axes(&self) -> &[Vec2];
 }
 
+#[sealed]
 trait Collides<Rhs> {
     fn collides(&self, other: &Rhs) -> bool;
 }
