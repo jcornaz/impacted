@@ -2,8 +2,8 @@ use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Vec2 {
-    x: f32,
-    y: f32,
+    pub(super) x: f32,
+    pub(super) y: f32,
 }
 
 impl Vec2 {
