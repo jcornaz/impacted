@@ -1,4 +1,4 @@
-use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
+use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Vec2 {
@@ -80,6 +80,15 @@ impl Div<f32> for Vec2 {
     }
 }
 
+impl Neg for Vec2 {
+    type Output = Self;
+    fn neg(mut self) -> Self::Output {
+        self.x = -self.x;
+        self.y = -self.y;
+        self
+    }
+}
+
 #[cfg(test)]
 impl approx::AbsDiffEq for Vec2 {
     type Epsilon = f32;
@@ -153,5 +162,14 @@ mod tests {
         res = v;
         res /= f.recip();
         assert_abs_diff_eq!(res, expected);
+    }
+
+    #[rstest]
+    #[case(Vec2::ZERO, Vec2::ZERO)]
+    #[case(Vec2::X, Vec2::new(-1.0, 0.0))]
+    #[case(Vec2::Y, Vec2::new(0.0, -1.0))]
+    #[case(Vec2::new(-2.3, 4.5), Vec2::new(2.3, -4.5))]
+    fn test_negate(#[case] v: Vec2, #[case] expected: Vec2) {
+        assert_abs_diff_eq!(-v, expected);
     }
 }
