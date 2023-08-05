@@ -1,4 +1,37 @@
-mod point {}
+mod point {
+    use crate::v3::{math::Vec2, AxisProjection, Range};
+
+    struct Point(Vec2);
+
+    impl From<Vec2> for Point {
+        fn from(value: Vec2) -> Self {
+            Self(value)
+        }
+    }
+
+    impl AxisProjection for Point {
+        fn project(&self, _axis: Vec2) -> crate::v3::Range {
+            Range::from_min_max(0.0, 0.0)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use approx::assert_abs_diff_eq;
+        use rstest::rstest;
+
+        #[rstest]
+        #[case(Vec2::ZERO, Vec2::ZERO, Range::from_min_max(0.0, 0.0))]
+        fn test_axis_projection(
+            #[case] point: impl Into<Point>,
+            #[case] axis: Vec2,
+            #[case] expected: Range,
+        ) {
+            assert_abs_diff_eq!(point.into().project(axis), expected);
+        }
+    }
+}
 
 mod aabb {
     use crate::v3::{math::Vec2, AxisProjection, Range};
