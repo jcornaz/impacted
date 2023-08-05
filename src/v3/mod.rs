@@ -14,8 +14,9 @@ trait Cast<Rhs> {
     fn cast(&self, other: &Rhs) -> Option<Vec2>;
 }
 
-trait ConvexPolygon {
-    fn axes(&self) -> &[Vec2];
+trait SatAxes {
+    type Iter: Iterator<Item = Vec2>;
+    fn axes(&self) -> Self::Iter;
 }
 
 trait AxisProjection {
