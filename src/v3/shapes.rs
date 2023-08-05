@@ -10,8 +10,9 @@ mod point {
     }
 
     impl AxisProjection for Point {
-        fn project(&self, _axis: Vec2) -> crate::v3::Range {
-            Range::from_min_max(0.0, 0.0)
+        fn project(&self, axis: Vec2) -> crate::v3::Range {
+            let p = self.0.dot(axis);
+            Range::from_min_max(p, p)
         }
     }
 
@@ -23,6 +24,23 @@ mod point {
 
         #[rstest]
         #[case(Vec2::ZERO, Vec2::ZERO, Range::from_min_max(0.0, 0.0))]
+        #[case(Vec2::ZERO, Vec2::X, Range::from_min_max(0.0, 0.0))]
+        #[case(Vec2::X, Vec2::X, Range::from_min_max(1.0, 1.0))]
+        #[case(Vec2::X, Vec2::Y, Range::from_min_max(0.0, 0.0))]
+        #[case(Vec2::Y, Vec2::Y, Range::from_min_max(1.0, 1.0))]
+        #[case(Vec2::Y, Vec2::X, Range::from_min_max(0.0, 0.0))]
+        #[case(Vec2::new(3.0, 4.0), Vec2::X, Range::from_min_max(3.0, 3.0))]
+        #[case(Vec2::new(3.0, 4.0), Vec2::Y, Range::from_min_max(4.0, 4.0))]
+        #[case(
+            Vec2::new(3.0, 4.0),
+            Vec2::new(3.0/5.0, 4.0/5.0),
+            Range::from_min_max(5.0, 5.0)
+        )]
+        #[case(
+            Vec2::new(3.0, 3.0),
+            Vec2::new(2f32.sqrt(), -(2f32.sqrt())),
+            Range::from_min_max(0.0, 0.0)
+        )]
         fn test_axis_projection(
             #[case] point: impl Into<Point>,
             #[case] axis: Vec2,
