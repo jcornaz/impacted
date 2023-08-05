@@ -119,7 +119,13 @@ mod aabb {
         }
 
         #[rstest]
-        fn test_polygon_axes(#[values(Aabb::from_size(Vec2::ZERO))] shape: Aabb) {
+        fn test_polygon_axes(
+            #[values(
+                Aabb::from_size(Vec2::ZERO),
+                Aabb::from_size(Vec2::new(2.0, 3.0)).with_position(Vec2::new(4.0, 5.0))
+            )]
+            shape: Aabb,
+        ) {
             let mut iterator = shape.axes();
             assert_eq!(iterator.next(), Some(Vec2::X));
             assert_eq!(iterator.next(), Some(Vec2::Y));
