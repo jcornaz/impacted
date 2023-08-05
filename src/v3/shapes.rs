@@ -45,7 +45,7 @@ mod point {
 }
 
 mod aabb {
-    use crate::v3::{math::Vec2, AxisProjection, Range};
+    use crate::v3::{math::Vec2, AxisProjection, Range, SatAxes};
 
     struct Aabb {
         center: Vec2,
@@ -75,6 +75,14 @@ mod aabb {
             let r = r1.max(r2);
             let shift = self.center.dot(axis);
             Range::from_min_max(shift - r, shift + r)
+        }
+    }
+
+    impl SatAxes for Aabb {
+        type Iter = core::array::IntoIter<Vec2, 2>;
+
+        fn axes(&self) -> Self::Iter {
+            [Vec2::X, Vec2::Y].into_iter()
         }
     }
 
@@ -108,6 +116,14 @@ mod aabb {
             let range = shape.project(axis);
             assert_abs_diff_eq!(range.min, expected_min);
             assert_abs_diff_eq!(range.max, expected_max);
+        }
+
+        #[rstest]
+        fn test_polygon_axes(#[values(Aabb::from_size(Vec2::ZERO))] shape: Aabb) {
+            let mut iterator = shape.axes();
+            assert_eq!(iterator.next(), Some(Vec2::X));
+            assert_eq!(iterator.next(), Some(Vec2::Y));
+            assert!(iterator.next().is_none(), "too many axes returned");
         }
     }
 }
