@@ -23,29 +23,22 @@ mod point {
         use rstest::rstest;
 
         #[rstest]
-        #[case(Vec2::ZERO, Vec2::ZERO, Range::from_min_max(0.0, 0.0))]
-        #[case(Vec2::ZERO, Vec2::X, Range::from_min_max(0.0, 0.0))]
-        #[case(Vec2::X, Vec2::X, Range::from_min_max(1.0, 1.0))]
-        #[case(Vec2::X, Vec2::Y, Range::from_min_max(0.0, 0.0))]
-        #[case(Vec2::Y, Vec2::Y, Range::from_min_max(1.0, 1.0))]
-        #[case(Vec2::Y, Vec2::X, Range::from_min_max(0.0, 0.0))]
-        #[case(Vec2::new(3.0, 4.0), Vec2::X, Range::from_min_max(3.0, 3.0))]
-        #[case(Vec2::new(3.0, 4.0), Vec2::Y, Range::from_min_max(4.0, 4.0))]
-        #[case(
-            Vec2::new(3.0, 4.0),
-            Vec2::new(3.0/5.0, 4.0/5.0),
-            Range::from_min_max(5.0, 5.0)
-        )]
-        #[case(
-            Vec2::new(3.0, 3.0),
-            Vec2::new(2f32.sqrt(), -(2f32.sqrt())),
-            Range::from_min_max(0.0, 0.0)
-        )]
+        #[case(Vec2::ZERO, Vec2::ZERO, 0.0)]
+        #[case(Vec2::ZERO, Vec2::X, 0.0)]
+        #[case(Vec2::X, Vec2::X, 1.0)]
+        #[case(Vec2::X, Vec2::Y, 0.0)]
+        #[case(Vec2::Y, Vec2::Y, 1.0)]
+        #[case(Vec2::Y, Vec2::X, 0.0)]
+        #[case(Vec2::new(3.0, 4.0), Vec2::X, 3.0)]
+        #[case(Vec2::new(3.0, 4.0), Vec2::Y, 4.0)]
+        #[case(Vec2::new(3.0, 4.0),Vec2::new(3.0/5.0, 4.0/5.0),5.0)]
+        #[case(Vec2::new(3.0, 3.0),Vec2::new(2f32.sqrt(), -(2f32.sqrt())),0.0)]
         fn test_axis_projection(
             #[case] point: impl Into<Point>,
             #[case] axis: Vec2,
-            #[case] expected: Range,
+            #[case] expected: f32,
         ) {
+            let expected = Range::from_min_max(expected, expected);
             assert_abs_diff_eq!(point.into().project(axis), expected);
         }
     }
@@ -92,27 +85,29 @@ mod aabb {
         use rstest::rstest;
 
         #[rstest]
-        #[case(
-            Aabb::from_size(Vec2::new(0.0, 0.0)),
-            Vec2::new(1.0, 0.0),
-            Range::from_min_max(0.0, 0.0)
-        )]
-        #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(1.0, 0.0), Range::from_min_max(-1.0, 1.0))]
-        #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(-1.0, 0.0), Range::from_min_max(-1.0, 1.0))]
-        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, 1.0), Range::from_min_max(-1.0, 1.0))]
-        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, -1.0), Range::from_min_max(-1.0, 1.0))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.0, 0.0), Range::from_min_max(-1.5, 1.5))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(0.0, 1.0), Range::from_min_max(-2.0, 2.0))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, 2.0), Range::from_min_max(-6.25, 6.25))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, -2.0), Range::from_min_max(-6.25, 6.25))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(-1.5, 2.0), Range::from_min_max(-6.25, 6.25))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), Range::from_min_max(-1.5, 1.5))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), Range::from_min_max(-0.5, 2.5))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), Range::from_min_max(-1.5, 1.5))]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(0.0, 1.0), Range::from_min_max(-1.0, 3.0))]
-        fn test_axis_project(#[case] shape: Aabb, #[case] axis: Vec2, #[case] expected: Range) {
+        #[case(Aabb::from_size(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), 0.0, 0.0)]
+        #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(1.0, 0.0), -1.0, 1.0)]
+        #[case(Aabb::from_size(Vec2::new(2.0, 0.0)), Vec2::new(-1.0, 0.0), -1.0, 1.0)]
+        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, 1.0), -1.0, 1.0)]
+        #[case(Aabb::from_size(Vec2::new(0.0, 2.0)), Vec2::new(0.0, -1.0), -1.0, 1.0)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(0.0, 1.0), -2.0, 2.0)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, 2.0), -6.25, 6.25)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, -2.0), -6.25, 6.25)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(-1.5, 2.0), -6.25, 6.25)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), -0.5, 2.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(0.0, 1.0), -1.0, 3.0)]
+        fn test_axis_project(
+            #[case] shape: Aabb,
+            #[case] axis: Vec2,
+            #[case] expected_min: f32,
+            #[case] expected_max: f32,
+        ) {
             let range = shape.project(axis);
-            assert_abs_diff_eq!(range, expected);
+            assert_abs_diff_eq!(range.min, expected_min);
+            assert_abs_diff_eq!(range.max, expected_max);
         }
     }
 }
