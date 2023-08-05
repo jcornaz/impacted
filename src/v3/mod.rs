@@ -3,15 +3,19 @@ mod shapes;
 
 use math::Vec2;
 use sealed::sealed;
-use shapes::Aabb;
-
-trait ConvexPolygon {
-    fn axes(&self) -> &[Vec2];
-}
 
 #[sealed]
 trait Collides<Rhs> {
     fn collides(&self, other: &Rhs) -> bool;
+}
+
+#[sealed]
+trait Cast<Rhs> {
+    fn cast(&self, other: &Rhs) -> Option<Vec2>;
+}
+
+trait ConvexPolygon {
+    fn axes(&self) -> &[Vec2];
 }
 
 trait AxisProjection {

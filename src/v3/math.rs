@@ -103,7 +103,7 @@ impl approx::AbsDiffEq for Vec2 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use approx::{assert_abs_diff_eq, assert_abs_diff_ne, assert_ulps_eq};
+    use approx::assert_abs_diff_eq;
     use rstest::rstest;
 
     #[rstest]

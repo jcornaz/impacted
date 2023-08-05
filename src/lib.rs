@@ -57,7 +57,7 @@
 //!
 
 mod v2;
-#[allow(unused)]
+#[cfg(test)]
 mod v3;
 
 pub use v2::*;

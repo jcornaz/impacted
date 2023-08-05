@@ -33,8 +33,6 @@ impl AxisProjection for Aabb {
 
 #[cfg(test)]
 mod tests {
-    use core::ops::RangeInclusive;
-
     use super::*;
     use approx::assert_abs_diff_eq;
     use rstest::rstest;
