@@ -73,6 +73,8 @@ mod tests {
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(1.6, 0.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(-1.6, 0.0)))]
     #[ignore = "not implemented"]
+    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(0.6, 0.0)))]
+    #[ignore = "not implemented"]
     #[case(Vec2::X * 10.0, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(0.5, 0.0)))]
     fn ray_cast_should_return_none_when_there_is_no_hit(
         #[case] origin: impl Into<Point>,
