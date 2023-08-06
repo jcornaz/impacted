@@ -1,7 +1,7 @@
 use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Debug, Copy, Clone, Default, PartialEq)]
-pub(super) struct Vec2 {
+pub(crate) struct Vec2 {
     pub(super) x: f32,
     pub(super) y: f32,
 }

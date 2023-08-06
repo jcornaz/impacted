@@ -47,20 +47,20 @@ mod point {
 mod aabb {
     use crate::v3::{math::Vec2, AxisProjection, Range, SatShape};
 
-    struct Aabb {
+    pub(crate) struct Aabb {
         center: Vec2,
         half_size: Vec2,
     }
 
     impl Aabb {
-        fn from_size(size: Vec2) -> Self {
+        pub(crate) fn from_size(size: Vec2) -> Self {
             Self {
                 center: Vec2::default(),
                 half_size: size / 2.0,
             }
         }
 
-        fn with_position(mut self, center: Vec2) -> Self {
+        pub(crate) fn with_position(mut self, center: Vec2) -> Self {
             self.center = center;
             self
         }
@@ -133,3 +133,5 @@ mod aabb {
         }
     }
 }
+
+pub(super) use aabb::Aabb;
