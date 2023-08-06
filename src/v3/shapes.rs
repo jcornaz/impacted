@@ -45,7 +45,7 @@ mod point {
 }
 
 mod aabb {
-    use crate::v3::{math::Vec2, AxisProjection, Range, SatAxes};
+    use crate::v3::{math::Vec2, AxisProjection, Range, SatShape};
 
     struct Aabb {
         center: Vec2,
@@ -78,10 +78,10 @@ mod aabb {
         }
     }
 
-    impl SatAxes for Aabb {
-        type Iter = core::array::IntoIter<Vec2, 2>;
+    impl SatShape for Aabb {
+        type AxisIter = core::array::IntoIter<Vec2, 2>;
 
-        fn axes(&self) -> Self::Iter {
+        fn axes(&self) -> Self::AxisIter {
             [Vec2::X, Vec2::Y].into_iter()
         }
     }

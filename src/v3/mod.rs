@@ -14,9 +14,9 @@ trait Cast<Rhs> {
     fn cast(&self, other: &Rhs) -> Option<Vec2>;
 }
 
-trait SatAxes {
-    type Iter: Iterator<Item = Vec2>;
-    fn axes(&self) -> Self::Iter;
+trait SatShape: AxisProjection {
+    type AxisIter: Iterator<Item = Vec2>;
+    fn axes(&self) -> Self::AxisIter;
 }
 
 trait AxisProjection {
