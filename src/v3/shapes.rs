@@ -1,7 +1,8 @@
 mod point {
     use crate::v3::{math::Vec2, AxisProjection, Range};
 
-    struct Point(Vec2);
+    #[derive(Debug, Copy, Clone)]
+    pub(crate) struct Point(Vec2);
 
     impl From<Vec2> for Point {
         fn from(value: Vec2) -> Self {
@@ -135,3 +136,4 @@ mod aabb {
 }
 
 pub(super) use aabb::Aabb;
+pub(super) use point::Point;

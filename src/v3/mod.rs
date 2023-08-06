@@ -4,6 +4,7 @@ mod shapes;
 
 use math::Vec2;
 use range::Range;
+use shapes::Point;
 
 trait SatShape: AxisProjection {
     type AxisIter: Iterator<Item = Vec2>;
@@ -18,7 +19,7 @@ trait AxisProjection {
 #[non_exhaustive]
 struct Contact {}
 
-fn cast_ray(_origin: Vec2, _vector: Vec2, _target: &impl SatShape) -> Option<Contact> {
+fn cast_ray(_origin: Point, _vector: Vec2, _target: &impl SatShape) -> Option<Contact> {
     None
 }
 
@@ -32,7 +33,7 @@ mod tests {
     #[rstest]
     fn ray_cast_should_return_none_when_there_is_no_hit() {
         let result = cast_ray(
-            Vec2::ZERO,
+            Vec2::ZERO.into(),
             Vec2::X,
             &Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::X * 2.0),
         );
