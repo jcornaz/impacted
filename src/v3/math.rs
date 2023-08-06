@@ -7,16 +7,24 @@ pub(crate) struct Vec2 {
 }
 
 impl Vec2 {
-    pub(super) const ZERO: Self = Self::new(0.0, 0.0);
-    pub(super) const X: Self = Self::new(1.0, 0.0);
-    pub(super) const Y: Self = Self::new(0.0, 1.0);
+    pub const ZERO: Self = Self::new(0.0, 0.0);
+    pub const X: Self = Self::new(1.0, 0.0);
+    pub const Y: Self = Self::new(0.0, 1.0);
 
-    pub(super) const fn new(x: f32, y: f32) -> Self {
+    pub const fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
-    pub(super) fn dot(self, other: Self) -> f32 {
+    pub fn dot(self, other: Self) -> f32 {
         (self.x * other.x) + (self.y * other.y)
+    }
+
+    pub fn magnitude_squared(self) -> f32 {
+        self.x * self.x + self.y * self.y
+    }
+
+    pub fn magnitude(self) -> f32 {
+        self.magnitude_squared().sqrt()
     }
 }
 
@@ -171,5 +179,20 @@ mod tests {
     #[case(Vec2::new(-2.3, 4.5), Vec2::new(2.3, -4.5))]
     fn test_negate(#[case] v: Vec2, #[case] expected: Vec2) {
         assert_abs_diff_eq!(-v, expected);
+    }
+
+    #[rstest]
+    #[case(Vec2::ZERO, 0.0)]
+    #[case(Vec2::X, 1.0)]
+    #[case(-Vec2::X, 1.0)]
+    #[case(Vec2::Y, 1.0)]
+    #[case(-Vec2::Y, 1.0)]
+    #[case(Vec2::new(3.0, 4.0), 5.0)]
+    fn test_magnitude(#[case] vector: Vec2, #[case] expected_magnitude: f32) {
+        assert_abs_diff_eq!(vector.magnitude(), expected_magnitude);
+        assert_abs_diff_eq!(
+            vector.magnitude_squared(),
+            expected_magnitude * expected_magnitude
+        );
     }
 }
