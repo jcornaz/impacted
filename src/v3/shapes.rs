@@ -1,7 +1,7 @@
 mod point {
     use crate::v3::{math::Vec2, AxisProjection, Range};
 
-    #[derive(Debug, Copy, Clone)]
+    #[derive(Debug, Copy, Clone, PartialEq)]
     pub(crate) struct Point(Vec2);
 
     impl From<Vec2> for Point {
@@ -14,6 +14,17 @@ mod point {
         fn project(&self, axis: Vec2) -> crate::v3::Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
+        }
+    }
+
+    #[cfg(test)]
+    impl approx::AbsDiffEq for Point {
+        type Epsilon = f32;
+        fn default_epsilon() -> Self::Epsilon {
+            f32::default_epsilon()
+        }
+        fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+            self.0.abs_diff_eq(&other.0, epsilon)
         }
     }
 
