@@ -10,6 +10,12 @@ mod point {
         }
     }
 
+    impl From<Point> for Vec2 {
+        fn from(Point(v): Point) -> Self {
+            v
+        }
+    }
+
     impl AxisProjection for Point {
         fn project(&self, axis: Vec2) -> crate::v3::Range {
             let p = self.0.dot(axis);
