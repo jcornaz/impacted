@@ -1,4 +1,6 @@
 mod point {
+    use core::ops::Add;
+
     use crate::v3::{math::Vec2, AxisProjection, Range};
 
     #[derive(Debug, Copy, Clone, PartialEq)]
@@ -20,6 +22,14 @@ mod point {
         fn project(&self, axis: Vec2) -> crate::v3::Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
+        }
+    }
+
+    impl Add<Vec2> for Point {
+        type Output = Self;
+        fn add(mut self, rhs: Vec2) -> Self::Output {
+            self.0 += rhs;
+            self
         }
     }
 

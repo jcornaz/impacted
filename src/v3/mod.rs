@@ -30,12 +30,14 @@ mod tests {
     use rstest::rstest;
 
     fn cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
-        let projection = target.project(vector).min;
-        if !(0.0..=1.0).contains(&projection) {
+        let projected_origin = origin.project(vector).min;
+        let projected_end = (origin + vector).project(vector).min;
+        let projected_target = target.project(vector).min;
+        if projected_target < projected_origin || projected_target > projected_end {
             return None;
         }
         Some(Contact {
-            point: Vec2::new(projection + origin.project(vector).min, 0.0).into(),
+            point: Vec2::new(projected_target, 0.0).into(),
         })
     }
 
@@ -43,21 +45,21 @@ mod tests {
     #[case(
         Vec2::ZERO,
         Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.5, 0.0)),
-        Vec2::new(0.5, 0.0)
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 0.0)),
+        Vec2::new(0.9, 0.0)
     )]
     #[case(
-        Vec2::new(10.0, 0.0),
         Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.5, 0.0)),
-        Vec2::new(10.5, 0.0)
+        Vec2::X,
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.9, 0.0)),
+        Vec2::new(1.9, 0.0)
     )]
     #[ignore = "not implemented"]
     #[case(
         Vec2::ZERO,
         Vec2::X * 2.0,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.5, 0.0)),
-        Vec2::new(1.5, 0.0)
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.9, 0.0)),
+        Vec2::new(1.9, 0.0)
     )]
     fn ray_cast_should_find_contact_point(
         #[case] origin: impl Into<Point>,
@@ -70,12 +72,10 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(1.6, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(-1.6, 0.0)))]
-    #[ignore = "not implemented"]
-    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(0.6, 0.0)))]
-    #[ignore = "not implemented"]
-    #[case(Vec2::X * 10.0, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::new(0.5, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.1, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-2.1, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::ZERO))]
+    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.1, 0.0)))]
     fn ray_cast_should_return_none_when_there_is_no_hit(
         #[case] origin: impl Into<Point>,
         #[case] vector: Vec2,
