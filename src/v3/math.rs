@@ -27,7 +27,7 @@ impl Vec2 {
         self.magnitude_squared().sqrt()
     }
 
-    fn normalize(self) -> Option<Self> {
+    pub fn normalize(self) -> Option<Self> {
         let normal = self / self.magnitude();
         if !normal.x.is_finite() {
             return None;

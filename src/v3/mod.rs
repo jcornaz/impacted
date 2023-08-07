@@ -30,9 +30,10 @@ mod tests {
     use rstest::rstest;
 
     fn cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
-        let projected_origin = origin.project(vector).min;
-        let projected_end = (origin + vector).project(vector).min;
-        let projected_target = target.project(vector).min;
+        let normal = vector.normalize()?;
+        let projected_origin = origin.project(normal).min;
+        let projected_end = (origin + vector).project(normal).min;
+        let projected_target = target.project(normal).min;
         if projected_target < projected_origin || projected_target > projected_end {
             return None;
         }
@@ -54,7 +55,6 @@ mod tests {
         Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.9, 0.0)),
         Vec2::new(1.9, 0.0)
     )]
-    #[ignore = "not implemented"]
     #[case(
         Vec2::ZERO,
         Vec2::X * 2.0,
