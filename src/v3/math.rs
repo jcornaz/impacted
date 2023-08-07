@@ -26,6 +26,14 @@ impl Vec2 {
     pub fn magnitude(self) -> f32 {
         self.magnitude_squared().sqrt()
     }
+
+    fn normalize(self) -> Option<Self> {
+        let normal = self / self.magnitude();
+        if !normal.x.is_finite() {
+            return None;
+        }
+        Some(normal)
+    }
 }
 
 impl AddAssign for Vec2 {
@@ -194,5 +202,21 @@ mod tests {
             vector.magnitude_squared(),
             expected_magnitude * expected_magnitude
         );
+    }
+
+    #[rstest]
+    fn normalize_zero_returns_none() {
+        assert_eq!(Vec2::ZERO.normalize(), None);
+    }
+
+    #[rstest]
+    #[case(Vec2::X, Vec2::X)]
+    #[case(-Vec2::X, -Vec2::X)]
+    #[case(Vec2::Y, Vec2::Y)]
+    #[case(Vec2::X * 2.0, Vec2::X)]
+    #[case(Vec2::Y * 2.0, Vec2::Y)]
+    #[case(Vec2::new(3.0, 4.0), Vec2::new(0.6, 0.8))]
+    fn normalize_returns_expected(#[case] vector: Vec2, #[case] expected: Vec2) {
+        assert_abs_diff_eq!(vector.normalize().unwrap(), expected);
     }
 }
