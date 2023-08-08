@@ -34,6 +34,13 @@ impl Vec2 {
         }
         Some(normal)
     }
+
+    pub fn perp(self) -> Self {
+        Self {
+            x: -self.y,
+            y: self.x,
+        }
+    }
 }
 
 impl AddAssign for Vec2 {
@@ -218,5 +225,16 @@ mod tests {
     #[case(Vec2::new(3.0, 4.0), Vec2::new(0.6, 0.8))]
     fn normalize_returns_expected(#[case] vector: Vec2, #[case] expected: Vec2) {
         assert_abs_diff_eq!(vector.normalize().unwrap(), expected);
+    }
+
+    #[rstest]
+    #[case(Vec2::X, Vec2::Y)]
+    #[case(Vec2::Y, -Vec2::X)]
+    #[case(-Vec2::X, -Vec2::Y)]
+    #[case(-Vec2::Y, Vec2::X)]
+    #[case(Vec2::new(1.0, 2.0), Vec2::new(-2.0, 1.0))]
+    #[case(Vec2::new(-3.0, -4.0), Vec2::new(4.0, -3.0))]
+    fn test_perp(#[case] vector: Vec2, #[case] expected: Vec2) {
+        assert_eq!(vector.perp(), expected);
     }
 }
