@@ -10,11 +10,11 @@ impl Range {
         Self { min, max }
     }
 
-    fn collides(self, other: Range) -> bool {
+    pub(super) fn overlaps(self, other: Range) -> bool {
         self.min <= other.max && self.max >= other.min
     }
 
-    pub(crate) fn contains(self, point: f32) -> bool {
+    pub(super) fn contains(self, point: f32) -> bool {
         point >= self.min && point <= self.max
     }
 }
@@ -46,7 +46,7 @@ mod tests {
     fn range_should_overlap(#[case] r1: (f32, f32), #[case] r2: (f32, f32)) {
         let r1 = Range::from_min_max(r1.0, r1.1);
         let r2 = Range::from_min_max(r2.0, r2.1);
-        assert!(r1.collides(r2), "{r1:?} does not overlap {r2:?}");
+        assert!(r1.overlaps(r2), "{r1:?} does not overlap {r2:?}");
     }
 
     #[rstest]
@@ -56,7 +56,7 @@ mod tests {
     fn range_should_not_overlap(#[case] r1: (f32, f32), #[case] r2: (f32, f32)) {
         let r1 = Range::from_min_max(r1.0, r1.1);
         let r2 = Range::from_min_max(r2.0, r2.1);
-        assert!(!r1.collides(r2), "{r1:?} overlaps {r2:?}");
+        assert!(!r1.overlaps(r2), "{r1:?} overlaps {r2:?}");
     }
 
     #[rstest]
