@@ -8,6 +8,7 @@ use shapes::Point;
 
 trait SatShape: AxisProjection {
     type AxisIter: Iterator<Item = Vec2>;
+    /// Axes should all be unit vectors
     fn axes(&self) -> Self::AxisIter;
 }
 
@@ -51,6 +52,12 @@ mod tests {
         Vec2::X,
         Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 0.0)),
         Vec2::new(0.9, 0.0)
+    )]
+    #[case(
+        Vec2::ZERO,
+        -Vec2::X,
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-1.9, 0.0)),
+        Vec2::new(-0.9, 0.0)
     )]
     #[case(
         Vec2::X,
