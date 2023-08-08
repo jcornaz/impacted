@@ -34,7 +34,10 @@ mod tests {
         let projected_origin = origin.project(normal).min;
         let projected_end = (origin + vector).project(normal).min;
         let projected_target = target.project(normal).min;
-        if projected_target < projected_origin || projected_target > projected_end {
+        if projected_target < projected_origin
+            || projected_target > projected_end
+            || !target.project(normal.perp()).contains(0.0)
+        {
             return None;
         }
         Some(Contact {
@@ -107,9 +110,7 @@ mod tests {
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-2.1, 0.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::ZERO))]
     #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.1, 0.0)))]
-    #[ignore = "not implemented"]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 5.0)))]
-    #[ignore = "not implemented"]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, -5.0)))]
     fn ray_cast_should_return_none_when_there_is_no_hit(
         #[case] origin: impl Into<Point>,
