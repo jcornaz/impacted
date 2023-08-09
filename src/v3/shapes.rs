@@ -19,7 +19,7 @@ mod point {
     }
 
     impl AxisProjection for Point {
-        fn project(&self, axis: Vec2) -> crate::v3::Range {
+        fn project_on(&self, axis: Vec2) -> crate::v3::Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
         }
@@ -67,7 +67,7 @@ mod point {
             #[case] expected: f32,
         ) {
             let expected = Range::from_min_max(expected, expected);
-            assert_abs_diff_eq!(point.into().project(axis), expected);
+            assert_abs_diff_eq!(point.into().project_on(axis), expected);
         }
     }
 }
@@ -95,7 +95,7 @@ mod aabb {
     }
 
     impl AxisProjection for Aabb {
-        fn project(&self, axis: Vec2) -> Range {
+        fn project_on(&self, axis: Vec2) -> Range {
             let r1 = self.half_size.dot(axis).abs();
             let r2 = Vec2::new(-self.half_size.x, self.half_size.y)
                 .dot(axis)
@@ -141,7 +141,7 @@ mod aabb {
             #[case] expected_min: f32,
             #[case] expected_max: f32,
         ) {
-            let range = shape.project(axis);
+            let range = shape.project_on(axis);
             assert_abs_diff_eq!(range.min, expected_min);
             assert_abs_diff_eq!(range.max, expected_max);
         }

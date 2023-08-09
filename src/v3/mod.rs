@@ -13,7 +13,7 @@ trait SatShape: AxisProjection {
 }
 
 trait AxisProjection {
-    fn project(&self, axis: Vec2) -> Range;
+    fn project_on(&self, axis: Vec2) -> Range;
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -32,12 +32,12 @@ mod tests {
 
     fn cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
         let normal = vector.normalize()?;
-        let projected_origin = origin.project(normal).min;
-        let projected_end = (origin + vector).project(normal).min;
-        let projected_target = target.project(normal).min;
+        let projected_origin = origin.project_on(normal).min;
+        let projected_end = (origin + vector).project_on(normal).min;
+        let projected_target = target.project_on(normal).min;
         if projected_target < projected_origin
             || projected_target > projected_end
-            || !target.project(normal.perp()).contains(0.0)
+            || !target.project_on(normal.perp()).contains(0.0)
         {
             return None;
         }
@@ -46,25 +46,36 @@ mod tests {
         })
     }
 
+    #[cfg(feature = "std")]
     fn _cast_ray_spike(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
         let mut max_factor = -1.0;
-        for axis in target.axes() {
-            let projected_origin = origin.project(axis).max;
-            let projected_target = target.project(axis);
-            if projected_origin > projected_target.min {
-                return None;
+        for mut axis in target.axes() {
+            let mut projected_vector = vector.dot(axis);
+            if projected_vector < 0.0 {
+                axis = -axis;
+                projected_vector = -projected_vector;
             }
-            let projected_vector = vector.dot(axis);
+            let projected_origin = origin.project_on(axis).max;
+            let projected_target = target.project_on(axis);
+            println!("axis: {axis:?}");
+            println!("projected_origin: {projected_origin:?}");
+            println!("projected_target: {projected_target:?}");
+            if projected_origin > projected_target.min {
+                continue;
+            }
             let dist = projected_target.min - projected_origin;
             if dist > projected_vector {
+                println!("does not collide");
                 return None;
             }
             let factor = dist / projected_vector;
-            if factor < max_factor {
+            debug_assert!(factor >= 0.0, "negative factor");
+            if factor > max_factor {
                 max_factor = factor;
             }
         }
         if max_factor < 0.0 {
+            println!("no axis to test");
             return None;
         }
         Some(Contact {
