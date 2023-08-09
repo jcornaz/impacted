@@ -46,6 +46,32 @@ mod tests {
         })
     }
 
+    fn _cast_ray_spike(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
+        let mut max_factor = -1.0;
+        for axis in target.axes() {
+            let projected_origin = origin.project(axis).max;
+            let projected_target = target.project(axis);
+            if projected_origin > projected_target.min {
+                return None;
+            }
+            let projected_vector = vector.dot(axis);
+            let dist = projected_target.min - projected_origin;
+            if dist > projected_vector {
+                return None;
+            }
+            let factor = dist / projected_vector;
+            if factor < max_factor {
+                max_factor = factor;
+            }
+        }
+        if max_factor < 0.0 {
+            return None;
+        }
+        Some(Contact {
+            point: origin + (vector * max_factor),
+        })
+    }
+
     #[rstest]
     #[case(
         Vec2::ZERO,
