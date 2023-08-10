@@ -46,40 +46,46 @@ mod tests {
         })
     }
 
-    #[cfg(feature = "std")]
-    fn _cast_ray_spike(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
-        let mut max_factor = -1.0;
-        for mut axis in target.axes() {
-            let mut projected_vector = vector.dot(axis);
-            if projected_vector < 0.0 {
-                axis = -axis;
-                projected_vector = -projected_vector;
-            }
-            let projected_origin = origin.project_on(axis).max;
-            let projected_target = target.project_on(axis);
-            println!("axis: {axis:?}");
-            println!("projected_origin: {projected_origin:?}");
-            println!("projected_target: {projected_target:?}");
-            if projected_origin > projected_target.min {
-                continue;
-            }
-            let dist = projected_target.min - projected_origin;
-            if dist > projected_vector {
-                println!("does not collide");
-                return None;
-            }
-            let factor = dist / projected_vector;
-            debug_assert!(factor >= 0.0, "negative factor");
-            if factor > max_factor {
-                max_factor = factor;
-            }
+    fn _cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
+        let mut max_t1 = f32::MIN;
+        let mut min_t2 = f32::MAX;
+        for axis in target.axes() {
+            let proj_vector = vector.dot(axis);
+            let proj_origin = origin.project_on(axis).max;
+            let proj_target = target.project_on(axis);
+            let (t1, t2) = if proj_vector > 0.0 {
+                if proj_target.max < proj_origin {
+                    return None;
+                } else if proj_target.contains(proj_origin) {
+                    (0.0, (proj_target.max - proj_origin) / proj_vector)
+                } else {
+                    (
+                        (proj_target.min - proj_origin) / proj_vector,
+                        (proj_target.max - proj_origin) / proj_vector,
+                    )
+                }
+            } else if proj_vector < 0.0 {
+                if proj_target.min > proj_origin {
+                    return None;
+                } else if proj_target.contains(proj_origin) {
+                    ((proj_target.max - proj_origin) / proj_vector, 0.0)
+                } else {
+                    (
+                        (proj_target.max - proj_origin) / proj_vector,
+                        (proj_target.min - proj_origin) / proj_vector,
+                    )
+                }
+            } else {
+                (0.0, 0.0)
+            };
+            max_t1 = max_t1.max(t1);
+            min_t2 = min_t2.min(t2);
         }
-        if max_factor < 0.0 {
-            println!("no axis to test");
+        if max_t1 < min_t2 {
             return None;
         }
         Some(Contact {
-            point: origin + (vector * max_factor),
+            point: origin + (vector * max_t1),
         })
     }
 
