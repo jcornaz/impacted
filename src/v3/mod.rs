@@ -46,6 +46,7 @@ mod tests {
         })
     }
 
+    #[cfg(feature = "std")]
     fn _cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
         let mut max_t1 = f32::MIN;
         let mut min_t2 = f32::MAX;
@@ -53,8 +54,13 @@ mod tests {
             let proj_vector = vector.dot(axis);
             let proj_origin = origin.project_on(axis).max;
             let proj_target = target.project_on(axis);
+            println!("# axis: {axis:?}:");
+            println!("vector: {proj_vector:?}");
+            println!("origin: {proj_origin:?}");
+            println!("target: {proj_target:?}");
             let (t1, t2) = if proj_vector > 0.0 {
                 if proj_target.max < proj_origin {
+                    println!("early out");
                     return None;
                 } else if proj_target.contains(proj_origin) {
                     (0.0, (proj_target.max - proj_origin) / proj_vector)
@@ -66,6 +72,7 @@ mod tests {
                 }
             } else if proj_vector < 0.0 {
                 if proj_target.min > proj_origin {
+                    println!("early out");
                     return None;
                 } else if proj_target.contains(proj_origin) {
                     ((proj_target.max - proj_origin) / proj_vector, 0.0)
@@ -78,10 +85,21 @@ mod tests {
             } else {
                 (0.0, 0.0)
             };
+            println!("t1: {t1}");
+            println!("t2: {t2}");
             max_t1 = max_t1.max(t1);
             min_t2 = min_t2.min(t2);
         }
-        if max_t1 < min_t2 {
+        println!("max_t1: {max_t1}");
+        println!("min_t2: {min_t2}");
+        println!(
+            "{} || {} || {}",
+            max_t1 < min_t2,
+            max_t1 > 1.0,
+            max_t1 <= 0.0
+        );
+        if max_t1 < min_t2 || max_t1 > 1.0 || max_t1 <= 0.0 {
+            println!("no collision");
             return None;
         }
         Some(Contact {
@@ -159,6 +177,7 @@ mod tests {
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.1, 0.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-2.1, 0.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::ZERO))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::ZERO))]
     #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.1, 0.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 5.0)))]
     #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, -5.0)))]
