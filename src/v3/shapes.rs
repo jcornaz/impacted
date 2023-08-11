@@ -1,7 +1,7 @@
 mod point {
     use core::ops::Add;
 
-    use crate::v3::{math::Vec2, AxisProjection, Range};
+    use crate::v3::{math::Vec2, Range, SatShape};
 
     #[derive(Debug, Copy, Clone, PartialEq)]
     pub(crate) struct Point(Vec2);
@@ -18,7 +18,11 @@ mod point {
         }
     }
 
-    impl AxisProjection for Point {
+    impl SatShape for Point {
+        type AxisIter = core::iter::Empty<Vec2>;
+        fn axes(&self) -> Self::AxisIter {
+            core::iter::empty()
+        }
         fn project_on(&self, axis: Vec2) -> crate::v3::Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
@@ -69,11 +73,16 @@ mod point {
             let expected = Range::from_min_max(expected, expected);
             assert_abs_diff_eq!(point.into().project_on(axis), expected);
         }
+
+        #[test]
+        fn test_sat_axes() {
+            assert_eq!(Point::from(Vec2::ZERO).axes().next(), None);
+        }
     }
 }
 
 mod aabb {
-    use crate::v3::{math::Vec2, AxisProjection, Range, SatShape};
+    use crate::v3::{math::Vec2, Range, SatShape};
 
     pub(crate) struct Aabb {
         center: Vec2,
@@ -94,7 +103,13 @@ mod aabb {
         }
     }
 
-    impl AxisProjection for Aabb {
+    impl SatShape for Aabb {
+        type AxisIter = core::array::IntoIter<Vec2, 2>;
+
+        fn axes(&self) -> Self::AxisIter {
+            [Vec2::X, Vec2::Y].into_iter()
+        }
+
         fn project_on(&self, axis: Vec2) -> Range {
             let r1 = self.half_size.dot(axis).abs();
             let r2 = Vec2::new(-self.half_size.x, self.half_size.y)
@@ -103,14 +118,6 @@ mod aabb {
             let r = r1.max(r2);
             let shift = self.center.dot(axis);
             Range::from_min_max(shift - r, shift + r)
-        }
-    }
-
-    impl SatShape for Aabb {
-        type AxisIter = core::array::IntoIter<Vec2, 2>;
-
-        fn axes(&self) -> Self::AxisIter {
-            [Vec2::X, Vec2::Y].into_iter()
         }
     }
 

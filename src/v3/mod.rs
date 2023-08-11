@@ -6,18 +6,14 @@ use math::Vec2;
 use range::Range;
 use shapes::Point;
 
-trait SatShape: AxisProjection {
+trait SatShape {
     type AxisIter: Iterator<Item = Vec2>;
-    /// Axes should all be unit vectors
-    fn axes(&self) -> Self::AxisIter;
-}
 
-trait AxisProjection {
+    fn axes(&self) -> Self::AxisIter;
     fn project_on(&self, axis: Vec2) -> Range;
 }
 
 #[derive(Debug, Clone, PartialEq)]
-#[non_exhaustive]
 struct Contact {
     point: Point,
 }
