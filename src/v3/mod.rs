@@ -24,6 +24,8 @@ struct Contact {
 
 #[cfg(test)]
 mod tests {
+    use core::mem;
+
     use crate::v3::shapes::Aabb;
 
     use super::*;
@@ -188,5 +190,79 @@ mod tests {
     ) {
         let result = cast_ray(origin.into(), vector, &target);
         assert_eq!(result, None);
+    }
+
+    /// Given ranges of projected shapes,
+    /// return the earliest time and latest time there *could* be an impact. (though actual impact is not guarantee)
+    ///
+    /// Or none, if it is not possible for the source to impact the target.
+    fn cast_range(mut source: Range, mut vector: f32, mut target: Range) -> Option<(f32, f32)> {
+        if vector == 0.0 {
+            return if source.overlaps(target) {
+                Some((0.0, f32::MAX))
+            } else {
+                None
+            };
+        }
+        if vector < 0.0 {
+            vector = -vector;
+            mem::swap(&mut source, &mut target);
+        }
+        if source.min > target.max {
+            return None;
+        }
+        Some(if source.max >= target.min {
+            (0.0, (target.max - source.min) / vector)
+        } else {
+            (
+                (target.min - source.max) / vector,
+                (target.max - source.min) / vector,
+            )
+        })
+    }
+
+    #[rstest]
+    #[case((0.0, 0.0), 1.0, (0.5, 1.0), (0.5, 1.0))]
+    #[case((0.0, 0.0), 2.0, (0.5, 1.0), (0.25, 0.5))]
+    #[case((1.0, 1.0), 1.0, (1.5, 2.0), (0.5, 1.0))]
+    #[case((0.0, 1.0), 1.0, (1.5, 2.0), (0.5, 2.0))]
+    #[case((0.5, 1.0), -1.0, (0.0, 0.0), (0.5, 1.0))]
+    #[case((0.5, 1.0), -2.0, (0.0, 0.0), (0.25, 0.5))]
+    #[case((1.5, 2.0), -1.0, (1.0, 1.0), (0.5, 1.0))]
+    #[case((1.5, 2.0), -1.0, (0.0, 1.0), (0.5, 2.0))]
+    #[case((0.0, 1.0), 1.0, (0.5, 1.5), (0.0, 1.5))]
+    #[case((0.0, 1.0), 1.0, (-1.0, 2.0), (0.0, 2.0))]
+    #[case((0.0, 1.0), 0.0, (0.5, 1.5), (0.0, f32::MAX))]
+    fn cast_range_should_return_some_when_the_shape_are_moving_together(
+        #[case] source: (f32, f32),
+        #[case] vector: f32,
+        #[case] target: (f32, f32),
+        #[case] expected: (f32, f32),
+    ) {
+        let source = Range::from_min_max(source.0, source.1);
+        let target = Range::from_min_max(target.0, target.1);
+        let (earliest_time, latest_time) = cast_range(source, vector, target).unwrap();
+        assert_abs_diff_eq!(earliest_time, expected.0);
+        assert_abs_diff_eq!(latest_time, expected.1);
+    }
+
+    #[rstest]
+    #[case((0.0, 0.0), -1.0, (0.5, 1.0))]
+    #[case((0.0, 0.0), -2.0, (0.5, 1.0))]
+    #[case((1.0, 1.0), -1.0, (1.5, 2.0))]
+    #[case((0.0, 1.0), -1.0, (1.5, 2.0))]
+    #[case((0.5, 1.0), 1.0, (0.0, 0.0))]
+    #[case((0.5, 1.0), 2.0, (0.0, 0.0))]
+    #[case((1.5, 2.0), 1.0, (1.0, 1.0))]
+    #[case((1.5, 2.0), 1.0, (0.0, 1.0))]
+    #[case((0.0, 0.0), 0.0, (0.5, 1.0))]
+    fn cast_range_should_return_none_where_there_cannot_be_a_collistion(
+        #[case] source: (f32, f32),
+        #[case] vector: f32,
+        #[case] target: (f32, f32),
+    ) {
+        let source = Range::from_min_max(source.0, source.1);
+        let target = Range::from_min_max(target.0, target.1);
+        assert_eq!(cast_range(source, vector, target), None);
     }
 }
