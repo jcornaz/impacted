@@ -1,7 +1,7 @@
 use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Debug, Copy, Clone, Default, PartialEq)]
-pub(crate) struct Vec2 {
+pub struct Vec2 {
     pub(super) x: f32,
     pub(super) y: f32,
 }
@@ -11,23 +11,31 @@ impl Vec2 {
     pub const X: Self = Self::new(1.0, 0.0);
     pub const Y: Self = Self::new(0.0, 1.0);
 
+    #[must_use]
     pub const fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
-    pub fn dot(self, other: Self) -> f32 {
+    #[must_use]
+    pub(super) fn dot(self, other: Self) -> f32 {
         (self.x * other.x) + (self.y * other.y)
     }
 
-    pub fn magnitude_squared(self) -> f32 {
+    #[must_use]
+    #[cfg(test)]
+    pub(super) fn magnitude_squared(self) -> f32 {
         self.x * self.x + self.y * self.y
     }
 
-    pub fn magnitude(self) -> f32 {
+    #[must_use]
+    #[cfg(test)]
+    pub(super) fn magnitude(self) -> f32 {
         self.magnitude_squared().sqrt()
     }
 
-    pub fn normalize(self) -> Option<Self> {
+    #[must_use]
+    #[cfg(test)]
+    pub(super) fn normalize(self) -> Option<Self> {
         let normal = self / self.magnitude();
         if !normal.x.is_finite() {
             return None;
@@ -35,7 +43,9 @@ impl Vec2 {
         Some(normal)
     }
 
-    pub fn perp(self) -> Self {
+    #[must_use]
+    #[cfg(test)]
+    pub(super) fn perp(self) -> Self {
         Self {
             x: -self.y,
             y: self.x,

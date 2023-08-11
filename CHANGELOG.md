@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+* `unstable-v3` feature flag and related `v3` module: an exploration of how could look like the next major version
+
 
 ## [2.0.0] - 2023-08-03
 

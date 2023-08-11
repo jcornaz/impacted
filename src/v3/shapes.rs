@@ -1,10 +1,12 @@
 mod point {
     use core::ops::Add;
 
-    use crate::v3::{math::Vec2, Range, SatShape};
+    use sealed::sealed;
+
+    use crate::v3::{math::Vec2, Range, Shape, __seal_shape};
 
     #[derive(Debug, Copy, Clone, PartialEq)]
-    pub(crate) struct Point(Vec2);
+    pub struct Point(Vec2);
 
     impl From<Vec2> for Point {
         fn from(value: Vec2) -> Self {
@@ -18,7 +20,8 @@ mod point {
         }
     }
 
-    impl SatShape for Point {
+    #[sealed]
+    impl Shape for Point {
         type AxisIter = core::iter::Empty<Vec2>;
         fn axes(&self) -> Self::AxisIter {
             core::iter::empty()
@@ -82,28 +85,33 @@ mod point {
 }
 
 mod aabb {
-    use crate::v3::{math::Vec2, Range, SatShape};
+    use sealed::sealed;
 
-    pub(crate) struct Aabb {
+    use crate::v3::{math::Vec2, Range, Shape, __seal_shape};
+
+    pub struct Aabb {
         center: Vec2,
         half_size: Vec2,
     }
 
     impl Aabb {
-        pub(crate) fn from_size(size: Vec2) -> Self {
+        #[must_use]
+        pub fn from_size(size: Vec2) -> Self {
             Self {
                 center: Vec2::default(),
                 half_size: size / 2.0,
             }
         }
 
-        pub(crate) fn with_position(mut self, center: Vec2) -> Self {
+        #[must_use]
+        pub fn with_center_at(mut self, center: Vec2) -> Self {
             self.center = center;
             self
         }
     }
 
-    impl SatShape for Aabb {
+    #[sealed]
+    impl Shape for Aabb {
         type AxisIter = core::array::IntoIter<Vec2, 2>;
 
         fn axes(&self) -> Self::AxisIter {
@@ -138,10 +146,10 @@ mod aabb {
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, 2.0), -6.25, 6.25)]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, -2.0), -6.25, 6.25)]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(-1.5, 2.0), -6.25, 6.25)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), -0.5, 2.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_position(Vec2::new(0.0, 1.0)), Vec2::new(0.0, 1.0), -1.0, 3.0)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), -0.5, 2.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 1.0)), Vec2::new(0.0, 1.0), -1.0, 3.0)]
         fn test_axis_project(
             #[case] shape: Aabb,
             #[case] axis: Vec2,
@@ -157,7 +165,7 @@ mod aabb {
         fn test_polygon_axes(
             #[values(
                 Aabb::from_size(Vec2::ZERO),
-                Aabb::from_size(Vec2::new(2.0, 3.0)).with_position(Vec2::new(4.0, 5.0))
+                Aabb::from_size(Vec2::new(2.0, 3.0)).with_center_at(Vec2::new(4.0, 5.0))
             )]
             shape: Aabb,
         ) {
@@ -169,5 +177,5 @@ mod aabb {
     }
 }
 
-pub(super) use aabb::Aabb;
-pub(super) use point::Point;
+pub use aabb::Aabb;
+pub use point::Point;

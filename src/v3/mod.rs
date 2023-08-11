@@ -1,12 +1,16 @@
+#![allow(missing_docs)]
+
 mod math;
 mod range;
 mod shapes;
 
-use math::Vec2;
+pub use math::Vec2;
 use range::Range;
-use shapes::Point;
+use sealed::sealed;
+pub use shapes::{Aabb, Point};
 
-trait SatShape {
+#[sealed]
+pub trait Shape {
     type AxisIter: Iterator<Item = Vec2>;
 
     fn axes(&self) -> Self::AxisIter;
@@ -14,8 +18,9 @@ trait SatShape {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-struct Contact {
-    point: Point,
+#[non_exhaustive]
+pub struct Contact {
+    pub point: Point,
 }
 
 /// Given ranges of projected shapes,
@@ -47,7 +52,7 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
     })
 }
 
-fn cast_ray(origin: Point, vector: Vec2, target: &impl SatShape) -> Option<Contact> {
+pub fn cast_ray(origin: Point, vector: Vec2, target: &impl Shape) -> Option<Contact> {
     let mut max_t1 = f32::MIN;
     let mut min_t2 = f32::MAX;
     for axis in target.axes() {
@@ -78,61 +83,61 @@ mod tests {
     #[case(
         Vec2::ZERO,
         Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 0.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 0.0)),
         Vec2::new(0.9, 0.0)
     )]
     #[case(
         Vec2::ZERO,
         -Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-1.9, 0.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(-1.9, 0.0)),
         Vec2::new(-0.9, 0.0)
     )]
     #[case(
         Vec2::X,
         Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.9, 0.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.9, 0.0)),
         Vec2::new(1.9, 0.0)
     )]
     #[case(
         Vec2::ZERO,
         Vec2::X * 2.0,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.9, 0.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.9, 0.0)),
         Vec2::new(1.9, 0.0)
     )]
     #[case(
         Vec2::ZERO,
         Vec2::Y,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(0.0, 1.9)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 1.9)),
         Vec2::new(0.0, 0.9)
     )]
     #[case(
         Vec2::Y,
         Vec2::Y,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(0.0, 2.9)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 2.9)),
         Vec2::new(0.0, 1.9)
     )]
     #[case(
         Vec2::ZERO,
         Vec2::Y * 2.0,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(0.0, 2.9)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 2.9)),
         Vec2::new(0.0, 1.9)
     )]
     #[case(
         Vec2::ZERO,
         Vec2::new(1.0, 1.0),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 1.9)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 1.9)),
         Vec2::new(0.9, 0.9),
     )]
     #[case(
         Vec2::ZERO,
         Vec2::new(1.0, 1.0),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(0.5, 1.9)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.5, 1.9)),
         Vec2::new(0.9, 0.9),
     )]
     fn ray_cast_should_find_contact_point(
         #[case] origin: impl Into<Point>,
         #[case] vector: Vec2,
-        #[case] target: impl SatShape,
+        #[case] target: impl Shape,
         #[case] expected_point: impl Into<Point>,
     ) {
         let point = cast_ray(origin.into(), vector, &target).unwrap().point;
@@ -140,17 +145,17 @@ mod tests {
     }
 
     #[rstest]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(2.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(-2.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::ZERO))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_position(Vec2::ZERO))]
-    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, 5.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_position(Vec2::new(1.9, -5.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.1, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(-2.1, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::ZERO))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_center_at(Vec2::ZERO))]
+    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.1, 0.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 5.0)))]
+    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, -5.0)))]
     fn ray_cast_should_return_none_when_there_is_no_hit(
         #[case] origin: impl Into<Point>,
         #[case] vector: Vec2,
-        #[case] target: impl SatShape,
+        #[case] target: impl Shape,
     ) {
         let result = cast_ray(origin.into(), vector, &target);
         assert_eq!(result, None);

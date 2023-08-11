@@ -1,5 +1,5 @@
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub(super) struct Range {
+pub struct Range {
     pub(super) min: f32,
     pub(super) max: f32,
 }
@@ -14,6 +14,7 @@ impl Range {
         self.min <= other.max && self.max >= other.min
     }
 
+    #[cfg(test)]
     pub(super) fn contains(self, point: f32) -> bool {
         point >= self.min && point <= self.max
     }
