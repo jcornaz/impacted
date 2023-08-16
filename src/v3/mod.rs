@@ -1,13 +1,14 @@
 #![allow(missing_docs)]
 
-mod math;
-mod range;
-mod shapes;
+use sealed::sealed;
 
 pub use math::Vec2;
 use range::Range;
-use sealed::sealed;
 pub use shapes::{Aabb, Point};
+
+mod math;
+mod range;
+mod shapes;
 
 #[sealed]
 pub trait Shape {
@@ -52,7 +53,19 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
     })
 }
 
+#[cfg(all(test, feature = "std"))]
+fn check_collision(_: &impl Shape, _: &impl Shape) -> bool {
+    true
+}
+
 pub fn cast_ray(origin: Point, vector: Vec2, target: &impl Shape) -> Option<Contact> {
+    let time = contact_time(&origin, vector, target)?;
+    Some(Contact {
+        point: origin + (vector * time),
+    })
+}
+
+fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Option<f32> {
     let mut max_t1 = f32::MIN;
     let mut min_t2 = f32::MAX;
     for axis in target.axes() {
@@ -67,18 +80,32 @@ pub fn cast_ray(origin: Point, vector: Vec2, target: &impl Shape) -> Option<Cont
     if min_t2 < max_t1 || max_t1 > 1.0 || max_t1 <= 0.0 {
         return None;
     }
-    Some(Contact {
-        point: origin + (vector * max_t1),
-    })
+    Some(max_t1)
 }
 
 #[cfg(test)]
 mod tests {
+    use approx::assert_abs_diff_eq;
+    use rstest::rstest;
+
     use crate::v3::shapes::Aabb;
 
     use super::*;
-    use approx::assert_abs_diff_eq;
-    use rstest::rstest;
+
+    #[rstest]
+    #[case(
+        Aabb::from_size(Vec2::new(2.0, 2.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0))
+    )]
+    #[case(
+        Aabb::from_size(Vec2::new(2.0, 2.0)),
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 0.0))
+    )]
+    #[cfg(feature = "std")]
+    fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
+        assert!(check_collision(&shape1, &shape2));
+    }
+
     #[rstest]
     #[case(
         Vec2::ZERO,
