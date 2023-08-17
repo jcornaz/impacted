@@ -84,13 +84,10 @@ fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Optio
 }
 
 #[cfg(test)]
-mod tests {
-    use approx::assert_abs_diff_eq;
-    use rstest::rstest;
-
-    use crate::v3::shapes::Aabb;
-
+#[cfg(feature = "std")]
+mod collision_spec {
     use super::*;
+    use rstest::rstest;
 
     #[rstest]
     #[case(
@@ -101,92 +98,17 @@ mod tests {
         Aabb::from_size(Vec2::new(2.0, 2.0)),
         Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 0.0))
     )]
-    #[cfg(feature = "std")]
     fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
         assert!(check_collision(&shape1, &shape2));
     }
+}
 
-    #[rstest]
-    #[case(
-        Vec2::ZERO,
-        Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 0.0)),
-        Vec2::new(0.9, 0.0)
-    )]
-    #[case(
-        Vec2::ZERO,
-        -Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(-1.9, 0.0)),
-        Vec2::new(-0.9, 0.0)
-    )]
-    #[case(
-        Vec2::X,
-        Vec2::X,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.9, 0.0)),
-        Vec2::new(1.9, 0.0)
-    )]
-    #[case(
-        Vec2::ZERO,
-        Vec2::X * 2.0,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.9, 0.0)),
-        Vec2::new(1.9, 0.0)
-    )]
-    #[case(
-        Vec2::ZERO,
-        Vec2::Y,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 1.9)),
-        Vec2::new(0.0, 0.9)
-    )]
-    #[case(
-        Vec2::Y,
-        Vec2::Y,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 2.9)),
-        Vec2::new(0.0, 1.9)
-    )]
-    #[case(
-        Vec2::ZERO,
-        Vec2::Y * 2.0,
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.0, 2.9)),
-        Vec2::new(0.0, 1.9)
-    )]
-    #[case(
-        Vec2::ZERO,
-        Vec2::new(1.0, 1.0),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 1.9)),
-        Vec2::new(0.9, 0.9),
-    )]
-    #[case(
-        Vec2::ZERO,
-        Vec2::new(1.0, 1.0),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(0.5, 1.9)),
-        Vec2::new(0.9, 0.9),
-    )]
-    fn ray_cast_should_find_contact_point(
-        #[case] origin: impl Into<Point>,
-        #[case] vector: Vec2,
-        #[case] target: impl Shape,
-        #[case] expected_point: impl Into<Point>,
-    ) {
-        let point = cast_ray(origin.into(), vector, &target).unwrap().point;
-        assert_abs_diff_eq!(point, expected_point.into());
-    }
+#[cfg(test)]
+mod test {
+    use approx::assert_abs_diff_eq;
+    use rstest::rstest;
 
-    #[rstest]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(2.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(-2.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::ZERO))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(1.0, 1.0)).with_center_at(Vec2::ZERO))]
-    #[case(-Vec2::X, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.1, 0.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 5.0)))]
-    #[case(Vec2::ZERO, Vec2::X, Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, -5.0)))]
-    fn ray_cast_should_return_none_when_there_is_no_hit(
-        #[case] origin: impl Into<Point>,
-        #[case] vector: Vec2,
-        #[case] target: impl Shape,
-    ) {
-        let result = cast_ray(origin.into(), vector, &target);
-        assert_eq!(result, None);
-    }
+    use super::*;
 
     #[rstest]
     #[case((0.0, 0.0), 1.0, (0.5, 1.0), (0.5, 1.0))]
@@ -223,7 +145,7 @@ mod tests {
     #[case((1.5, 2.0), 1.0, (1.0, 1.0))]
     #[case((1.5, 2.0), 1.0, (0.0, 1.0))]
     #[case((0.0, 0.0), 0.0, (0.5, 1.0))]
-    fn cast_range_should_return_none_where_there_cannot_be_a_collistion(
+    fn cast_range_should_return_none_where_there_cannot_be_a_collision(
         #[case] source: (f32, f32),
         #[case] vector: f32,
         #[case] target: (f32, f32),

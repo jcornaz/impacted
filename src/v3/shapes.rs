@@ -1,12 +1,27 @@
+pub use aabb::Aabb;
+pub use point::Point;
+
 mod point {
     use core::ops::Add;
 
     use sealed::sealed;
 
-    use crate::v3::{math::Vec2, Range, Shape, __seal_shape};
+    use crate::v3::{__seal_shape, math::Vec2, Range, Shape};
 
     #[derive(Debug, Copy, Clone, PartialEq)]
     pub struct Point(Vec2);
+
+    impl Point {
+        #[must_use]
+        pub fn x(self) -> f32 {
+            self.0.x
+        }
+
+        #[must_use]
+        pub fn y(self) -> f32 {
+            self.0.y
+        }
+    }
 
     impl From<Vec2> for Point {
         fn from(value: Vec2) -> Self {
@@ -26,7 +41,7 @@ mod point {
         fn axes(&self) -> Self::AxisIter {
             core::iter::empty()
         }
-        fn project_on(&self, axis: Vec2) -> crate::v3::Range {
+        fn project_on(&self, axis: Vec2) -> Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
         }
@@ -53,9 +68,10 @@ mod point {
 
     #[cfg(test)]
     mod tests {
-        use super::*;
         use approx::assert_abs_diff_eq;
         use rstest::rstest;
+
+        use super::*;
 
         #[rstest]
         #[case(Vec2::ZERO, Vec2::ZERO, 0.0)]
@@ -87,7 +103,7 @@ mod point {
 mod aabb {
     use sealed::sealed;
 
-    use crate::v3::{math::Vec2, Range, Shape, __seal_shape};
+    use crate::v3::{__seal_shape, math::Vec2, Range, Shape};
 
     pub struct Aabb {
         center: Vec2,
@@ -131,9 +147,10 @@ mod aabb {
 
     #[cfg(test)]
     mod tests {
-        use super::*;
         use approx::assert_abs_diff_eq;
         use rstest::rstest;
+
+        use super::*;
 
         #[rstest]
         #[case(Aabb::from_size(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), 0.0, 0.0)]
@@ -176,6 +193,3 @@ mod aabb {
         }
     }
 }
-
-pub use aabb::Aabb;
-pub use point::Point;
