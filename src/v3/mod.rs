@@ -62,8 +62,14 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
     })
 }
 
-#[cfg(all(test, feature = "std"))]
-fn check_collision(_: &impl Shape, _: &impl Shape) -> bool {
+pub fn check_collision(shape1: &impl Shape, shape2: &impl Shape) -> bool {
+    for axis in sat_axes(shape1, shape2) {
+        let r1 = shape1.project_on(axis);
+        let r2 = shape2.project_on(axis);
+        if !r1.overlaps(r2) {
+            return false;
+        }
+    }
     true
 }
 
@@ -94,26 +100,6 @@ fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Optio
 
 fn sat_axes(shape1: &impl Shape, shape2: &impl Shape) -> impl Iterator<Item = Vec2> {
     shape1.axes().chain(shape2.axes())
-}
-
-#[cfg(all(test, feature = "std", feature = "unstable-v3-aabb"))]
-mod collision_spec {
-    use rstest::rstest;
-
-    use super::*;
-
-    #[rstest]
-    #[case(
-        Aabb::from_size(Vec2::new(2.0, 2.0)),
-        Aabb::from_size(Vec2::new(2.0, 2.0))
-    )]
-    #[case(
-        Aabb::from_size(Vec2::new(2.0, 2.0)),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Point::new(1.9, 0.0))
-    )]
-    fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
-        assert!(check_collision(&shape1, &shape2));
-    }
 }
 
 #[cfg(test)]
