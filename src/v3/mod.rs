@@ -2,13 +2,15 @@
 
 use sealed::sealed;
 
-pub use math::Vec2;
+pub use aabb::Aabb;
+pub use point::Point;
 use range::Range;
-pub use shapes::{Aabb, Point};
+pub use vector::Vec2;
 
-mod math;
+mod aabb;
+mod point;
 mod range;
-mod shapes;
+mod vector;
 
 #[sealed]
 pub trait Shape {
