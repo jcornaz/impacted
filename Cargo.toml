@@ -17,6 +17,7 @@ all-features = true
 default = ["std"]
 std = ["glam/std", "bvh-arena?/std"]
 unstable-v3 = []
+unstable-v3-aabb = ["unstable-v3"]
 
 [dependencies]
 # Public

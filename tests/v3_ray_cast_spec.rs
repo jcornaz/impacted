@@ -1,4 +1,4 @@
-#![cfg(feature = "unstable-v3")]
+#![cfg(feature = "unstable-v3-aabb")]
 
 use approx::assert_abs_diff_eq;
 use impacted::v3::{cast_ray, Aabb, Point, Shape, Vec2};

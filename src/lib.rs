@@ -63,7 +63,7 @@
 //! * `unstable-v3` `v3` module, an exploration of what could be the next major version of the API
 //!
 
-#[cfg(all(test, feature = "unstable-v3"))]
+#[cfg(all(test, feature = "unstable-v3-aabb"))]
 extern crate alloc;
 
 mod v2;

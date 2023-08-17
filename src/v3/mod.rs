@@ -2,11 +2,13 @@
 
 use sealed::sealed;
 
+#[cfg(feature = "unstable-v3-aabb")]
 pub use aabb::Aabb;
 pub use point::Point;
 use range::Range;
 pub use vector::Vec2;
 
+#[cfg(feature = "unstable-v3-aabb")]
 mod aabb;
 mod point;
 mod range;
@@ -90,8 +92,7 @@ fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Optio
     Some(max_t1)
 }
 
-#[cfg(test)]
-#[cfg(feature = "std")]
+#[cfg(all(test, feature = "std", feature = "unstable-v3-aabb"))]
 mod collision_spec {
     use rstest::rstest;
 
