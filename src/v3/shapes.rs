@@ -2,7 +2,10 @@ pub use aabb::Aabb;
 pub use point::Point;
 
 mod point {
-    use core::ops::Add;
+    use core::{
+        iter,
+        ops::{Add, AddAssign, Sub, SubAssign},
+    };
 
     use sealed::sealed;
 
@@ -12,6 +15,13 @@ mod point {
     pub struct Point(Vec2);
 
     impl Point {
+        pub const ORIGIN: Self = Self(Vec2::ZERO);
+
+        #[must_use]
+        pub fn new(x: f32, y: f32) -> Self {
+            Self(Vec2::new(x, y))
+        }
+
         #[must_use]
         pub fn x(self) -> f32 {
             self.0.x
@@ -37,20 +47,52 @@ mod point {
 
     #[sealed]
     impl Shape for Point {
-        type AxisIter = core::iter::Empty<Vec2>;
+        type AxisIter = iter::Empty<Vec2>;
+        type FocalsIter = iter::Once<Point>;
+        type VerticesIter = iter::Empty<Point>;
+
         fn axes(&self) -> Self::AxisIter {
-            core::iter::empty()
+            iter::empty()
         }
+
+        fn focals(&self) -> Self::FocalsIter {
+            iter::once(*self)
+        }
+
+        fn vertices(&self) -> Self::VerticesIter {
+            iter::empty()
+        }
+
         fn project_on(&self, axis: Vec2) -> Range {
             let p = self.0.dot(axis);
             Range::from_min_max(p, p)
         }
     }
 
+    impl AddAssign<Vec2> for Point {
+        fn add_assign(&mut self, rhs: Vec2) {
+            self.0 += rhs;
+        }
+    }
+
     impl Add<Vec2> for Point {
         type Output = Self;
         fn add(mut self, rhs: Vec2) -> Self::Output {
-            self.0 += rhs;
+            self += rhs;
+            self
+        }
+    }
+
+    impl SubAssign<Vec2> for Point {
+        fn sub_assign(&mut self, rhs: Vec2) {
+            self.0 -= rhs;
+        }
+    }
+
+    impl Sub<Vec2> for Point {
+        type Output = Self;
+        fn sub(mut self, rhs: Vec2) -> Self::Output {
+            self -= rhs;
             self
         }
     }
@@ -101,12 +143,13 @@ mod point {
 }
 
 mod aabb {
+    use core::{array, iter};
     use sealed::sealed;
 
-    use crate::v3::{__seal_shape, math::Vec2, Range, Shape};
+    use crate::v3::{__seal_shape, math::Vec2, Point, Range, Shape};
 
     pub struct Aabb {
-        center: Vec2,
+        center: Point,
         half_size: Vec2,
     }
 
@@ -114,13 +157,13 @@ mod aabb {
         #[must_use]
         pub fn from_size(size: Vec2) -> Self {
             Self {
-                center: Vec2::default(),
+                center: Point::ORIGIN,
                 half_size: size / 2.0,
             }
         }
 
         #[must_use]
-        pub fn with_center_at(mut self, center: Vec2) -> Self {
+        pub fn with_center_at(mut self, center: Point) -> Self {
             self.center = center;
             self
         }
@@ -128,10 +171,26 @@ mod aabb {
 
     #[sealed]
     impl Shape for Aabb {
-        type AxisIter = core::array::IntoIter<Vec2, 2>;
+        type AxisIter = array::IntoIter<Vec2, 2>;
+        type FocalsIter = iter::Empty<Point>;
+        type VerticesIter = array::IntoIter<Point, 4>;
 
         fn axes(&self) -> Self::AxisIter {
             [Vec2::X, Vec2::Y].into_iter()
+        }
+
+        fn focals(&self) -> Self::FocalsIter {
+            iter::empty()
+        }
+
+        fn vertices(&self) -> Self::VerticesIter {
+            [
+                (self.center - self.half_size),
+                (self.center + Vec2::new(self.half_size.x, -self.half_size.y)),
+                (self.center + self.half_size),
+                (self.center + Vec2::new(-self.half_size.x, self.half_size.y)),
+            ]
+            .into_iter()
         }
 
         fn project_on(&self, axis: Vec2) -> Range {
@@ -140,13 +199,14 @@ mod aabb {
                 .dot(axis)
                 .abs();
             let r = r1.max(r2);
-            let shift = self.center.dot(axis);
+            let shift = Vec2::from(self.center).dot(axis);
             Range::from_min_max(shift - r, shift + r)
         }
     }
 
     #[cfg(test)]
     mod tests {
+        use alloc::vec::Vec;
         use approx::assert_abs_diff_eq;
         use rstest::rstest;
 
@@ -163,10 +223,10 @@ mod aabb {
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, 2.0), -6.25, 6.25)]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(1.5, -2.0), -6.25, 6.25)]
         #[case(Aabb::from_size(Vec2::new(3.0, 4.0)), Vec2::new(-1.5, 2.0), -6.25, 6.25)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 0.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(1.0, 0.0)), Vec2::new(1.0, 0.0), -0.5, 2.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 1.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
-        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Vec2::new(0.0, 1.0)), Vec2::new(0.0, 1.0), -1.0, 3.0)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Point::new(0.0, 0.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Point::new(1.0, 0.0)), Vec2::new(1.0, 0.0), -0.5, 2.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Point::new(0.0, 1.0)), Vec2::new(1.0, 0.0), -1.5, 1.5)]
+        #[case(Aabb::from_size(Vec2::new(3.0, 4.0)).with_center_at(Point::new(0.0, 1.0)), Vec2::new(0.0, 1.0), -1.0, 3.0)]
         fn test_axis_project(
             #[case] shape: Aabb,
             #[case] axis: Vec2,
@@ -179,10 +239,10 @@ mod aabb {
         }
 
         #[rstest]
-        fn test_polygon_axes(
+        fn test_sat_axes(
             #[values(
                 Aabb::from_size(Vec2::ZERO),
-                Aabb::from_size(Vec2::new(2.0, 3.0)).with_center_at(Vec2::new(4.0, 5.0))
+                Aabb::from_size(Vec2::new(2.0, 3.0)).with_center_at(Point::new(4.0, 5.0))
             )]
             shape: Aabb,
         ) {
@@ -190,6 +250,29 @@ mod aabb {
             assert_eq!(iterator.next(), Some(Vec2::X));
             assert_eq!(iterator.next(), Some(Vec2::Y));
             assert!(iterator.next().is_none(), "too many axes returned");
+        }
+
+        #[test]
+        fn test_sat_vertices() {
+            let aabb = Aabb::from_size(Vec2::new(2.0, 3.0)).with_center_at(Point::new(4.0, 5.0));
+            let vertices: Vec<_> = aabb.vertices().collect();
+            assert_eq!(vertices.len(), 4);
+            assert!(
+                vertices.iter().copied().any(|p| p == Point::new(3.0, 3.5)),
+                "top left corner not is incorrect: {vertices:?}"
+            );
+            assert!(
+                vertices.iter().copied().any(|p| p == Point::new(5.0, 3.5)),
+                "top left corner not is incorrect: {vertices:?}"
+            );
+            assert!(
+                vertices.iter().copied().any(|p| p == Point::new(5.0, 6.5)),
+                "top left corner not is incorrect: {vertices:?}"
+            );
+            assert!(
+                vertices.iter().copied().any(|p| p == Point::new(3.0, 6.5)),
+                "top left corner not is incorrect: {vertices:?}"
+            );
         }
     }
 }

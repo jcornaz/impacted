@@ -13,8 +13,13 @@ mod shapes;
 #[sealed]
 pub trait Shape {
     type AxisIter: Iterator<Item = Vec2>;
+    type FocalsIter: Iterator<Item = Point>;
+    type VerticesIter: Iterator<Item = Point>;
 
     fn axes(&self) -> Self::AxisIter;
+    fn focals(&self) -> Self::FocalsIter;
+    fn vertices(&self) -> Self::VerticesIter;
+
     fn project_on(&self, axis: Vec2) -> Range;
 }
 
@@ -86,8 +91,9 @@ fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Optio
 #[cfg(test)]
 #[cfg(feature = "std")]
 mod collision_spec {
-    use super::*;
     use rstest::rstest;
+
+    use super::*;
 
     #[rstest]
     #[case(
@@ -96,7 +102,7 @@ mod collision_spec {
     )]
     #[case(
         Aabb::from_size(Vec2::new(2.0, 2.0)),
-        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Vec2::new(1.9, 0.0))
+        Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Point::new(1.9, 0.0))
     )]
     fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
         assert!(check_collision(&shape1, &shape2));
