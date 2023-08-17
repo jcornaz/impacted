@@ -29,6 +29,30 @@ impl Point {
     }
 }
 
+impl From<[f32; 2]> for Point {
+    fn from([x, y]: [f32; 2]) -> Self {
+        Self::new(x, y)
+    }
+}
+
+impl From<Point> for [f32; 2] {
+    fn from(Point(v): Point) -> Self {
+        v.into()
+    }
+}
+
+impl From<(f32, f32)> for Point {
+    fn from((x, y): (f32, f32)) -> Self {
+        Point::new(x, y)
+    }
+}
+
+impl From<Point> for (f32, f32) {
+    fn from(Point(v): Point) -> Self {
+        v.into()
+    }
+}
+
 impl From<Vec2> for Point {
     fn from(value: Vec2) -> Self {
         Self(value)

@@ -53,6 +53,30 @@ impl Vec2 {
     }
 }
 
+impl From<[f32; 2]> for Vec2 {
+    fn from([x, y]: [f32; 2]) -> Self {
+        Self::new(x, y)
+    }
+}
+
+impl From<Vec2> for [f32; 2] {
+    fn from(Vec2 { x, y }: Vec2) -> Self {
+        [x, y]
+    }
+}
+
+impl From<(f32, f32)> for Vec2 {
+    fn from((x, y): (f32, f32)) -> Self {
+        Vec2::new(x, y)
+    }
+}
+
+impl From<Vec2> for (f32, f32) {
+    fn from(Vec2 { x, y }: Vec2) -> Self {
+        (x, y)
+    }
+}
+
 impl AddAssign for Vec2 {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
@@ -135,9 +159,10 @@ impl approx::AbsDiffEq for Vec2 {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use approx::assert_abs_diff_eq;
     use rstest::rstest;
+
+    use super::*;
 
     #[rstest]
     #[case(Vec2::ZERO, Vec2::ZERO, 0.0)]
