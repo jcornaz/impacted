@@ -68,19 +68,19 @@ impl From<Point> for Vec2 {
 #[sealed]
 impl Shape for Point {
     type AxisIter = iter::Empty<Vec2>;
-    type FocalsIter = iter::Once<Point>;
-    type VerticesIter = iter::Empty<Point>;
+    type FocalsIter = iter::Empty<Point>;
+    type VerticesIter = iter::Once<Point>;
 
     fn axes(&self) -> Self::AxisIter {
         iter::empty()
     }
 
     fn focals(&self) -> Self::FocalsIter {
-        iter::once(*self)
+        iter::empty()
     }
 
     fn vertices(&self) -> Self::VerticesIter {
-        iter::empty()
+        iter::once(*self)
     }
 
     fn project_on(&self, axis: Vec2) -> Range {

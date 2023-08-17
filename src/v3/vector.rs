@@ -17,6 +17,11 @@ impl Vec2 {
     }
 
     #[must_use]
+    pub const fn splat(value: f32) -> Self {
+        Self::new(value, value)
+    }
+
+    #[must_use]
     pub(super) fn dot(self, other: Self) -> f32 {
         (self.x * other.x) + (self.y * other.y)
     }

@@ -77,7 +77,7 @@ pub fn cast_ray(origin: Point, vector: Vec2, target: &impl Shape) -> Option<Cont
 fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Option<f32> {
     let mut max_t1 = f32::MIN;
     let mut min_t2 = f32::MAX;
-    for axis in target.axes() {
+    for axis in sat_axes(origin, target) {
         let Some((t1, t2)) = cast_projection(
             origin.project_on(axis),
             vector.dot(axis),
@@ -90,6 +90,10 @@ fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Optio
         return None;
     }
     Some(max_t1)
+}
+
+fn sat_axes(shape1: &impl Shape, shape2: &impl Shape) -> impl Iterator<Item = Vec2> {
+    shape1.axes().chain(shape2.axes())
 }
 
 #[cfg(all(test, feature = "std", feature = "unstable-v3-aabb"))]
@@ -114,6 +118,8 @@ mod collision_spec {
 
 #[cfg(test)]
 mod test {
+    #[cfg(feature = "unstable-v3-aabb")]
+    use alloc::vec::Vec;
     use approx::assert_abs_diff_eq;
     use rstest::rstest;
 
@@ -162,5 +168,25 @@ mod test {
         let source = Range::from_min_max(source.0, source.1);
         let target = Range::from_min_max(target.0, target.1);
         assert_eq!(cast_projection(source, vector, target), None);
+    }
+
+    #[test]
+    #[cfg(feature = "unstable-v3-aabb")]
+    fn sat_axes_aabb_to_aabb() {
+        let actual: Vec<Vec2> = sat_axes(
+            &Aabb::from_size(Vec2::splat(1.0)),
+            &Aabb::from_size(Vec2::splat(2.0)),
+        )
+        .collect();
+        assert_eq!(&actual[..], &[Vec2::X, Vec2::Y, Vec2::X, Vec2::Y]);
+    }
+
+    #[test]
+    #[cfg(feature = "unstable-v3-aabb")]
+    fn sat_axes_point_to_aabb() {
+        let v1: Vec<Vec2> = sat_axes(&Point::ORIGIN, &Aabb::from_size(Vec2::splat(2.0))).collect();
+        let v2: Vec<Vec2> = sat_axes(&Aabb::from_size(Vec2::splat(2.0)), &Point::ORIGIN).collect();
+        assert_eq!(&v1[..], &[Vec2::X, Vec2::Y]);
+        assert_eq!(&v2[..], &[Vec2::X, Vec2::Y]);
     }
 }
