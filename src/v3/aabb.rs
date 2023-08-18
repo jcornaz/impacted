@@ -4,6 +4,7 @@ use sealed::sealed;
 
 use super::{__seal_shape, vector::Vec2, Point, Range, Shape};
 
+#[derive(Debug, Copy, Clone)]
 pub struct Aabb {
     center: Point,
     half_size: Vec2,
@@ -18,9 +19,13 @@ impl Aabb {
         }
     }
 
+    pub fn set_center_at(&mut self, center: impl Into<Point>) {
+        self.center = center.into();
+    }
+
     #[must_use]
     pub fn with_center_at(mut self, center: impl Into<Point>) -> Self {
-        self.center = center.into();
+        self.set_center_at(center);
         self
     }
 }
