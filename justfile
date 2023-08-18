@@ -15,9 +15,11 @@ watch:
 run-bevy-example:
     cargo run --example bevy
 
+
 # Run the tests
 test:
-    cargo hack test --tests --feature-powerset
+    cargo hack check --feature-powerset
+    cargo hack test --tests --each-feature
     cargo test --examples --all-features
     cargo test --doc --all-features
 

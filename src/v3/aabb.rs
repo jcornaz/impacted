@@ -50,14 +50,22 @@ impl Shape for Aabb {
     }
 
     fn project_on(&self, axis: Vec2) -> Range {
-        let r1 = self.half_size.dot(axis).abs();
-        let r2 = Vec2::new(-self.half_size.x, self.half_size.y)
-            .dot(axis)
-            .abs();
+        let r1 = abs(self.half_size.dot(axis));
+        let r2 = abs(Vec2::new(-self.half_size.x, self.half_size.y).dot(axis));
         let r = r1.max(r2);
         let shift = Vec2::from(self.center).dot(axis);
         Range::from_min_max(shift - r, shift + r)
     }
+}
+
+#[cfg(feature = "std")]
+fn abs(v: f32) -> f32 {
+    v.abs()
+}
+
+#[cfg(not(feature = "std"))]
+fn abs(v: f32) -> f32 {
+    libm::fabsf(v)
 }
 
 #[cfg(test)]
