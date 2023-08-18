@@ -10,6 +10,7 @@ pub use vector::Vec2;
 
 #[cfg(feature = "unstable-v3-aabb")]
 mod aabb;
+mod interop;
 mod point;
 mod range;
 mod vector;

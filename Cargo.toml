@@ -18,6 +18,7 @@ default = ["std"]
 std = ["glam/std", "bvh-arena?/std"]
 unstable-v3 = []
 unstable-v3-aabb = ["unstable-v3", "libm"]
+glam-0-24 = []
 
 [dependencies]
 # Public

@@ -11,16 +11,16 @@ pub struct Aabb {
 
 impl Aabb {
     #[must_use]
-    pub fn from_size(size: Vec2) -> Self {
+    pub fn from_size(size: impl Into<Vec2>) -> Self {
         Self {
             center: Point::ORIGIN,
-            half_size: size / 2.0,
+            half_size: size.into() / 2.0,
         }
     }
 
     #[must_use]
-    pub fn with_center_at(mut self, center: Point) -> Self {
-        self.center = center;
+    pub fn with_center_at(mut self, center: impl Into<Point>) -> Self {
+        self.center = center.into();
         self
     }
 }
