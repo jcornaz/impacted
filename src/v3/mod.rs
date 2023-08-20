@@ -1,11 +1,10 @@
 #![allow(missing_docs)]
 
-use sealed::sealed;
-
 #[cfg(feature = "unstable-v3-aabb")]
 pub use aabb::Aabb;
 pub use point::Point;
 use range::Range;
+use sealed::sealed;
 pub use vector::Vec2;
 
 #[cfg(feature = "unstable-v3-aabb")]
@@ -26,6 +25,22 @@ pub trait Shape {
     fn vertices(&self) -> Self::VerticesIter;
 
     fn project_on(&self, axis: Vec2) -> Range;
+}
+
+#[sealed]
+pub trait Collides<Rhs> {
+    fn collides(&self, other: &Rhs) -> bool;
+}
+
+#[sealed]
+impl<A, B> Collides<B> for A
+where
+    A: Shape,
+    B: Shape,
+{
+    fn collides(&self, other: &B) -> bool {
+        check_collision(self, other)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
