@@ -50,10 +50,12 @@ where
     }
 }
 
+#[sealed]
 pub trait Cast<Rhs> {
     fn cast(&self, vector: Vec2, target: &Rhs) -> Option<CastHit>;
 }
 
+#[sealed]
 impl<A, B> Cast<B> for A
 where
     A: Shape,
