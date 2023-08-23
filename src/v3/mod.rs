@@ -64,19 +64,30 @@ where
     fn cast(&self, vector: Vec2, target: &B) -> Option<CastHit> {
         let mut max_t1 = f32::MIN;
         let mut min_t2 = f32::MAX;
+        let mut normal = Vec2::ZERO;
         for axis in sat_axes(self, target) {
             let Some((t1, t2)) = cast_projection(
                 self.project_on(axis),
                 vector.dot(axis),
                 target.project_on(axis),
             ) else { return None };
+            if t1 > max_t1 {
+                max_t1 = t1;
+                normal = axis;
+            }
             max_t1 = max_t1.max(t1);
             min_t2 = min_t2.min(t2);
         }
         if min_t2 < max_t1 || max_t1 > 1.0 || max_t1 <= 0.0 {
             return None;
         }
-        Some(CastHit { time: max_t1 })
+        if normal.dot(vector) > 0.0 {
+            normal = -normal;
+        }
+        Some(CastHit {
+            time: max_t1,
+            normal,
+        })
     }
 }
 
@@ -84,6 +95,7 @@ where
 #[non_exhaustive]
 pub struct CastHit {
     pub time: f32,
+    pub normal: Vec2,
 }
 
 pub fn ray_cast(origin: Point, vector: Vec2, target: &impl Shape) -> Option<CastHit> {
