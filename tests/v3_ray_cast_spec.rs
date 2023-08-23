@@ -1,7 +1,7 @@
 #![cfg(feature = "unstable-v3-aabb")]
 
 use approx::assert_abs_diff_eq;
-use impacted::v3::{cast_ray, Aabb, Point, Shape, Vec2};
+use impacted::v3::{ray_cast, Aabb, Point, Shape, Vec2};
 use rstest::rstest;
 
 #[rstest]
@@ -65,8 +65,10 @@ fn should_find_contact_point(
     #[case] target: impl Shape,
     #[case] expected_point: impl Into<Point>,
 ) {
+    let origin = origin.into();
     let expected_point = expected_point.into();
-    let point = cast_ray(origin.into(), vector, &target).unwrap().point;
+    let time = ray_cast(origin, vector, &target).unwrap().time;
+    let point = origin + (vector * time);
     assert_abs_diff_eq!(point.x(), expected_point.x());
     assert_abs_diff_eq!(point.y(), expected_point.y());
 }
@@ -84,6 +86,6 @@ fn should_return_none_when_there_is_no_hit(
     #[case] vector: Vec2,
     #[case] target: impl Shape,
 ) {
-    let result = cast_ray(origin.into(), vector, &target);
+    let result = ray_cast(origin.into(), vector, &target);
     assert_eq!(result, None);
 }

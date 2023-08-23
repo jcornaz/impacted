@@ -43,10 +43,19 @@ where
     }
 }
 
+pub trait Cast<Rhs> {
+    fn cast(&self, vector: Vec2, target: &Rhs) -> Option<CastHit>;
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive]
-pub struct Contact {
-    pub point: Point,
+pub struct CastHit {
+    pub time: f32,
+}
+
+pub fn ray_cast(origin: Point, vector: Vec2, target: &impl Shape) -> Option<CastHit> {
+    let time = contact_time(&origin, vector, target)?;
+    Some(CastHit { time })
 }
 
 /// Given ranges of projected shapes,
@@ -87,13 +96,6 @@ pub fn check_collision(shape1: &impl Shape, shape2: &impl Shape) -> bool {
         }
     }
     true
-}
-
-pub fn cast_ray(origin: Point, vector: Vec2, target: &impl Shape) -> Option<Contact> {
-    let time = contact_time(&origin, vector, target)?;
-    Some(Contact {
-        point: origin + (vector * time),
-    })
 }
 
 fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Option<f32> {
