@@ -2,7 +2,7 @@
 
 use rstest::rstest;
 
-use impacted::v3::{check_collision, Aabb, Point, Shape, Vec2};
+use impacted::v3::{Aabb, Collides, Point, Shape, Vec2};
 
 #[rstest]
 #[case(
@@ -23,7 +23,7 @@ use impacted::v3::{check_collision, Aabb, Point, Shape, Vec2};
     Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Point::new(10.0, 10.0))
 )]
 fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
-    assert!(check_collision(&shape1, &shape2));
+    assert!(shape1.collides(&shape2));
 }
 
 #[rstest]
@@ -40,5 +40,5 @@ fn test_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
     Aabb::from_size(Vec2::new(2.0, 2.0)).with_center_at(Point::new(10.0, 10.0))
 )]
 fn test_not_collides(#[case] shape1: impl Shape, #[case] shape2: impl Shape) {
-    assert!(!check_collision(&shape1, &shape2));
+    assert!(!shape1.collides(&shape2));
 }

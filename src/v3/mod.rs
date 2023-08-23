@@ -39,7 +39,14 @@ where
     B: Shape,
 {
     fn collides(&self, other: &B) -> bool {
-        check_collision(self, other)
+        for axis in sat_axes(self, other) {
+            let r1 = self.project_on(axis);
+            let r2 = other.project_on(axis);
+            if !r1.overlaps(r2) {
+                return false;
+            }
+        }
+        true
     }
 }
 
@@ -85,17 +92,6 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
             (target.max - source.min) / vector,
         )
     })
-}
-
-pub fn check_collision(shape1: &impl Shape, shape2: &impl Shape) -> bool {
-    for axis in sat_axes(shape1, shape2) {
-        let r1 = shape1.project_on(axis);
-        let r2 = shape2.project_on(axis);
-        if !r1.overlaps(r2) {
-            return false;
-        }
-    }
-    true
 }
 
 fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Option<f32> {
