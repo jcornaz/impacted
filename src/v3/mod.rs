@@ -54,6 +54,30 @@ pub trait Cast<Rhs> {
     fn cast(&self, vector: Vec2, target: &Rhs) -> Option<CastHit>;
 }
 
+impl<A, B> Cast<B> for A
+where
+    A: Shape,
+    B: Shape,
+{
+    fn cast(&self, vector: Vec2, target: &B) -> Option<CastHit> {
+        let mut max_t1 = f32::MIN;
+        let mut min_t2 = f32::MAX;
+        for axis in sat_axes(self, target) {
+            let Some((t1, t2)) = cast_projection(
+                self.project_on(axis),
+                vector.dot(axis),
+                target.project_on(axis),
+            ) else { return None };
+            max_t1 = max_t1.max(t1);
+            min_t2 = min_t2.min(t2);
+        }
+        if min_t2 < max_t1 || max_t1 > 1.0 || max_t1 <= 0.0 {
+            return None;
+        }
+        Some(CastHit { time: max_t1 })
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive]
 pub struct CastHit {
@@ -61,8 +85,7 @@ pub struct CastHit {
 }
 
 pub fn ray_cast(origin: Point, vector: Vec2, target: &impl Shape) -> Option<CastHit> {
-    let time = contact_time(&origin, vector, target)?;
-    Some(CastHit { time })
+    origin.cast(vector, target)
 }
 
 /// Given ranges of projected shapes,
@@ -92,24 +115,6 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
             (target.max - source.min) / vector,
         )
     })
-}
-
-fn contact_time(origin: &impl Shape, vector: Vec2, target: &impl Shape) -> Option<f32> {
-    let mut max_t1 = f32::MIN;
-    let mut min_t2 = f32::MAX;
-    for axis in sat_axes(origin, target) {
-        let Some((t1, t2)) = cast_projection(
-            origin.project_on(axis),
-            vector.dot(axis),
-            target.project_on(axis),
-        ) else { return None };
-        max_t1 = max_t1.max(t1);
-        min_t2 = min_t2.min(t2);
-    }
-    if min_t2 < max_t1 || max_t1 > 1.0 || max_t1 <= 0.0 {
-        return None;
-    }
-    Some(max_t1)
 }
 
 fn sat_axes(shape1: &impl Shape, shape2: &impl Shape) -> impl Iterator<Item = Vec2> {
