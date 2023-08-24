@@ -52,7 +52,7 @@ where
 
 #[sealed]
 pub trait Cast<Rhs> {
-    fn cast(&self, vector: Vec2, target: &Rhs) -> Option<CastHit>;
+    fn cast(&self, vector: impl Into<Vec2>, target: &Rhs) -> Option<CastHit>;
 }
 
 #[sealed]
@@ -61,7 +61,8 @@ where
     A: Shape,
     B: Shape,
 {
-    fn cast(&self, vector: Vec2, target: &B) -> Option<CastHit> {
+    fn cast(&self, vector: impl Into<Vec2>, target: &B) -> Option<CastHit> {
+        let vector = vector.into();
         let mut max_t1 = f32::MIN;
         let mut min_t2 = f32::MAX;
         let mut normal = Vec2::ZERO;
@@ -98,7 +99,7 @@ pub struct CastHit {
     pub normal: Vec2,
 }
 
-pub fn ray_cast(origin: Point, vector: Vec2, target: &impl Shape) -> Option<CastHit> {
+pub fn ray_cast(origin: Point, vector: impl Into<Vec2>, target: &impl Shape) -> Option<CastHit> {
     origin.cast(vector, target)
 }
 
