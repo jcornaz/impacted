@@ -71,7 +71,9 @@ where
                 self.project_on(axis),
                 vector.dot(axis),
                 target.project_on(axis),
-            ) else { return None };
+            ) else {
+                return None;
+            };
             if t1 > max_t1 {
                 max_t1 = t1;
                 normal = axis;
