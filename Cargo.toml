@@ -25,7 +25,7 @@ glam-0-24 = []
 bvh-arena = { version = "1.1.3", default-features = false, optional = true }
 
 # Private
-glam = { version = "0.24.1", default-features = false, features = ["libm"] }
+glam = { version = "0.24.2", default-features = false, features = ["libm"] }
 sealed = { version = "0.5.0", default-features = false }
 smallvec = { version = "1.11.1", default-features = false }
 libm = { version = "0.2.7", default-features = false, optional = true }
@@ -33,7 +33,7 @@ libm = { version = "0.2.7", default-features = false, optional = true }
 [dev-dependencies]
 rstest = { version = "0.18.2", default-features = false }
 bevy = { version = "0.11.2", default-features = false, features = ["bevy_render", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_asset", "x11"]}
-glam = { version = "0.24.1", features = ["libm", "approx"] }
+glam = { version = "0.24.2", features = ["libm", "approx"] }
 approx = "0.5.1"
 
 [build-dependencies]
