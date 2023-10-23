@@ -4,8 +4,10 @@ set dotenv-load
 	just --choose --unsorted
 
 # Perform all verifications (compile, test, lint, etc.)
-verify: test lint doc check-msrv
-	cargo deny check licenses
+verify: test lint doc
+	cargo semver-checks
+	cargo deny check
+	cargo msrv verify
 
 # Watch the source files and run `just verify` when source changes
 watch:
@@ -14,7 +16,6 @@ watch:
 # Run the bevy example
 run-bevy-example:
     cargo run --example bevy
-
 
 # Run the tests
 test:
@@ -35,10 +36,6 @@ doc *args:
 # Open the documentation page
 doc-open: (doc "--open")
 
-# Make sure the MSRV is satisfiable
-check-msrv:
-	cargo msrv verify
-
 # Clean up compilation output
 clean:
 	rm -rf target
@@ -49,7 +46,7 @@ clean:
 install-dev-tools:
 	rustup install stable
 	rustup override set stable
-	cargo install cargo-hack cargo-watch cargo-msrv
+	cargo install cargo-hack cargo-watch cargo-msrv cargo-semver-checks
 
 # Install a git hook to run tests before every commits
 install-git-hooks:
