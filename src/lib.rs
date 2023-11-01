@@ -61,6 +61,7 @@
 //! The following features may receive breaking changes or be removed in a patch release.
 //!
 //! * `unstable-v3` `v3` module, an exploration of what could be the next major version of the API
+//! * `unstable-v3-aabb` Axis-Aligned-Bounding-Box shape for the v3 module
 //!
 
 #[cfg(all(test, feature = "unstable-v3-aabb"))]
