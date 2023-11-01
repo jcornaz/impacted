@@ -47,6 +47,14 @@ cargo add impacted
 * `std` (enabled by default) Allow to use rust the standard library (need to be disabled for `no_std` apps)
 * `bvh-arena` Integration with [bvh-arena](https://crates.io/crates/bvh-arena) bounding volumes
 
+## Unstable feature flags
+
+**The following features may receive breaking changes or be removed in a patch release!**
+
+* `unstable-v3` `v3` module, an exploration of what could be the next major version of the API
+* `unstable-v3-aabb` Axis-Aligned-Bounding-Box shape for the v3 module
+
+
 
 ## MSRV
 
