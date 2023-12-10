@@ -10,6 +10,9 @@ repository = "https://github.com/jcornaz/impacted"
 categories = ["game-development"]
 keywords = ["collision", "2d", "geometry", "gamedev", "gjk"]
 
+[badges.maintenance]
+status = "passively-maintained"
+
 [package.metadata.docs.rs]
 all-features = true
 
