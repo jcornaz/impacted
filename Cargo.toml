@@ -35,7 +35,7 @@ libm = { version = "0.2.8", default-features = false, optional = true }
 
 [dev-dependencies]
 rstest = { version = "0.18.2", default-features = false }
-bevy = { version = "0.12.1", default-features = false, features = ["bevy_render", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_asset", "x11"]}
+bevy = { version = "0.13.0", default-features = false, features = ["bevy_render", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_asset", "x11"]}
 glam = { version = "0.25.0", features = ["libm", "approx"] }
 approx = "0.5.1"
 
