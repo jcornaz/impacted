@@ -67,13 +67,11 @@ where
         let mut min_t2 = f32::MAX;
         let mut normal = Vec2::ZERO;
         for axis in sat_axes(self, target) {
-            let Some((t1, t2)) = cast_projection(
+            let (t1, t2) = cast_projection(
                 self.project_on(axis),
                 vector.dot(axis),
                 target.project_on(axis),
-            ) else {
-                return None;
-            };
+            )?;
             if t1 > max_t1 {
                 max_t1 = t1;
                 normal = axis;
