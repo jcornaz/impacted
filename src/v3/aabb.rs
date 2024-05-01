@@ -1,4 +1,4 @@
-use core::{array, iter};
+use core::iter;
 
 use sealed::sealed;
 
@@ -32,19 +32,15 @@ impl Aabb {
 
 #[sealed]
 impl Shape for Aabb {
-    type AxisIter = array::IntoIter<Vec2, 2>;
-    type FocalsIter = iter::Empty<Point>;
-    type VerticesIter = array::IntoIter<Point, 4>;
-
-    fn axes(&self) -> Self::AxisIter {
+    fn axes(&self) -> impl Iterator<Item = Vec2> {
         [Vec2::X, Vec2::Y].into_iter()
     }
 
-    fn focals(&self) -> Self::FocalsIter {
+    fn focals(&self) -> impl Iterator<Item = Point> {
         iter::empty()
     }
 
-    fn vertices(&self) -> Self::VerticesIter {
+    fn vertices(&self) -> impl Iterator<Item = Point> {
         [
             (self.center - self.half_size),
             (self.center + Vec2::new(self.half_size.x, -self.half_size.y)),

@@ -67,19 +67,15 @@ impl From<Point> for Vec2 {
 
 #[sealed]
 impl Shape for Point {
-    type AxisIter = iter::Empty<Vec2>;
-    type FocalsIter = iter::Empty<Point>;
-    type VerticesIter = iter::Once<Point>;
-
-    fn axes(&self) -> Self::AxisIter {
+    fn axes(&self) -> impl Iterator<Item = Vec2> {
         iter::empty()
     }
 
-    fn focals(&self) -> Self::FocalsIter {
+    fn focals(&self) -> impl Iterator<Item = Point> {
         iter::empty()
     }
 
-    fn vertices(&self) -> Self::VerticesIter {
+    fn vertices(&self) -> impl Iterator<Item = Point> {
         iter::once(*self)
     }
 

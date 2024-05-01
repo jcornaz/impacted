@@ -16,13 +16,9 @@ mod vector;
 
 #[sealed]
 pub trait Shape {
-    type AxisIter: Iterator<Item = Vec2>;
-    type FocalsIter: Iterator<Item = Point>;
-    type VerticesIter: Iterator<Item = Point>;
-
-    fn axes(&self) -> Self::AxisIter;
-    fn focals(&self) -> Self::FocalsIter;
-    fn vertices(&self) -> Self::VerticesIter;
+    fn axes(&self) -> impl Iterator<Item = Vec2> + '_;
+    fn focals(&self) -> impl Iterator<Item = Point> + '_;
+    fn vertices(&self) -> impl Iterator<Item = Point> + '_;
 
     fn project_on(&self, axis: Vec2) -> Range;
 }
@@ -132,7 +128,7 @@ fn cast_projection(mut source: Range, mut vector: f32, mut target: Range) -> Opt
     })
 }
 
-fn sat_axes(shape1: &impl Shape, shape2: &impl Shape) -> impl Iterator<Item = Vec2> {
+fn sat_axes<'a>(shape1: &'a impl Shape, shape2: &'a impl Shape) -> impl Iterator<Item = Vec2> + 'a {
     shape1.axes().chain(shape2.axes())
 }
 
