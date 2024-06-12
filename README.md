@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/crates/l/impacted)](#Unlicense)
 [![Crates.io](https://img.shields.io/crates/v/impacted)](https://crates.io/crates/impacted)
-![rustc](https://img.shields.io/badge/rustc-1.60+-blue?logo=rust)
+![rustc](https://img.shields.io/badge/rustc-1.68+-blue?logo=rust)
 [![Docs](https://docs.rs/impacted/badge.svg)](https://docs.rs/impacted)
 
 2d collision test for game-development in rust
@@ -58,7 +58,7 @@ cargo add impacted
 
 ## MSRV
 
-The minimum supported rust version is currently: `1.60`
+The minimum supported rust version is currently: `1.68`
 
 Bumping the minimum supported rust version to a newer stable version
 is not considered a breaking change.

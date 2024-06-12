@@ -1,5 +1,5 @@
 mod array;
-mod glam_0_24;
+mod glam;
 
 pub(crate) trait Dot {
     type Output;

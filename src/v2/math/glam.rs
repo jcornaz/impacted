@@ -1,6 +1,6 @@
 use glam::Vec2;
 
-use super::*;
+use super::{Cross, Dot, Normalize, Perp};
 
 impl Dot for Vec2 {
     type Output = f32;

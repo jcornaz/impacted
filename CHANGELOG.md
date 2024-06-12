@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Breaking changes to `unstable-v3`
 
 * Change `Shape` trait methods to return `impl Iterator`
+* Rename feature `glam-0-24` to `unstable-glam-0-24`
+
+### Dependencies
+
+* Update glam to 0.28
+* Bump rust MSRV to 1.68
+
 
 ## [2.0.1] - 2023-11-01
 
