@@ -9,7 +9,7 @@
 
 This provides a low-level "narrow-phase" collision-detection logic.
 
-If you want to pair it with a broad-phase, you may look at [bvh-arena] or [broccoli].
+If you want to pair it with a broad phrase, you may look at [bvh-arena] or [broccoli].
 
 [bvh-arena]: https://github.com/jcornaz/bvh-arena
 [broccoli]: https://github.com/tiby312/broccoli
@@ -51,8 +51,8 @@ cargo add impacted
 
 **The following features may receive breaking changes or be removed in a patch release!**
 
-* `unstable-v3` `v3` module, an exploration of what could be the next major version of the API
-* `unstable-v3-aabb` Axis-Aligned-Bounding-Box shape for the v3 module
+* `unstable-v3`: enable the `v3` module containing an exploration of what could be the next major version of the API
+* `unstable-v3-aabb`: Axis-Aligned-Bounding-Box shape for the `v3` module
 
 
 
