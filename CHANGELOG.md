@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+
+## [2.0.3] - 2024-09-02
+
 ### Dependencies
 
 * Update glam to `0.29`
@@ -66,7 +69,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * **readme:** fix build badge ([1f91bf8](https://github.com/jcornaz/impacted/commit/1f91bf88ee4a57eddc4a1ed4b47fc5ffea04e85d))
 
 
-[Unreleased]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/jcornaz/beancount_parser_2/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/jcornaz/beancount_parser_2/compare/v1.5.3...v2.0.0
