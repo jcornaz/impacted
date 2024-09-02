@@ -14,6 +14,9 @@ If you want to pair it with a broad phrase, you may look at [bvh-arena] or [broc
 [bvh-arena]: https://github.com/jcornaz/bvh-arena
 [broccoli]: https://github.com/tiby312/broccoli
 
+> [!NOTE]
+>
+> If you only need simple shapes (i.e. axis-aligned bounding boxes) you may prefer to look at this simpler 2d collision library I'm working on: [collision2d](https://github.com/jcornaz/collision2d)
 
 ## Usage example
 
