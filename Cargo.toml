@@ -4,7 +4,7 @@ version = "2.0.3"
 license = "Unlicense"
 authors = ["Jonathan Cornaz"]
 edition = "2021"
-rust-version = "1.68"
+rust-version = "1.68.2"
 description = "2d collision test for arbitrary convex shapes"
 repository = "https://github.com/jcornaz/impacted"
 categories = ["game-development"]
@@ -41,7 +41,7 @@ glam = { version = "0.29.0", features = ["libm", "approx"] }
 approx = "0.5.1"
 
 [build-dependencies]
-rustc_version = "0.4.0"
+rustc_version = "0.4.1"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }
