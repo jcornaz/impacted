@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Bump rust MSRV to 1.68.2
 * Update 'sealed' to version `0.6.0`
+* Releax minimum version of dependencies:
+  * `bvh-arena`: `^1.1` (instead of `^1.1.3`)
+  * `smallvec`: `^1.9` (instead of `^1.13.2`)
+  * `libm`: `^0.2` (instead of `^0.2.8`)
 
 
 ## [2.0.3] - 2024-09-02

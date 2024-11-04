@@ -9,7 +9,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -18,14 +18,11 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-hack@0.6,just@1,cargo-msrv@0.15,cargo-deny@0.14,cargo-semver-checks@0.35
+          tool: cargo-hack@0.6,just@1,cargo-msrv@0.16,cargo-deny@0.16,cargo-semver-checks@0.35
       - run: just verify
   lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      RUSTFLAGS: "-D warnings"
-      RUSTDOCFLAGS: "-D warnings"
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -35,5 +32,9 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-hack,just,cargo-deny
-      - run: just lint doc
+      - run: cargo update
+      - run: just test lint doc
+        env:
+          RUSTFLAGS: "-D warnings"
+          RUSTDOCFLAGS: "-D warnings"
       - run: cargo deny check
