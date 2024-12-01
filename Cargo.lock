@@ -1355,9 +1355,9 @@ dependencies = [
 
 [[package]]
 name = "glam"
-version = "0.29.0"
+version = "0.29.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c28091a37a5d09b555cb6628fd954da299b536433834f5b8e59eba78e0cbbf8a"
+checksum = "dc46dd3ec48fdd8e693a98d2b8bafae273a2d54c1de02a2a7e3d57d501f39677"
 dependencies = [
  "approx",
  "libm",
@@ -1516,7 +1516,7 @@ dependencies = [
  "approx",
  "bevy",
  "bvh-arena",
- "glam 0.29.0",
+ "glam 0.29.2",
  "libm",
  "rstest",
  "rustc_version",
