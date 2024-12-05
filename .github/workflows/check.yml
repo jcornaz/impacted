@@ -37,4 +37,4 @@ jobs:
         env:
           RUSTFLAGS: "-D warnings"
           RUSTDOCFLAGS: "-D warnings"
-      - run: cargo deny check
+      - run: cargo deny check licenses
