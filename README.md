@@ -4,6 +4,7 @@
 [![Crates.io](https://img.shields.io/crates/v/impacted)](https://crates.io/crates/impacted)
 ![rustc](https://img.shields.io/badge/rustc-1.68+-blue?logo=rust)
 [![Docs](https://docs.rs/impacted/badge.svg)](https://docs.rs/impacted)
+![Maintenance](https://img.shields.io/maintenance/passively/2025)
 
 2d collision test for game-development in rust
 
