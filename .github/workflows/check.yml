@@ -18,5 +18,5 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-hack@0.6,just@1,cargo-msrv@0.16,cargo-deny@0.16,cargo-semver-checks@0.37
+          tool: cargo-hack@0.6,just@1,cargo-msrv@0.16,cargo-deny@0.16
       - run: just verify

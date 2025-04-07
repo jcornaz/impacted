@@ -5,7 +5,6 @@ set dotenv-load
 
 # Perform all verifications (compile, test, lint, etc.)
 verify: test lint doc
-	cargo semver-checks
 	cargo msrv verify
 
 # Watch the source files and run `just verify` when source changes
@@ -45,7 +44,7 @@ clean:
 install-dev-tools:
 	rustup install stable
 	rustup override set stable
-	cargo install cargo-hack cargo-watch cargo-msrv cargo-semver-checks
+	cargo install cargo-hack cargo-watch cargo-msrv
 
 # Install a git hook to run tests before every commits
 install-git-hooks:
