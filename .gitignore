@@ -14,3 +14,7 @@
 
 # NodeJS tools
 /node_modules
+
+# Nix
+result/
+.direnv/
