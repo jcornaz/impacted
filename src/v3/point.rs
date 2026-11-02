@@ -5,7 +5,7 @@ use core::{
 
 use sealed::sealed;
 
-use super::{vector::Vec2, Range, Shape, __seal_shape};
+use super::{__seal_shape, vector::Vec2, Range, Shape};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Point(Vec2);
