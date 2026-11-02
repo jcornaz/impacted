@@ -1,21 +1,9 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = { self, nixpkgs, ... }: {
-    packages = builtins.mapAttrs (system: pkgs: {
-      default = pkgs.callPackage ({ rustPlatform, debug ? false }:
-        rustPlatform.buildRustPackage {
-          name = "countdown";
-          buildMode = if debug then "debug" else "release";
-          src = ./.;
-          cargoLock.lockFile = ./Cargo.lock;
-        }
-      ) {};
-      debug = self.packages.${system}.default.override { debug = true; };
-    }) nixpkgs.legacyPackages;
-
     devShells = builtins.mapAttrs (system: pkgs: {
       default = pkgs.mkShell {
         packages = [
